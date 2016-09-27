@@ -6,7 +6,7 @@ import java.io.File;
 
 public interface InterFAXClient {
 
-    String OUTBOUND_FAXES_ENDPOINT = "https://rest.interfax.net/outbound/faxes?faxNumber=%s";
+    String OUTBOUND_FAXES_PATH = "outbound/faxes?faxNumber=%s";
 
     public Response sendFax(final String faxNumber, final File fileToSendAsFax);
 

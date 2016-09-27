@@ -1,6 +1,8 @@
 package net.interfax.rest.client.impl;
 
 import net.interfax.rest.client.InterFAXClient;
+import net.interfax.rest.client.config.ClientConfig;
+import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
@@ -10,13 +12,16 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.UriBuilder;
 import java.io.File;
+import java.net.URI;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class InterFAXJerseyClient implements InterFAXClient {
 
     private static String username;
     private static String password;
+    private static String outboundFaxesEndpoint;
     private static HttpAuthenticationFeature httpAuthenticationFeature;
     private static Client client;
 
@@ -29,14 +34,15 @@ public class InterFAXJerseyClient implements InterFAXClient {
         initializeClient();
     }
 
-    public net.interfax.rest.client.domain.Response sendFax(final String faxNumber, final File fileToSendAsFax) {
+    public Response sendFax(final String faxNumber, final File fileToSendAsFax) {
 
         javax.ws.rs.core.Response response = null;
         Response apiResponse = null;
 
         try {
 
-            final WebTarget target = client.target(String.format(OUTBOUND_FAXES_ENDPOINT, faxNumber));
+            URI outboundFaxesUri = UriBuilder.fromUri(outboundFaxesEndpoint).queryParam("faxNumber", faxNumber).build();
+            WebTarget target = client.target(outboundFaxesUri);
             response = target
                             .request()
                             .header("Content-Type", "application/pdf")
@@ -76,6 +82,9 @@ public class InterFAXJerseyClient implements InterFAXClient {
             httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
             client = ClientBuilder.newClient();
             client.register(httpAuthenticationFeature);
+
+            ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "config.yaml").getTestConfig();
+            outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
         } finally {
             reentrantLock.unlock();
         }

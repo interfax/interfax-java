@@ -1,22 +1,29 @@
 package net.interfax.rest.client.impl;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.Response;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
 
+
 public class InterFAXJerseyClientTest {
+
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule(8089);
 
     @Test
     public void testSendFax() throws Exception {
+
+        String faxNumber = "+442084978672";
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
         File file = new File(absoluteFilePath);
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
-        Response response = interFAXClient.sendFax("+442084978672", file);
-
+        Response response = interFAXClient.sendFax(faxNumber, file);
         System.out.println(response.getStatusCode());
     }
 }

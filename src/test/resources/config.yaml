@@ -1,0 +1,2 @@
+interFAX:
+  outboundFaxesEndpoint: "http://localhost:8089/outbound/faxes"

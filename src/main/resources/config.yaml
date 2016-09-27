@@ -1,0 +1,2 @@
+interFAX:
+  outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"
