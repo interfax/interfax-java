@@ -77,13 +77,14 @@ public class InterFAXJerseyClient implements InterFAXClient {
             if (client != null)
                 return;
 
-            username = System.getenv("interfax-api-username");
-            password = System.getenv("interfax-api-password");
+            ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "config.yaml").getTestConfig();
+
+            username = clientConfig.getInterFAX().getApiUsername();
+            password = clientConfig.getInterFAX().getApiPassword();
             httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
             client = ClientBuilder.newClient();
             client.register(httpAuthenticationFeature);
 
-            ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "config.yaml").getTestConfig();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
         } finally {
             reentrantLock.unlock();

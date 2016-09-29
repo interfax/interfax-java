@@ -1,2 +1,4 @@
 interFAX:
+  apiUsername: ${interfax-api-username:-username}
+  apiPassword: ${interfax-api-password:-password}
   outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"
