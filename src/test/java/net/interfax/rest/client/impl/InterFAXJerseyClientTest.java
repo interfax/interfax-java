@@ -2,7 +2,7 @@ package net.interfax.rest.client.impl;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
-import net.interfax.rest.client.domain.Response;
+import net.interfax.rest.client.domain.APIResponse;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class InterFAXJerseyClientTest {
         File file = new File(absoluteFilePath);
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
-        Response response = interFAXClient.sendFax(faxNumber, file);
-        Assert.assertEquals(201, response.getStatusCode());
+        APIResponse apiResponse = interFAXClient.sendFax(faxNumber, file);
+        Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 }

@@ -1,6 +1,6 @@
 package net.interfax.rest.client.domain;
 
-public class Response {
+public class APIResponse {
 
     private int statusCode;
     private String responseBody;

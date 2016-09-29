@@ -3,7 +3,7 @@ package net.interfax.rest.client.impl;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.config.ClientConfig;
 import net.interfax.rest.client.config.ConfigLoader;
-import net.interfax.rest.client.domain.Response;
+import net.interfax.rest.client.domain.APIResponse;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +34,10 @@ public class InterFAXJerseyClient implements InterFAXClient {
         initializeClient();
     }
 
-    public Response sendFax(final String faxNumber, final File fileToSendAsFax) {
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) {
 
         javax.ws.rs.core.Response response = null;
-        Response apiResponse = null;
+        APIResponse apiResponse = null;
 
         try {
 
@@ -48,7 +48,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                             .header("Content-Type", "application/pdf")
                             .post(Entity.entity(fileToSendAsFax, "application/pdf"));
 
-            apiResponse = new Response();
+            apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
 
             if (response.hasEntity())
