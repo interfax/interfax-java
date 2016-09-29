@@ -4,7 +4,12 @@
     "urlPath" : "/outbound/faxes",
     "queryParameters" : {
       "faxNumber" : {
-        "matches" : ".*"
+        "equalTo" : "+442084978672"
+      }
+    },
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
       }
     },
     "method" : "POST",

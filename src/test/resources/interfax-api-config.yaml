@@ -1,5 +1,3 @@
 interFAX:
-  apiUsername: ${interfax-api-username:-username}
-  apiPassword: ${interfax-api-password:-password}
   outboundFaxesEndpoint: "http://localhost:8089/outbound/faxes"
   #outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"

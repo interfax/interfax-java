@@ -2,6 +2,7 @@ package net.interfax.rest.client.impl;
 
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.config.ClientConfig;
+import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -29,9 +30,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
     private static final Logger log = LoggerFactory.getLogger(InterFAXJerseyClient.class);
 
+    public InterFAXJerseyClient(String username, String password) {
+
+        this.username = username;
+        this.password = password;
+
+        initializeClient(username, password);
+    }
+
     public InterFAXJerseyClient() {
 
-        initializeClient();
+        initialiseCredentials();
+        initializeClient(username, password);
     }
 
     public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) {
@@ -69,7 +79,15 @@ public class InterFAXJerseyClient implements InterFAXClient {
         client.close();
     }
 
-    private void initializeClient() {
+    private void initialiseCredentials() {
+
+        ClientCredentials clientCredentials = new ConfigLoader<>(ClientCredentials.class, "interfax-api-credentials.yaml").getTestConfig();
+
+        username = clientCredentials.getUsername();
+        password = clientCredentials.getPassword();
+    }
+
+    private void initializeClient(String username, String password) {
 
         reentrantLock.lock();
         try {
@@ -77,10 +95,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             if (client != null)
                 return;
 
-            ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "config.yaml").getTestConfig();
-
-            username = clientConfig.getInterFAX().getApiUsername();
-            password = clientConfig.getInterFAX().getApiPassword();
+            ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
             httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
             client = ClientBuilder.newClient();
             client.register(httpAuthenticationFeature);
