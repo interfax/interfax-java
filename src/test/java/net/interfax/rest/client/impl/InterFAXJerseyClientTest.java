@@ -3,6 +3,7 @@ package net.interfax.rest.client.impl;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.Response;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -24,6 +25,6 @@ public class InterFAXJerseyClientTest {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         Response response = interFAXClient.sendFax(faxNumber, file);
-        System.out.println(response.getStatusCode());
+        Assert.assertEquals(201, response.getStatusCode());
     }
 }
