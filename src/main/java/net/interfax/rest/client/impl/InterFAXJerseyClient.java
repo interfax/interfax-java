@@ -5,6 +5,7 @@ import net.interfax.rest.client.config.ClientConfig;
 import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
+import org.apache.tika.Tika;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesEndpoint;
     private static HttpAuthenticationFeature httpAuthenticationFeature;
     private static Client client;
+    private static Tika tika;
 
     private final ReentrantLock reentrantLock = new ReentrantLock();
 
@@ -51,12 +53,14 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
         try {
 
+            String contentType = tika.detect(fileToSendAsFax);
+
             URI outboundFaxesUri = UriBuilder.fromUri(outboundFaxesEndpoint).queryParam("faxNumber", faxNumber).build();
             WebTarget target = client.target(outboundFaxesUri);
             response = target
                             .request()
-                            .header("Content-Type", "application/pdf")
-                            .post(Entity.entity(fileToSendAsFax, "application/pdf"));
+                            .header("Content-Type", contentType)
+                            .post(Entity.entity(fileToSendAsFax, contentType));
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
@@ -99,6 +103,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
             httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
             client = ClientBuilder.newClient();
             client.register(httpAuthenticationFeature);
+
+            tika = new Tika();
 
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
         } finally {
