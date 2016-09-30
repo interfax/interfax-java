@@ -7,6 +7,9 @@ import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import org.apache.tika.Tika;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.media.multipart.MultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +17,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.net.URI;
@@ -24,7 +29,6 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String username;
     private static String password;
     private static String outboundFaxesEndpoint;
-    private static HttpAuthenticationFeature httpAuthenticationFeature;
     private static Client client;
     private static Tika tika;
 
@@ -34,8 +38,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
     public InterFAXJerseyClient(String username, String password) {
 
-        this.username = username;
-        this.password = password;
+        InterFAXJerseyClient.username = username;
+        InterFAXJerseyClient.password = password;
 
         initializeClient(username, password);
     }
@@ -48,7 +52,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) {
 
-        javax.ws.rs.core.Response response = null;
+        Response response = null;
         APIResponse apiResponse = null;
 
         try {
@@ -61,6 +65,46 @@ public class InterFAXJerseyClient implements InterFAXClient {
                             .request()
                             .header("Content-Type", contentType)
                             .post(Entity.entity(fileToSendAsFax, contentType));
+
+            apiResponse = new APIResponse();
+            apiResponse.setStatusCode(response.getStatus());
+
+            if (response.hasEntity())
+                apiResponse.setResponseBody(response.readEntity(String.class));
+
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return apiResponse;
+    }
+
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) {
+
+        Response response = null;
+        APIResponse apiResponse = null;
+
+        try {
+
+            MultiPart multiPart = new MultiPart();
+            int count = 1;
+            for (File file : filesToSendAsFax) {
+                String contentType = tika.detect(file);
+                String entityName = "file"+count++;
+                FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(entityName, file, MediaType.valueOf(contentType));
+                multiPart.bodyPart(fileDataBodyPart);
+            }
+
+            URI outboundFaxesUri = UriBuilder.fromUri(outboundFaxesEndpoint).queryParam("faxNumber", faxNumber).build();
+            WebTarget target = client.target(outboundFaxesUri);
+            target.register(MultiPartFeature.class);
+            response = target
+                    .request()
+                    .header("Content-Type", "multipart/mixed")
+                    .post(Entity.entity(multiPart, multiPart.getMediaType()));
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
@@ -100,9 +144,10 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 return;
 
             ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
-            httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
+            HttpAuthenticationFeature httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
             client = ClientBuilder.newClient();
             client.register(httpAuthenticationFeature);
+            client.register(MultiPartFeature.class);
 
             tika = new Tika();
 

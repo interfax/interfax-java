@@ -8,4 +8,6 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax);
 
+    public APIResponse sendFax(final String faxNumber, final File[] fileToSendAsFax);
+
 }
