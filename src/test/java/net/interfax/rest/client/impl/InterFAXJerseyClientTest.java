@@ -25,6 +25,7 @@ public class InterFAXJerseyClientTest {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         APIResponse apiResponse = interFAXClient.sendFax(faxNumber, file);
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/666639902]", apiResponse.getHeaders().get("Location").toString());
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 
@@ -38,9 +39,8 @@ public class InterFAXJerseyClientTest {
         File[] files = {file1, file2};
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
-
         APIResponse apiResponse = interFAXClient.sendFax(faxNumber, files);
-
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 }

@@ -22,6 +22,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class InterFAXJerseyClient implements InterFAXClient {
@@ -68,7 +70,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
-
+            copyHeadersToAPIResponse(response, apiResponse);
             if (response.hasEntity())
                 apiResponse.setResponseBody(response.readEntity(String.class));
 
@@ -108,7 +110,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
-
+            copyHeadersToAPIResponse(response, apiResponse);
             if (response.hasEntity())
                 apiResponse.setResponseBody(response.readEntity(String.class));
 
@@ -125,6 +127,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public void closeClient() {
 
         client.close();
+    }
+
+    private void copyHeadersToAPIResponse(Response response, APIResponse apiResponse) {
+
+        Map<String, Object> headers = new HashMap<>();
+        response.getStringHeaders().forEach(headers::put);
+        apiResponse.setHeaders(headers);
     }
 
     private void initialiseCredentials() {
