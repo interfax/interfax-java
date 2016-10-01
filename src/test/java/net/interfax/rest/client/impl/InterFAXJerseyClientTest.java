@@ -43,4 +43,16 @@ public class InterFAXJerseyClientTest {
         Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
+
+
+    @Test
+    public void testUploadDocument() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.uploadDocument(file);
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+    }
 }
