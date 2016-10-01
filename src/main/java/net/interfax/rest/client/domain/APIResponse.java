@@ -1,12 +1,13 @@
 package net.interfax.rest.client.domain;
 
+import java.util.List;
 import java.util.Map;
 
 public class APIResponse {
 
     private int statusCode;
     private String responseBody;
-    private Map<String, Object> headers;
+    private Map<String, List<Object>> headers;
 
     public int getStatusCode() {
         return statusCode;
@@ -24,11 +25,11 @@ public class APIResponse {
         this.responseBody = responseBody;
     }
 
-    public Map<String, Object> getHeaders() {
+    public Map<String, List<Object>> getHeaders() {
         return headers;
     }
 
-    public void setHeaders(final Map<String, Object> headers) {
+    public void setHeaders(final Map<String, List<Object>> headers) {
         this.headers = headers;
     }
 }
