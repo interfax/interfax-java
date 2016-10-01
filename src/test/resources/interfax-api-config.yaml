@@ -1,3 +1,6 @@
 interFAX:
+  scheme: "http"
+  hostname: "localhost"
   outboundFaxesEndpoint: "http://localhost:8089/outbound/faxes"
   #outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"
+  outboundDocumentsEndpoint: "/outbound/documents"

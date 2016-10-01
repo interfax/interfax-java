@@ -1,0 +1,32 @@
+{
+  "uuid" : "2f41c6e9-fe60-4123-a524-a3515f919eb6",
+  "request" : {
+    "url" : "/outbound/documents/3d475b6ff1614f28a2abae0b2d6adae8",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      },
+      "Range": {
+        "matches": "bytes=19922944-.*"
+      }
+    },
+    "bodyPatterns" : [ {
+      "matches" : ".*"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-outbound-documents-documentId-upload-chunks.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "X-Content-Range": "bytes0-1024",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Fri, 30 Sep 2016 23:10:26 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f77ab532171663ad7085d18a26315d8da139242103be655d5d4553b2e7102430e; Path=/"
+    }
+  }
+}
