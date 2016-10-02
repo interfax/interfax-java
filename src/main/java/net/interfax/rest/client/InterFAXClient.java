@@ -32,6 +32,8 @@ public interface InterFAXClient {
 
     public UploadedDocumentStatus[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options);
 
+    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId);
+
     // client lifecycle
 
     public void closeClient();

@@ -294,6 +294,38 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId) {
+
+        Response response = null;
+        UploadedDocumentStatus uploadedDocumentStatus = null;
+
+        try {
+
+            URI outboundDocumentUri = UriBuilder
+                    .fromPath(outboundDocumentsEndpoint+"/"+documentId)
+                    .scheme(scheme)
+                    .host(hostname)
+                    .port(port)
+                    .build();
+
+            WebTarget target = client.target(outboundDocumentUri);
+            response = target
+                    .request()
+                    .get();
+
+            uploadedDocumentStatus = response.readEntity(UploadedDocumentStatus.class);
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return uploadedDocumentStatus;
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();

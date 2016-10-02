@@ -103,4 +103,13 @@ public class InterFAXJerseyClientTest {
         Assert.assertEquals("sampledoc.pdf", uploadedDocumentStatuses[0].getFileName());
         Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentStatuses[1].getFileName());
     }
+
+    @Test
+    public void testGetUploadedDocumentStatus() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        UploadedDocumentStatus uploadedDocumentStatus = interFAXClient.getUploadedDocumentStatus("deca890355b44b42944970d9773962b5");
+
+        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentStatus.getFileName());
+    }
 }

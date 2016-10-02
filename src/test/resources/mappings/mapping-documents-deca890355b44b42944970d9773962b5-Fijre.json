@@ -1,0 +1,26 @@
+{
+  "uuid" : "0f6c6b71-9f2c-34b5-8bcc-9e08bd0b1aad",
+  "request" : {
+    "url" : "/outbound/documents/deca890355b44b42944970d9773962b5",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-documents-deca890355b44b42944970d9773962b5-Fijre.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sun, 02 Oct 2016 22:20:00 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f85447bde0d80fae51021bfdc3cf9a1127f39ee271b62ced17a4f408a0b205d79; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}
