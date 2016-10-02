@@ -6,6 +6,8 @@ public class InterFAX {
 
     private String hostname;
 
+    private int port;
+
     private String outboundFaxesEndpoint;
 
     private String outboundDocumentsEndpoint;
@@ -24,6 +26,14 @@ public class InterFAX {
 
     public void setHostname(final String hostname) {
         this.hostname = hostname;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(final int port) {
+        this.port = port;
     }
 
     public String getOutboundFaxesEndpoint() {
