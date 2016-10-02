@@ -6,11 +6,13 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.UploadedDocumentResponse;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -40,6 +42,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String password;
     private static String scheme;
     private static String hostname;
+    private static int port;
     private static String outboundFaxesEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
@@ -152,7 +155,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         try {
 
             // create document upload session
-            URI outboundDocumentsUri = getUploadDocumentsUri(fileToUpload, options);
+            URI outboundDocumentsUri = getOutboundDocumentsUri(fileToUpload, options);
 
             WebTarget target = client.target(outboundDocumentsUri);
             response = target
@@ -257,12 +260,45 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public UploadedDocumentResponse[] getUploadedDocumentsList() {
+
+        Response response = null;
+        UploadedDocumentResponse[] uploadedDocumentResponses = null;
+
+        try {
+
+            URI outboundDocumentsUriToGetDocumentsList
+                        = UriBuilder
+                                .fromPath(outboundDocumentsEndpoint)
+                                .scheme(scheme)
+                                .host(hostname)
+                                .port(port)
+                                .build();
+
+            WebTarget target = client.target(outboundDocumentsUriToGetDocumentsList);
+            response = target
+                    .request()
+                    .get();
+
+            uploadedDocumentResponses = response.readEntity(UploadedDocumentResponse[].class);
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return uploadedDocumentResponses;
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
     }
 
-    private URI getUploadDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
+    private URI getOutboundDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
 
         DocumentUploadSessionOptions reqOptions = options.orElse(null);
 
@@ -270,7 +306,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 .fromPath(outboundDocumentsEndpoint)
                 .scheme(scheme)
                 .host(hostname)
-                .port(8089)
+                .port(port)
                 .queryParam("size", options.isPresent() ? reqOptions.getSize().orElse(fileToUpload.length()) : fileToUpload.length())
                 .queryParam("name", options.isPresent() ? reqOptions.getName().orElse(fileToUpload.getName()) : fileToUpload.getName());
 
@@ -317,6 +353,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             client.register(httpAuthenticationFeature);
             client.register(MultiPartFeature.class);
             client.register(RequestEntityProcessing.CHUNKED);
+            client.register(JacksonFeature.class);
 
             // required for the document upload API, to set Content-Length header
             System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -327,6 +364,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             // read config from yaml
             scheme = clientConfig.getInterFAX().getScheme();
             hostname = clientConfig.getInterFAX().getHostname();
+            port = clientConfig.getInterFAX().getPort();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {

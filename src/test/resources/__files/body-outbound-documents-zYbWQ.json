@@ -1,0 +1,26 @@
+[
+  {
+    "userId": "devexp-java",
+    "fileName": "sampledoc.pdf",
+    "fileSize": 82318,
+    "uploaded": 0,
+    "uri": "https://rest.interfax.net/outbound/documents/133e202d1a144141b48e89e902e8d1bd",
+    "creationTime": "2016-09-30T22:33:58",
+    "lastusageTime": "2016-09-30T22:33:58",
+    "status": "Created",
+    "disposition": "SingleUse",
+    "sharing": "Private"
+  },
+  {
+    "userId": "devexp-java",
+    "fileName": "A17_FlightPlan.pdf",
+    "fileSize": 20702285,
+    "uploaded": 0,
+    "uri": "https://rest.interfax.net/outbound/documents/deca890355b44b42944970d9773962b5",
+    "creationTime": "2016-09-30T22:36:14",
+    "lastusageTime": "2016-09-30T22:36:14",
+    "status": "Created",
+    "disposition": "SingleUse",
+    "sharing": "Private"
+  }
+]

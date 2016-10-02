@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.UploadedDocumentResponse;
 import net.interfax.rest.client.domain.enums.Disposition;
 import net.interfax.rest.client.domain.enums.Sharing;
 import org.junit.Assert;
@@ -74,5 +75,16 @@ public class InterFAXJerseyClientTest {
         documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
         APIResponse apiResponse = interFAXClient.uploadDocument(file, Optional.of(documentUploadSessionOptions));
         Assert.assertEquals(200, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testGetUploadedDocumentsList() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient("devexp-java", "ZAQ!zaq1");
+        UploadedDocumentResponse[] uploadedDocumentResponses = interFAXClient.getUploadedDocumentsList();
+
+        Assert.assertEquals(2, uploadedDocumentResponses.length);
+        Assert.assertEquals("sampledoc.pdf", uploadedDocumentResponses[0].getFileName());
+        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentResponses[1].getFileName());
     }
 }
