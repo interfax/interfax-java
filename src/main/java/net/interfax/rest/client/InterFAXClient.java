@@ -16,4 +16,15 @@ public interface InterFAXClient {
 
     public APIResponse uploadDocument(final File fileToUpload);
 
+    public APIResponse uploadChunk(
+            String uploadChunkToDocumentEndpoint,
+            byte[] bytesToUpload,
+            int startByteRange,
+            int endByteRange,
+            boolean lastChunk);
+
+    // client lifecycle
+
+    public void closeClient();
+
 }

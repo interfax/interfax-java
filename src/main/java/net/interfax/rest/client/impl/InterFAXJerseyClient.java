@@ -200,6 +200,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         return apiResponse;
     }
 
+    @Override
     public APIResponse uploadChunk(
             String uploadChunkToDocumentEndpoint,
             byte[] bytesToUpload,
@@ -255,6 +256,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         return apiResponse;
     }
 
+    @Override
     public void closeClient() {
 
         client.close();
