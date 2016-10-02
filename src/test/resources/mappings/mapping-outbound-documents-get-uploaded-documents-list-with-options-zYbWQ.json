@@ -2,7 +2,12 @@
   "uuid" : "dfb85de7-dc1f-4a86-8937-10264bf51847",
   "request" : {
     "url" : "/outbound/documents?limit=5&offset=1",
-    "method" : "GET"
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
   },
   "response" : {
     "status" : 200,
