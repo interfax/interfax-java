@@ -1,0 +1,21 @@
+{
+  "uuid" : "dfb85de7-dc1f-4a86-8937-10264bf51847",
+  "request" : {
+    "url" : "/outbound/documents?limit=5&offset=1",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-outbound-documents-zYbWQ.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sun, 02 Oct 2016 20:48:21 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3fa3bc0ab6010b916d03ce4c7d6eee049c5a4b71b39ebd0fbad5542bd5170dc192; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

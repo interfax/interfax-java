@@ -2,6 +2,7 @@ package net.interfax.rest.client;
 
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.UploadedDocumentResponse;
 
 import java.io.File;
@@ -28,6 +29,8 @@ public interface InterFAXClient {
                                    boolean lastChunk);
 
     public UploadedDocumentResponse[] getUploadedDocumentsList();
+
+    public UploadedDocumentResponse[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options);
 
     // client lifecycle
 

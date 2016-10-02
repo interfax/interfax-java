@@ -6,6 +6,7 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.UploadedDocumentResponse;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
@@ -262,18 +263,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public UploadedDocumentResponse[] getUploadedDocumentsList() {
 
+        return getUploadedDocumentsList(Optional.empty());
+    }
+
+    @Override
+    public UploadedDocumentResponse[] getUploadedDocumentsList(final Optional<GetUploadedDocumentsListOptions> options) {
+
         Response response = null;
         UploadedDocumentResponse[] uploadedDocumentResponses = null;
 
         try {
 
-            URI outboundDocumentsUriToGetDocumentsList
-                        = UriBuilder
-                                .fromPath(outboundDocumentsEndpoint)
-                                .scheme(scheme)
-                                .host(hostname)
-                                .port(port)
-                                .build();
+            URI outboundDocumentsUriToGetDocumentsList = getUploadedDocumentListUri(options);
 
             WebTarget target = client.target(outboundDocumentsUriToGetDocumentsList);
             response = target
@@ -321,6 +322,29 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         return outboundDocumentsUriBuilder.build();
+    }
+
+    private URI getUploadedDocumentListUri(final Optional<GetUploadedDocumentsListOptions> options) {
+
+        GetUploadedDocumentsListOptions reqOptions = options.orElse(null);
+
+        UriBuilder uriBuilder = UriBuilder
+                                        .fromPath(outboundDocumentsEndpoint)
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port);
+
+        if (options.isPresent()) {
+            if (reqOptions.getLimit().isPresent()) {
+                uriBuilder.queryParam("limit", reqOptions.getLimit().get());
+            }
+            if (reqOptions.getOffset().isPresent()) {
+                uriBuilder.queryParam("offset", reqOptions.getOffset().get());
+            }
+
+        }
+
+        return uriBuilder.build();
     }
 
     private void copyHeadersToAPIResponse(Response response, APIResponse apiResponse) {
