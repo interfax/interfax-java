@@ -3,11 +3,15 @@ package net.interfax.rest.client.impl;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
+import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.enums.Disposition;
+import net.interfax.rest.client.domain.enums.Sharing;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Optional;
 
 
 public class InterFAXJerseyClientTest {
@@ -53,6 +57,22 @@ public class InterFAXJerseyClientTest {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         APIResponse apiResponse = interFAXClient.uploadDocument(file);
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testUploadDocumentWithOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        DocumentUploadSessionOptions documentUploadSessionOptions = new DocumentUploadSessionOptions();
+        documentUploadSessionOptions.setName(Optional.of("overriddenname.pdf"));
+        documentUploadSessionOptions.setSize(Optional.of(Integer.toUnsignedLong(12345)));
+        documentUploadSessionOptions.setDisposition(Optional.of(Disposition.multiUse));
+        documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
+        APIResponse apiResponse = interFAXClient.uploadDocument(file, Optional.of(documentUploadSessionOptions));
         Assert.assertEquals(200, apiResponse.getStatusCode());
     }
 }

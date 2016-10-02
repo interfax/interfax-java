@@ -5,6 +5,7 @@ import net.interfax.rest.client.config.ClientConfig;
 import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
+import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
@@ -30,6 +31,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class InterFAXJerseyClient implements InterFAXClient {
@@ -138,20 +140,19 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse uploadDocument(final File fileToUpload) {
 
+        return uploadDocument(fileToUpload, Optional.empty());
+    }
+
+    @Override
+    public APIResponse uploadDocument(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
+
         Response response = null;
         APIResponse apiResponse = new APIResponse();
 
         try {
 
             // create document upload session
-            URI outboundDocumentsUri = UriBuilder
-                    .fromPath(outboundDocumentsEndpoint)
-                    .scheme(scheme)
-                    .host(hostname)
-                    .port(8089)
-                    .queryParam("size", fileToUpload.length())
-                    .queryParam("name", fileToUpload.getName())
-                    .build();
+            URI outboundDocumentsUri = getUploadDocumentsUri(fileToUpload, options);
 
             WebTarget target = client.target(outboundDocumentsUri);
             response = target
@@ -201,12 +202,11 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public APIResponse uploadChunk(
-            String uploadChunkToDocumentEndpoint,
-            byte[] bytesToUpload,
-            int startByteRange,
-            int endByteRange,
-            boolean lastChunk) {
+    public APIResponse uploadChunk(String uploadChunkToDocumentEndpoint,
+                                   byte[] bytesToUpload,
+                                   int startByteRange,
+                                   int endByteRange,
+                                   boolean lastChunk) {
 
         Response response = null;
         APIResponse apiResponse = new APIResponse();
@@ -260,6 +260,31 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public void closeClient() {
 
         client.close();
+    }
+
+    private URI getUploadDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
+
+        DocumentUploadSessionOptions reqOptions = options.orElse(null);
+
+        UriBuilder outboundDocumentsUriBuilder = UriBuilder
+                .fromPath(outboundDocumentsEndpoint)
+                .scheme(scheme)
+                .host(hostname)
+                .port(8089)
+                .queryParam("size", options.isPresent() ? reqOptions.getSize().orElse(fileToUpload.length()) : fileToUpload.length())
+                .queryParam("name", options.isPresent() ? reqOptions.getName().orElse(fileToUpload.getName()) : fileToUpload.getName());
+
+        if (options.isPresent()) {
+            if (reqOptions.getDisposition().isPresent()) {
+                outboundDocumentsUriBuilder.queryParam("disposition", reqOptions.getDisposition().get().toString());
+            }
+
+            if (reqOptions.getSharing().isPresent()) {
+                outboundDocumentsUriBuilder.queryParam("sharing", reqOptions.getSharing().get().toString());
+            }
+        }
+
+        return outboundDocumentsUriBuilder.build();
     }
 
     private void copyHeadersToAPIResponse(Response response, APIResponse apiResponse) {

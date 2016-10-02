@@ -1,8 +1,10 @@
 package net.interfax.rest.client;
 
 import net.interfax.rest.client.domain.APIResponse;
+import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 
 import java.io.File;
+import java.util.Optional;
 
 public interface InterFAXClient {
 
@@ -12,16 +14,17 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final File[] fileToSendAsFax);
 
-    // Uploading documents
+    // documents
 
     public APIResponse uploadDocument(final File fileToUpload);
 
-    public APIResponse uploadChunk(
-            String uploadChunkToDocumentEndpoint,
-            byte[] bytesToUpload,
-            int startByteRange,
-            int endByteRange,
-            boolean lastChunk);
+    public APIResponse uploadDocument(final File fileToUpload, Optional<DocumentUploadSessionOptions> options);
+
+    public APIResponse uploadChunk(String uploadChunkToDocumentEndpoint,
+                                   byte[] bytesToUpload,
+                                   int startByteRange,
+                                   int endByteRange,
+                                   boolean lastChunk);
 
     // client lifecycle
 
