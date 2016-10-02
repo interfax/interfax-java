@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UploadedDocumentResponse {
+public class UploadedDocumentStatus {
 
     private String userId;
     private String fileName;

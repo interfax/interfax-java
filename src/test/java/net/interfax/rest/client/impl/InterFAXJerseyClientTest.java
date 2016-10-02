@@ -5,7 +5,7 @@ import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
-import net.interfax.rest.client.domain.UploadedDocumentResponse;
+import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.domain.enums.Disposition;
 import net.interfax.rest.client.domain.enums.Sharing;
 import org.junit.Assert;
@@ -82,11 +82,11 @@ public class InterFAXJerseyClientTest {
     public void testGetUploadedDocumentsList() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
-        UploadedDocumentResponse[] uploadedDocumentResponses = interFAXClient.getUploadedDocumentsList();
+        UploadedDocumentStatus[] uploadedDocumentStatuses = interFAXClient.getUploadedDocumentsList();
 
-        Assert.assertEquals(2, uploadedDocumentResponses.length);
-        Assert.assertEquals("sampledoc.pdf", uploadedDocumentResponses[0].getFileName());
-        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentResponses[1].getFileName());
+        Assert.assertEquals(2, uploadedDocumentStatuses.length);
+        Assert.assertEquals("sampledoc.pdf", uploadedDocumentStatuses[0].getFileName());
+        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentStatuses[1].getFileName());
     }
 
     @Test
@@ -96,11 +96,11 @@ public class InterFAXJerseyClientTest {
         GetUploadedDocumentsListOptions getUploadedDocumentsListOptions = new GetUploadedDocumentsListOptions();
         getUploadedDocumentsListOptions.setLimit(Optional.of(5));
         getUploadedDocumentsListOptions.setOffset(Optional.of(1));
-        UploadedDocumentResponse[] uploadedDocumentResponses
+        UploadedDocumentStatus[] uploadedDocumentStatuses
                 = interFAXClient.getUploadedDocumentsList(Optional.of(getUploadedDocumentsListOptions));
 
-        Assert.assertEquals(2, uploadedDocumentResponses.length);
-        Assert.assertEquals("sampledoc.pdf", uploadedDocumentResponses[0].getFileName());
-        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentResponses[1].getFileName());
+        Assert.assertEquals(2, uploadedDocumentStatuses.length);
+        Assert.assertEquals("sampledoc.pdf", uploadedDocumentStatuses[0].getFileName());
+        Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentStatuses[1].getFileName());
     }
 }

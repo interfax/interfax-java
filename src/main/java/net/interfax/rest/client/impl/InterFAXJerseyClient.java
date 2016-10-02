@@ -7,7 +7,7 @@ import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
-import net.interfax.rest.client.domain.UploadedDocumentResponse;
+import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
@@ -261,16 +261,16 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public UploadedDocumentResponse[] getUploadedDocumentsList() {
+    public UploadedDocumentStatus[] getUploadedDocumentsList() {
 
         return getUploadedDocumentsList(Optional.empty());
     }
 
     @Override
-    public UploadedDocumentResponse[] getUploadedDocumentsList(final Optional<GetUploadedDocumentsListOptions> options) {
+    public UploadedDocumentStatus[] getUploadedDocumentsList(final Optional<GetUploadedDocumentsListOptions> options) {
 
         Response response = null;
-        UploadedDocumentResponse[] uploadedDocumentResponses = null;
+        UploadedDocumentStatus[] uploadedDocumentStatuses = null;
 
         try {
 
@@ -281,7 +281,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                     .request()
                     .get();
 
-            uploadedDocumentResponses = response.readEntity(UploadedDocumentResponse[].class);
+            uploadedDocumentStatuses = response.readEntity(UploadedDocumentStatus[].class);
         } catch (Exception e) {
             log.error("Exception occurred while sending fax", e);
 
@@ -290,7 +290,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 response.close();
         }
 
-        return uploadedDocumentResponses;
+        return uploadedDocumentStatuses;
     }
 
     @Override
