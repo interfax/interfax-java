@@ -139,7 +139,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public APIResponse uploadDocument(final File fileToUpload) {
 
         Response response = null;
-        APIResponse apiResponse = null;
+        APIResponse apiResponse = new APIResponse();
 
         try {
 
@@ -169,16 +169,9 @@ public class InterFAXJerseyClient implements InterFAXClient {
             // upload chunks
             if (apiResponse.getStatusCode() == Response.Status.CREATED.getStatusCode()) {
 
-                String uploadChunkToDocumentPath = URI
+                String uploadChunkToDocumentEndpoint = URI
                                                     .create(apiResponse.getHeaders().get("Location").get(0).toString())
                                                     .getPath();
-
-                URI uploadChunkToDocumentEndpoint = UriBuilder
-                        .fromPath(uploadChunkToDocumentPath)
-                        .scheme(scheme)
-                        .host(hostname)
-                        .port(8089)
-                        .build();
 
                 InputStream inputStream = new FileInputStream(fileToUpload);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
@@ -187,40 +180,73 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 int bytesUploaded = 0;
                 for (int i=0; i<chunks.length; i++) {
 
-                    target = client.target(uploadChunkToDocumentEndpoint);
-                    response = target
-                            .request()
-                            .header("Range", "bytes="+bytesUploaded+"-"+(bytesUploaded+chunks[i].length-1))
-                            .post(Entity.entity(chunks[i], MediaType.APPLICATION_OCTET_STREAM_TYPE));
-
-                    bytesUploaded += chunks[i].length;
-
-                    int expectedResponseCode = Response.Status.ACCEPTED.getStatusCode();
+                    boolean lastChunk = false;
                     if (i == chunks.length-1) {
-                        expectedResponseCode = Response.Status.OK.getStatusCode();
+                        lastChunk = true;
                     }
-
-                    if (response.getStatus() == expectedResponseCode) {
-                        log.info(
-                                "chunk uploaded at {}; totalByesUploaded = {}; chunksRemaining = {}",
-                                uploadChunkToDocumentEndpoint.toString(),
-                                bytesUploaded,
-                                chunks.length-i-1
-                        );
-                    } else {
-                        // TODO: define and use a custom exception
-                        throw new Exception("Unexpected response code when uploading chunk"+response.getStatus());
-                    }
+                    apiResponse = uploadChunk(uploadChunkToDocumentEndpoint, chunks[i], bytesUploaded, bytesUploaded+chunks[i].length-1, lastChunk);
+                    bytesUploaded += chunks[i].length;
                 }
-
-                apiResponse = new APIResponse();
-                apiResponse.setStatusCode(response.getStatus());
-                copyHeadersToAPIResponse(response, apiResponse);
             }
 
         } catch (Exception e) {
             log.error("Exception occurred while sending fax", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return apiResponse;
+    }
+
+    public APIResponse uploadChunk(
+            String uploadChunkToDocumentEndpoint,
+            byte[] bytesToUpload,
+            int startByteRange,
+            int endByteRange,
+            boolean lastChunk) {
+
+        Response response = null;
+        APIResponse apiResponse = new APIResponse();
+
+        try {
+            URI uploadChunkToDocumentUri = UriBuilder
+                    .fromPath(uploadChunkToDocumentEndpoint)
+                    .scheme(scheme)
+                    .host(hostname)
+                    .port(8089)
+                    .build();
+
+            WebTarget target = client.target(uploadChunkToDocumentUri);
+            response = target
+                    .request()
+                    .header("Range", "bytes="+startByteRange+"-"+endByteRange)
+                    .post(Entity.entity(bytesToUpload, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+
+            int expectedResponseCode = lastChunk ?
+                                        Response.Status.OK.getStatusCode():
+                                        Response.Status.ACCEPTED.getStatusCode();
+
+            if (response.getStatus() == expectedResponseCode) {
+                log.info(
+                        "chunk uploaded at {}; totalByesUploaded = {}; lastChunk = {}",
+                        uploadChunkToDocumentEndpoint,
+                        endByteRange,
+                        lastChunk
+                );
+            } else {
+                // TODO: define and use a custom exception
+                throw new Exception("Unexpected response code when uploading chunk"+response.getStatus());
+            }
+
+            apiResponse.setStatusCode(response.getStatus());
+            copyHeadersToAPIResponse(response, apiResponse);
+
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+            apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+
         } finally {
             if (response != null)
                 response.close();
