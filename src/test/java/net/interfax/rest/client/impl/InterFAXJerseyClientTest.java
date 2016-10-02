@@ -112,4 +112,13 @@ public class InterFAXJerseyClientTest {
 
         Assert.assertEquals("A17_FlightPlan.pdf", uploadedDocumentStatus.getFileName());
     }
+
+    @Test
+    public void testCancelDocumentUploadSession() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.cancelDocumentUploadSession("deca890355b44b42944970d9773962b5");
+
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+    }
 }

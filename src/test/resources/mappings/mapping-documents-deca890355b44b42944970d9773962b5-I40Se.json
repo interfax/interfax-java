@@ -1,0 +1,25 @@
+{
+  "uuid" : "7c99b09f-8465-35d9-8e7a-fcbc007f25ff",
+  "request" : {
+    "url" : "/outbound/documents/deca890355b44b42944970d9773962b5",
+    "method" : "DELETE",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-documents-deca890355b44b42944970d9773962b5-I40Se.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sun, 02 Oct 2016 22:36:21 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f32451f20e1cdfc407db3779f010459edf2dd0cec2bb6010e55a699656fa5a6cd; Path=/"
+    }
+  }
+}

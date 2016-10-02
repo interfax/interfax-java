@@ -34,6 +34,8 @@ public interface InterFAXClient {
 
     public UploadedDocumentStatus getUploadedDocumentStatus(String documentId);
 
+    public APIResponse cancelDocumentUploadSession(String documentId);
+
     // client lifecycle
 
     public void closeClient();
