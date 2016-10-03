@@ -50,6 +50,13 @@ public class InterFAXJerseyClientTest {
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 
+    @Test
+    public void testSendFaxUsingPreviouslyUploadedDocUrl() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.sendFax(faxNumber, "https://rest.interfax.net/outbound/documents/90bd5477d5944c6d884c610171b75258");
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
 
     @Test
     public void testUploadDocument() throws Exception {

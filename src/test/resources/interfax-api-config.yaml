@@ -2,6 +2,5 @@ interFAX:
   scheme: "http"
   hostname: "localhost"
   port: 8089
-  outboundFaxesEndpoint: "http://localhost:8089/outbound/faxes"
-  #outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"
+  outboundFaxesEndpoint: "/outbound/faxes"
   outboundDocumentsEndpoint: "/outbound/documents"

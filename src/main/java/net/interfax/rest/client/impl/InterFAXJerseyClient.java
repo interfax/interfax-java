@@ -77,7 +77,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             String contentType = tika.detect(fileToSendAsFax);
 
-            URI outboundFaxesUri = UriBuilder.fromUri(outboundFaxesEndpoint).queryParam("faxNumber", faxNumber).build();
+            URI outboundFaxesUri = UriBuilder
+                                        .fromPath(outboundFaxesEndpoint)
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port)
+                                        .queryParam("faxNumber", faxNumber)
+                                        .build();
             WebTarget target = client.target(outboundFaxesUri);
             response = target
                             .request()
@@ -117,7 +123,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 multiPart.bodyPart(fileDataBodyPart);
             }
 
-            URI outboundFaxesUri = UriBuilder.fromUri(outboundFaxesEndpoint).queryParam("faxNumber", faxNumber).build();
+            URI outboundFaxesUri = UriBuilder
+                                        .fromPath(outboundFaxesEndpoint)
+                                        .queryParam("faxNumber", faxNumber)
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port)
+                                        .build();
             WebTarget target = client.target(outboundFaxesUri);
             target.register(MultiPartFeature.class);
             response = target
@@ -130,6 +142,44 @@ public class InterFAXJerseyClient implements InterFAXClient {
             copyHeadersToAPIResponse(response, apiResponse);
             if (response.hasEntity())
                 apiResponse.setResponseBody(response.readEntity(String.class));
+
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return apiResponse;
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) {
+
+        Response response = null;
+        APIResponse apiResponse = null;
+
+        try {
+
+            URI outboundFaxesUri = UriBuilder
+                                        .fromPath(outboundFaxesEndpoint)
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port)
+                                        .queryParam("faxNumber", faxNumber).build();
+            WebTarget target = client.target(outboundFaxesUri);
+            response = target
+                    .request()
+                    .header("Content-Location", urlOfDoc)
+                    .header("Content-Length", 0)
+                    .post(null);
+
+            apiResponse = new APIResponse();
+            apiResponse.setStatusCode(response.getStatus());
+            copyHeadersToAPIResponse(response, apiResponse);
+            if (response.hasEntity())
+                apiResponse.setResponseBody(response.readEntity(String.class));
+
 
         } catch (Exception e) {
             log.error("Exception occurred while sending fax", e);
@@ -183,15 +233,17 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 int chunkSize = 1024*1024;
                 byte[][] chunks = ArrayUtil.chunkArray(bytes, chunkSize);
                 int bytesUploaded = 0;
+                APIResponse chunkUploadResponses = new APIResponse();
                 for (int i=0; i<chunks.length; i++) {
 
                     boolean lastChunk = false;
                     if (i == chunks.length-1) {
                         lastChunk = true;
                     }
-                    apiResponse = uploadChunk(uploadChunkToDocumentEndpoint, chunks[i], bytesUploaded, bytesUploaded+chunks[i].length-1, lastChunk);
+                    chunkUploadResponses = uploadChunk(uploadChunkToDocumentEndpoint, chunks[i], bytesUploaded, bytesUploaded+chunks[i].length-1, lastChunk);
                     bytesUploaded += chunks[i].length;
                 }
+                apiResponse.setStatusCode(chunkUploadResponses.getStatusCode());
             }
 
         } catch (Exception e) {

@@ -16,6 +16,8 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final File[] fileToSendAsFax);
 
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc);
+
     // documents
 
     public APIResponse uploadDocument(final File fileToUpload);

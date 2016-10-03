@@ -1,0 +1,31 @@
+{
+  "uuid" : "93ae980e-0974-3b10-b6fe-52a7a0b92d56",
+  "request" : {
+    "url" : "/outbound/faxes?faxNumber=%2B442084978672",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      },
+      "Content-Location": {
+        "equalTo" : "https://rest.interfax.net/outbound/documents/90bd5477d5944c6d884c610171b75258"
+      },
+      "Content-Length": {
+        "equalTo" : "0"
+      }
+    },
+    "method" : "POST"
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-outbound-faxes-RBc8I.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Location" : "https://rest.interfax.net/outbound/faxes/667915751",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Mon, 03 Oct 2016 00:36:29 GMT"
+    }
+  }
+}
