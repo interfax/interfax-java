@@ -220,7 +220,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                     .fromPath(uploadChunkToDocumentEndpoint)
                     .scheme(scheme)
                     .host(hostname)
-                    .port(8089)
+                    .port(port)
                     .build();
 
             WebTarget target = client.target(uploadChunkToDocumentUri);
