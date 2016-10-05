@@ -1,4 +1,4 @@
-# InterFAX Java Library - Under development and not ready for prime time use. Please check back on Oct 6, 2016.
+# InterFAX Java Library - Under development and not ready for prime time use. Please check back on Oct 8, 2016.
 
 ## Introduction
 
