@@ -3,6 +3,7 @@ package net.interfax.rest.client;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 
 import java.io.File;
@@ -14,9 +15,15 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax);
 
-    public APIResponse sendFax(final String faxNumber, final File[] fileToSendAsFax);
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax, final Optional<SendFaxOptions> options);
+
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax);
+
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax, final Optional<SendFaxOptions> options);
 
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc);
+
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options);
 
     // documents
 

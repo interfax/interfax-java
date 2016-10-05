@@ -1,26 +1,31 @@
 {
-  "uuid" : "166b6a3c-48a4-3f0e-b7c5-398ede572de5",
+  "uuid" : "4e11b24c-358c-42d7-a63a-03bb2a4f76b6",
   "request" : {
-    "url" : "/outbound/documents",
-    "method" : "GET",
+    "url" : "/outbound/faxes?faxNumber=%2B442084978672&pageSize=a4",
     "headers": {
       "Authorization": {
         "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      },
+      "Content-Type": {
+        "matches" : "multipart/mixed.*"
       }
-    }
+    },
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "matches" : ".*test\\.pdf.*test\\.pdf.*"
+    } ]
   },
   "response" : {
-    "status" : 200,
-    "bodyFileName" : "body-outbound-documents-zYbWQ.json",
+    "status" : 201,
+    "bodyFileName" : "body-outbound-faxes-geyUE.json",
     "headers" : {
       "Cache-Control" : "private",
       "Content-Type" : "text/json",
+      "Location" : "https://rest.interfax.net/outbound/faxes/667457707",
       "Access-Control-Allow-Origin" : "*",
       "Access-Control-Allow-Methods" : "*",
       "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
-      "Date" : "Sun, 02 Oct 2016 20:48:21 GMT",
-      "Set-Cookie" : "TS0194c058=0173233f3fa3bc0ab6010b916d03ce4c7d6eee049c5a4b71b39ebd0fbad5542bd5170dc192; Path=/",
-      "Transfer-Encoding" : "chunked"
+      "Date" : "Fri, 30 Sep 2016 13:33:45 GMT"
     }
   }
 }

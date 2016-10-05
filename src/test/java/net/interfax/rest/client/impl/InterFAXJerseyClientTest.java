@@ -5,6 +5,7 @@ import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.domain.enums.Disposition;
 import net.interfax.rest.client.domain.enums.Sharing;
@@ -36,6 +37,21 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
+    public void testSendFaxWithOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        sendFaxOptions.setContact(Optional.of("testContactName"));
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.sendFax(faxNumber, file, Optional.of(sendFaxOptions));
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/666639902]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
     public void testSendMultipleFilesAsFax() throws Exception {
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
@@ -51,10 +67,43 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
+    public void testSendMultipleFilesAsFaxWithOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        File file1 = new File(absoluteFilePath);
+        File file2 = new File(absoluteFilePath);
+
+        File[] files = {file1, file2};
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        sendFaxOptions.setPageSize(Optional.of("a4"));
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.sendFax(faxNumber, files, Optional.of(sendFaxOptions));
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+
+    }
+
+    @Test
     public void testSendFaxUsingPreviouslyUploadedDocUrl() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         APIResponse apiResponse = interFAXClient.sendFax(faxNumber, "https://rest.interfax.net/outbound/documents/90bd5477d5944c6d884c610171b75258");
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testSendFaxUsingPreviouslyUploadedDocUrlWithOptions() throws Exception {
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        sendFaxOptions.setReplyAddress(Optional.of("reply@example.com"));
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.sendFax(
+                                        faxNumber,
+                                        "https://rest.interfax.net/outbound/documents/90bd5477d5944c6d884c610171b75258",
+                                        Optional.of(sendFaxOptions));
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 

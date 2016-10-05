@@ -7,6 +7,7 @@ import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
@@ -70,6 +71,12 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) {
 
+        return sendFax(faxNumber, fileToSendAsFax, Optional.empty());
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax, final Optional<SendFaxOptions> options) {
+
         Response response = null;
         APIResponse apiResponse = null;
 
@@ -77,18 +84,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             String contentType = tika.detect(fileToSendAsFax);
 
-            URI outboundFaxesUri = UriBuilder
-                                        .fromPath(outboundFaxesEndpoint)
-                                        .scheme(scheme)
-                                        .host(hostname)
-                                        .port(port)
-                                        .queryParam("faxNumber", faxNumber)
-                                        .build();
+            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+
             WebTarget target = client.target(outboundFaxesUri);
             response = target
-                            .request()
-                            .header("Content-Type", contentType)
-                            .post(Entity.entity(fileToSendAsFax, contentType));
+                    .request()
+                    .header("Content-Type", contentType)
+                    .post(Entity.entity(fileToSendAsFax, contentType));
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
@@ -109,6 +111,12 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) {
 
+        return sendFax(faxNumber, filesToSendAsFax, Optional.empty());
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax, final Optional<SendFaxOptions> options) {
+
         Response response = null;
         APIResponse apiResponse = null;
 
@@ -123,13 +131,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 multiPart.bodyPart(fileDataBodyPart);
             }
 
-            URI outboundFaxesUri = UriBuilder
-                                        .fromPath(outboundFaxesEndpoint)
-                                        .queryParam("faxNumber", faxNumber)
-                                        .scheme(scheme)
-                                        .host(hostname)
-                                        .port(port)
-                                        .build();
+            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
             WebTarget target = client.target(outboundFaxesUri);
             target.register(MultiPartFeature.class);
             response = target
@@ -156,17 +158,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc) {
 
+        return sendFax(faxNumber, urlOfDoc, Optional.empty());
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) {
+
         Response response = null;
         APIResponse apiResponse = null;
 
         try {
 
-            URI outboundFaxesUri = UriBuilder
-                                        .fromPath(outboundFaxesEndpoint)
-                                        .scheme(scheme)
-                                        .host(hostname)
-                                        .port(port)
-                                        .queryParam("faxNumber", faxNumber).build();
+            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
             WebTarget target = client.target(outboundFaxesUri);
             response = target
                     .request()
@@ -418,6 +421,35 @@ public class InterFAXJerseyClient implements InterFAXClient {
         client.close();
     }
 
+    private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {
+
+        UriBuilder outboundFaxesUriBuilder = UriBuilder
+                .fromPath(outboundFaxesEndpoint)
+                .scheme(scheme)
+                .host(hostname)
+                .port(port)
+                .queryParam("faxNumber", faxNumber);
+
+        if (options.isPresent()) {
+            SendFaxOptions reqOptions = options.orElse(null);
+
+            reqOptions.getContact().ifPresent(x -> outboundFaxesUriBuilder.queryParam("contact", x));
+            reqOptions.getCsid().ifPresent(x -> outboundFaxesUriBuilder.queryParam("csid", x));
+            reqOptions.getFitToPage().ifPresent(x -> outboundFaxesUriBuilder.queryParam("fitToPage", x));
+            reqOptions.getPageHeader().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageHeader", x));
+            reqOptions.getPageOrientation().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageOrientation", x));
+            reqOptions.getPageSize().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageSize", x));
+            reqOptions.getPostponeTime().ifPresent(x -> outboundFaxesUriBuilder.queryParam("postponeTime", x));
+            reqOptions.getReference().ifPresent(x -> outboundFaxesUriBuilder.queryParam("reference", x));
+            reqOptions.getRendering().ifPresent(x -> outboundFaxesUriBuilder.queryParam("rendering", x));
+            reqOptions.getReplyAddress().ifPresent(x -> outboundFaxesUriBuilder.queryParam("replyAddress", x));
+            reqOptions.getResolution().ifPresent(x -> outboundFaxesUriBuilder.queryParam("resolution", x));
+            reqOptions.getRetriesToPerform().ifPresent(x -> outboundFaxesUriBuilder.queryParam("retriesToPerform", x));
+        }
+
+        return outboundFaxesUriBuilder.build();
+    }
+
     private URI getOutboundDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
 
         DocumentUploadSessionOptions reqOptions = options.orElse(null);
@@ -431,13 +463,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 .queryParam("name", options.isPresent() ? reqOptions.getName().orElse(fileToUpload.getName()) : fileToUpload.getName());
 
         if (options.isPresent()) {
-            if (reqOptions.getDisposition().isPresent()) {
-                outboundDocumentsUriBuilder.queryParam("disposition", reqOptions.getDisposition().get().toString());
-            }
-
-            if (reqOptions.getSharing().isPresent()) {
-                outboundDocumentsUriBuilder.queryParam("sharing", reqOptions.getSharing().get().toString());
-            }
+            reqOptions.getDisposition().ifPresent(x -> outboundDocumentsUriBuilder.queryParam("disposition", x.toString()));
+            reqOptions.getSharing().ifPresent(x -> outboundDocumentsUriBuilder.queryParam("sharing", x.toString()));
         }
 
         return outboundDocumentsUriBuilder.build();
