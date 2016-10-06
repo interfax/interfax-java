@@ -1,5 +1,7 @@
 # InterFAX Java Library - Under development and not ready for prime time use. Please check back on Oct 8, 2016.
 
+[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java)
+
 ## Introduction
 
 Send and receive faxes in Java with the [InterFAX REST API](https://www.interfax.net/en/dev/rest/reference).
