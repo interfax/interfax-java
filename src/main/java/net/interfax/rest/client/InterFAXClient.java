@@ -31,6 +31,8 @@ public interface InterFAXClient {
 
     public OutboundFaxStructure[] getFaxList(Optional<GetFaxListOptions> options);
 
+    public OutboundFaxStructure[] getCompletedFaxList(String[] ids);
+
     // documents
 
     public APIResponse uploadDocument(final File fileToUpload);

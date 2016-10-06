@@ -10,6 +10,8 @@ public class InterFAX {
 
     private String outboundFaxesEndpoint;
 
+    private String outboundFaxesCompletedEndpoint;
+
     private String outboundDocumentsEndpoint;
 
     public String getScheme() {
@@ -42,6 +44,14 @@ public class InterFAX {
 
     public void setOutboundFaxesEndpoint(final String outboundFaxesEndpoint) {
         this.outboundFaxesEndpoint = outboundFaxesEndpoint;
+    }
+
+    public String getOutboundFaxesCompletedEndpoint() {
+        return outboundFaxesCompletedEndpoint;
+    }
+
+    public void setOutboundFaxesCompletedEndpoint(final String outboundFaxesCompletedEndpoint) {
+        this.outboundFaxesCompletedEndpoint = outboundFaxesCompletedEndpoint;
     }
 
     public String getOutboundDocumentsEndpoint() {

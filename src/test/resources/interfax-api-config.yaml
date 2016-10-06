@@ -3,4 +3,5 @@ interFAX:
   hostname: "localhost"
   port: 8089
   outboundFaxesEndpoint: "/outbound/faxes"
+  outboundFaxesCompletedEndpoint: "/outbound/faxes/completed"
   outboundDocumentsEndpoint: "/outbound/documents"

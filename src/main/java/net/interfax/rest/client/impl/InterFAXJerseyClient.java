@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String hostname;
     private static int port;
     private static String outboundFaxesEndpoint;
+    private static String outboundFaxesCompletedEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
     private static Tika tika;
@@ -221,6 +223,39 @@ public class InterFAXJerseyClient implements InterFAXClient {
             }
 
             WebTarget target = client.target(outboundFaxesUriBuilder.build());
+            response = target
+                    .request()
+                    .get();
+
+            outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
+
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return outboundFaxStructures;
+    }
+
+    @Override
+    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) {
+
+        Response response = null;
+        OutboundFaxStructure[] outboundFaxStructures = null;
+
+        try {
+
+            URI outboundFaxesCompletedUri = UriBuilder
+                                                .fromPath(outboundFaxesCompletedEndpoint)
+                                                .host(hostname)
+                                                .scheme(scheme)
+                                                .port(port)
+                                                .queryParam("ids", getCsvIds(ids))
+                                                .build();
+
+            WebTarget target = client.target(outboundFaxesCompletedUri);
             response = target
                     .request()
                     .get();
@@ -543,6 +578,11 @@ public class InterFAXJerseyClient implements InterFAXClient {
         apiResponse.setHeaders(headers);
     }
 
+    private String getCsvIds(final String[] ids) {
+
+        return Arrays.stream(ids).reduce((x, y)  -> x + "," + y).get();
+    }
+
     private void initialiseCredentials() {
 
         ClientCredentials clientCredentials = new ConfigLoader<>(ClientCredentials.class, "interfax-api-credentials.yaml").getTestConfig();
@@ -579,6 +619,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             hostname = clientConfig.getInterFAX().getHostname();
             port = clientConfig.getInterFAX().getPort();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
+            outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {
             reentrantLock.unlock();

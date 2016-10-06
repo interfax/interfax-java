@@ -1,0 +1,30 @@
+[
+  {
+    "userId": "devexp-java",
+    "pagesSent": 1,
+    "completionTime": "2016-10-03T00:34:44",
+    "remoteCSID": "Interfax",
+    "duration": 41,
+    "priority": 5,
+    "units": 1.00,
+    "costPerUnit": 0.1500,
+    "attemptsMade": 1,
+    "id": 667915471,
+    "uri": "https://rest.interfax.net/outbound/faxes/667915471",
+    "status": 0
+  },
+  {
+    "userId": "devexp-java",
+    "pagesSent": 1,
+    "completionTime": "2016-10-03T00:36:36",
+    "remoteCSID": "Interfax",
+    "duration": 41,
+    "priority": 2,
+    "units": 1.00,
+    "costPerUnit": 0.1500,
+    "attemptsMade": 1,
+    "id": 667915751,
+    "uri": "https://rest.interfax.net/outbound/faxes/667915751",
+    "status": 0
+  }
+]

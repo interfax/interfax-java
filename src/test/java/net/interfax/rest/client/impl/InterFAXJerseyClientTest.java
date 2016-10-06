@@ -129,6 +129,15 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
+    public void testGetCompletedFaxList() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        OutboundFaxStructure[] outboundFaxStructures = interFAXClient.getCompletedFaxList(new String[]{"667915751", "667915471"});
+        Assert.assertEquals(2, outboundFaxStructures.length);
+        Assert.assertEquals("667915751", outboundFaxStructures[1].getId());
+    }
+
+    @Test
     public void testUploadDocument() throws Exception {
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();

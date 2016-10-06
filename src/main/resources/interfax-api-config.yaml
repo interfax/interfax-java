@@ -3,4 +3,5 @@ interFAX:
   hostname: "rest.interfax.net"
   port: 443
   outboundFaxesEndpoint: "/outbound/faxes"
+  outboundFaxesCompletedEndpoint: "/outbound/faxes/completed"
   outboundDocumentsEndpoint: "/outbound/documents"

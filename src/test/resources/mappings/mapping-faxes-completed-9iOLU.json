@@ -1,0 +1,26 @@
+{
+  "uuid" : "b783b48e-03fd-3b13-ac35-f4ee6d0363eb",
+  "request" : {
+    "url" : "/outbound/faxes/completed?ids=667915751%2C667915471",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-faxes-completed-9iOLU.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Thu, 06 Oct 2016 21:45:24 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f5a46f6e98bfce6ee01969006e41b190b4ef68d91e2fc2b010cbc0839c2963cee; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}
