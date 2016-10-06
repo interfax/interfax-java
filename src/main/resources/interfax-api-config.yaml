@@ -2,5 +2,5 @@ interFAX:
   scheme: "https"
   hostname: "rest.interfax.net"
   port: 443
-  outboundFaxesEndpoint: "https://rest.interfax.net/outbound/faxes"
+  outboundFaxesEndpoint: "/outbound/faxes"
   outboundDocumentsEndpoint: "/outbound/documents"

@@ -7,6 +7,7 @@ import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.util.ArrayUtil;
@@ -192,6 +193,33 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         return apiResponse;
+    }
+
+    @Override
+    public OutboundFaxStructure[] getFaxList() {
+
+        Response response = null;
+        OutboundFaxStructure[] outboundFaxStructures = null;
+        try {
+
+            URI outboundFaxesUri =
+                    UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port).build();
+
+            WebTarget target = client.target(outboundFaxesUri);
+            response = target
+                    .request()
+                    .get();
+
+            outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
+
+        } catch (Exception e) {
+            log.error("Exception occurred while sending fax", e);
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return outboundFaxStructures;
     }
 
     @Override

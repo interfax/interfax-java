@@ -5,6 +5,7 @@ import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.domain.enums.Disposition;
@@ -105,6 +106,14 @@ public class InterFAXJerseyClientTest {
                                         "https://rest.interfax.net/outbound/documents/90bd5477d5944c6d884c610171b75258",
                                         Optional.of(sendFaxOptions));
         Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testGetFaxList() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        OutboundFaxStructure[] outboundFaxStructures = interFAXClient.getFaxList();
+        Assert.assertEquals(25, outboundFaxStructures.length);
     }
 
     @Test
