@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
@@ -114,6 +115,17 @@ public class InterFAXJerseyClientTest {
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         OutboundFaxStructure[] outboundFaxStructures = interFAXClient.getFaxList();
         Assert.assertEquals(25, outboundFaxStructures.length);
+    }
+
+    @Test
+    public void testGetFaxListWithOptions() throws Exception {
+
+        GetFaxListOptions getFaxListOptions = new GetFaxListOptions();
+        getFaxListOptions.setLimit(Optional.of(5));
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        OutboundFaxStructure[] outboundFaxStructures = interFAXClient.getFaxList(Optional.of(getFaxListOptions));
+        Assert.assertEquals(5, outboundFaxStructures.length);
     }
 
     @Test

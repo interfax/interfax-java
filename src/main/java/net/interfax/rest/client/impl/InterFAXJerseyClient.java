@@ -6,6 +6,7 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
@@ -198,14 +199,28 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public OutboundFaxStructure[] getFaxList() {
 
+        return getFaxList(Optional.empty());
+    }
+
+    @Override
+    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options) {
+
         Response response = null;
         OutboundFaxStructure[] outboundFaxStructures = null;
         try {
 
-            URI outboundFaxesUri =
-                    UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port).build();
+            UriBuilder outboundFaxesUriBuilder =
+                    UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port);
 
-            WebTarget target = client.target(outboundFaxesUri);
+            if (options.isPresent()) {
+                GetFaxListOptions reqOptions = options.orElse(null);
+                reqOptions.getLastId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("lastId", x));
+                reqOptions.getLimit().ifPresent(x -> outboundFaxesUriBuilder.queryParam("limit", x));
+                reqOptions.getSortOrder().ifPresent(x -> outboundFaxesUriBuilder.queryParam("sortOrder", x));
+                reqOptions.getUserId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("userId", x));
+            }
+
+            WebTarget target = client.target(outboundFaxesUriBuilder.build());
             response = target
                     .request()
                     .get();

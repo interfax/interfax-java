@@ -1,0 +1,25 @@
+{
+  "uuid" : "2ba08c42-4d39-3c84-82fc-5358bc6caa34",
+  "request" : {
+    "url" : "/outbound/faxes?limit=5",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-outbound-faxes-zfEBX.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Thu, 06 Oct 2016 21:24:25 GMT",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}
