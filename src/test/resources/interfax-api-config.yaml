@@ -4,4 +4,5 @@ interFAX:
   port: 8089
   outboundFaxesEndpoint: "/outbound/faxes"
   outboundFaxesCompletedEndpoint: "/outbound/faxes/completed"
+  outboundFaxImageEndpoint: "/outbound/faxes/%s/image"
   outboundDocumentsEndpoint: "/outbound/documents"

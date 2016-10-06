@@ -1,0 +1,26 @@
+{
+  "uuid" : "246972e2-04fe-329b-a67b-70364feaa36c",
+  "request" : {
+    "url" : "/outbound/faxes/667915751/image",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-667915751-image-Z4hvu.tiff",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "image/tiff",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Thu, 06 Oct 2016 23:18:58 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f2eb57b7c3b8577ae85f8b50e41273ac8a0bd8724896b51d2efd994457601a308; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

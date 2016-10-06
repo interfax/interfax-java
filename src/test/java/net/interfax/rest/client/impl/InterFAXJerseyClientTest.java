@@ -11,6 +11,7 @@ import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.domain.enums.Disposition;
 import net.interfax.rest.client.domain.enums.Sharing;
+import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -135,6 +136,26 @@ public class InterFAXJerseyClientTest {
         OutboundFaxStructure[] outboundFaxStructures = interFAXClient.getCompletedFaxList(new String[]{"667915751", "667915471"});
         Assert.assertEquals(2, outboundFaxStructures.length);
         Assert.assertEquals("667915751", outboundFaxStructures[1].getId());
+    }
+
+    @Test
+    public void testGetFaxImage() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        byte[] faxImage = interFAXClient.getFaxImage("667915751");
+        Assert.assertEquals(30072, faxImage.length);
+    }
+
+    @Test(expected = UnsuccessfulStatusCodeException.class)
+    public void testGetFaxImageWithInvalidId() throws Exception {
+
+        try {
+            InterFAXClient interFAXClient = new InterFAXJerseyClient();
+            interFAXClient.getFaxImage("1234");
+        } catch (UnsuccessfulStatusCodeException e) {
+            Assert.assertEquals("Unsuccessful response from API. Status code = 404", e.getMessage());
+            throw new UnsuccessfulStatusCodeException(e.getMessage());
+        }
     }
 
     @Test

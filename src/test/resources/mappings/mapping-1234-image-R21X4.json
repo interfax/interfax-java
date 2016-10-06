@@ -1,0 +1,26 @@
+{
+  "uuid" : "b13505d7-1f8e-3391-8e88-de35bc4325e2",
+  "request" : {
+    "url" : "/outbound/faxes/1234/image",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 404,
+    "bodyFileName" : "body-1234-image-R21X4.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Thu, 06 Oct 2016 23:22:32 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f422462da6830c32e8aaf13614fff27a33a98bdbc8148c3c8b04fc5fbd55d341f; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

@@ -7,6 +7,7 @@ import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
+import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 
 import java.io.File;
 import java.util.Optional;
@@ -32,6 +33,8 @@ public interface InterFAXClient {
     public OutboundFaxStructure[] getFaxList(Optional<GetFaxListOptions> options);
 
     public OutboundFaxStructure[] getCompletedFaxList(String[] ids);
+
+    public byte[] getFaxImage(String id) throws UnsuccessfulStatusCodeException;
 
     // documents
 

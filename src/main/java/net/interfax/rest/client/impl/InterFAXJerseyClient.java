@@ -11,6 +11,7 @@ import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
+import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 import net.interfax.rest.client.util.ArrayUtil;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
@@ -32,6 +33,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
@@ -50,6 +52,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static int port;
     private static String outboundFaxesEndpoint;
     private static String outboundFaxesCompletedEndpoint;
+    private static String outboundFaxImageEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
     private static Tika tika;
@@ -270,6 +273,38 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         return outboundFaxStructures;
+    }
+
+    @Override
+    public byte[] getFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+
+        Response response = null;
+        byte[] responseBytes = null;
+        try {
+
+            URI uri = UriBuilder
+                        .fromPath(String.format(outboundFaxImageEndpoint, id))
+                        .host(hostname)
+                        .scheme(scheme)
+                        .port(port)
+                        .build();
+
+            response = client.target(uri).request().get();
+            if (response.getStatus() == 200) {
+                InputStream inputStream = response.readEntity(InputStream.class);
+                responseBytes = IOUtils.toByteArray(inputStream);
+                inputStream.close();
+            } else {
+                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API. Status code = " + response.getStatus());
+            }
+        } catch (IOException e) {
+            log.error("Exception occurred while sending fax", e);
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return responseBytes;
     }
 
     @Override
@@ -620,6 +655,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             port = clientConfig.getInterFAX().getPort();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
             outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
+            outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {
             reentrantLock.unlock();
