@@ -622,8 +622,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
                                         .port(port);
 
         if (options.isPresent()) {
-            reqOptions.getLimit().ifPresent(x -> uriBuilder.queryParam("limit", reqOptions.getLimit()));
-            reqOptions.getOffset().ifPresent(x -> uriBuilder.queryParam("offset", reqOptions.getLimit()));
+            reqOptions.getLimit().ifPresent(x -> uriBuilder.queryParam("limit", reqOptions.getLimit().get()));
+            reqOptions.getOffset().ifPresent(x -> uriBuilder.queryParam("offset", reqOptions.getOffset().get()));
         }
 
         return uriBuilder.build();
