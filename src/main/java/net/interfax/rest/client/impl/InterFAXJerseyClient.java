@@ -52,6 +52,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static int port;
     private static String outboundFaxesEndpoint;
     private static String outboundFaxesCompletedEndpoint;
+    private static String outbountFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
@@ -259,9 +260,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                                                 .build();
 
             WebTarget target = client.target(outboundFaxesCompletedUri);
-            response = target
-                    .request()
-                    .get();
+            response = target.request().get();
 
             outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
 
@@ -273,6 +272,36 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         return outboundFaxStructures;
+    }
+
+    @Override
+    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
+
+        Response response = null;
+        OutboundFaxStructure outboundFaxStructure = null;
+        try {
+
+            URI outboundFaxesRecordUri = UriBuilder
+                                            .fromUri(String.format(outbountFaxesRecordEndpoint, id))
+                                            .scheme(scheme)
+                                            .host(hostname)
+                                            .port(port)
+                                            .build();
+
+            WebTarget target = client.target(outboundFaxesRecordUri);
+            response = target.request().get();
+
+            if (response.getStatus() == 200) {
+                outboundFaxStructure = response.readEntity(OutboundFaxStructure.class);
+            } else {
+                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
+            }
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return outboundFaxStructure;
     }
 
     @Override
@@ -295,7 +324,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 responseBytes = IOUtils.toByteArray(inputStream);
                 inputStream.close();
             } else {
-                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API. Status code = " + response.getStatus());
+                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
             }
         } catch (IOException e) {
             log.error("Exception occurred while sending fax", e);
@@ -545,7 +574,6 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
         if (options.isPresent()) {
             SendFaxOptions reqOptions = options.orElse(null);
-
             reqOptions.getContact().ifPresent(x -> outboundFaxesUriBuilder.queryParam("contact", x));
             reqOptions.getCsid().ifPresent(x -> outboundFaxesUriBuilder.queryParam("csid", x));
             reqOptions.getFitToPage().ifPresent(x -> outboundFaxesUriBuilder.queryParam("fitToPage", x));
@@ -594,13 +622,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
                                         .port(port);
 
         if (options.isPresent()) {
-            if (reqOptions.getLimit().isPresent()) {
-                uriBuilder.queryParam("limit", reqOptions.getLimit().get());
-            }
-            if (reqOptions.getOffset().isPresent()) {
-                uriBuilder.queryParam("offset", reqOptions.getOffset().get());
-            }
-
+            reqOptions.getLimit().ifPresent(x -> uriBuilder.queryParam("limit", reqOptions.getLimit()));
+            reqOptions.getOffset().ifPresent(x -> uriBuilder.queryParam("offset", reqOptions.getLimit()));
         }
 
         return uriBuilder.build();
@@ -655,6 +678,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             port = clientConfig.getInterFAX().getPort();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
             outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
+            outbountFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {

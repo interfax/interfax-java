@@ -139,6 +139,15 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
+    public void testGetFaxRecord() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        OutboundFaxStructure outboundFaxStructure = interFAXClient.getFaxRecord("667915751");
+        Assert.assertEquals("667915751", outboundFaxStructure.getId());
+        Assert.assertEquals("2016-10-03T00:36:41", outboundFaxStructure.getSubmitTime());
+    }
+
+    @Test
     public void testGetFaxImage() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();

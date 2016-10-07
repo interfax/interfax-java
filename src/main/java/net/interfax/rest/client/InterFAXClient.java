@@ -34,6 +34,8 @@ public interface InterFAXClient {
 
     public OutboundFaxStructure[] getCompletedFaxList(String[] ids);
 
+    public OutboundFaxStructure getFaxRecord(String id) throws UnsuccessfulStatusCodeException;
+
     public byte[] getFaxImage(String id) throws UnsuccessfulStatusCodeException;
 
     // documents

@@ -12,6 +12,8 @@ public class InterFAX {
 
     private String outboundFaxesCompletedEndpoint;
 
+    private String outboundFaxesRecordEndpoint;
+
     private String outboundFaxImageEndpoint;
 
     private String outboundDocumentsEndpoint;
@@ -54,6 +56,14 @@ public class InterFAX {
 
     public void setOutboundFaxesCompletedEndpoint(final String outboundFaxesCompletedEndpoint) {
         this.outboundFaxesCompletedEndpoint = outboundFaxesCompletedEndpoint;
+    }
+
+    public String getOutboundFaxesRecordEndpoint() {
+        return outboundFaxesRecordEndpoint;
+    }
+
+    public void setOutboundFaxesRecordEndpoint(final String outboundFaxesRecordEndpoint) {
+        this.outboundFaxesRecordEndpoint = outboundFaxesRecordEndpoint;
     }
 
     public String getOutboundFaxImageEndpoint() {
