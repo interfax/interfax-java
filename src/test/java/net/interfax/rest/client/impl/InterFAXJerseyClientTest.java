@@ -162,7 +162,8 @@ public class InterFAXJerseyClientTest {
             InterFAXClient interFAXClient = new InterFAXJerseyClient();
             interFAXClient.getFaxImage("1234");
         } catch (UnsuccessfulStatusCodeException e) {
-            Assert.assertEquals("Unsuccessful response from API. Status code = 404", e.getMessage());
+            Assert.assertEquals("Unsuccessful response from API", e.getMessage());
+            Assert.assertEquals(404, e.getStatusCode());
             throw new UnsuccessfulStatusCodeException(e.getMessage());
         }
     }
