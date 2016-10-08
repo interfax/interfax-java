@@ -7,6 +7,7 @@ import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
+import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.domain.enums.Disposition;
@@ -183,6 +184,18 @@ public class InterFAXJerseyClientTest {
         OutboundFaxStructure[] outboundFaxStructures = interFAXClient.searchFaxList();
         Assert.assertEquals(25, outboundFaxStructures.length);
         Assert.assertEquals("667915751", outboundFaxStructures[0].getId());
+    }
+
+    @Test
+    public void testSearchFaxListWithOptions() throws Exception {
+
+        SearchFaxOptions searchFaxOptions = new SearchFaxOptions();
+        searchFaxOptions.setLimit(Optional.of(3));
+        searchFaxOptions.setFaxNumber(Optional.of("+442084978672"));
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        OutboundFaxStructure[] outboundFaxStructures = interFAXClient.searchFaxList(Optional.of(searchFaxOptions));
+        Assert.assertEquals(3, outboundFaxStructures.length);
+        Assert.assertEquals("667915476", outboundFaxStructures[1].getId());
     }
 
     @Test

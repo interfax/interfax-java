@@ -6,6 +6,7 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
@@ -314,6 +315,29 @@ public class InterFAXJerseyClient implements InterFAXClient {
                                             uri,
                                             OutboundFaxStructure[].class,
                                             target -> target.request().get()
+        );
+    }
+
+    @Override
+    public OutboundFaxStructure[] searchFaxList(final Optional<SearchFaxOptions> options) {
+
+        UriBuilder uriBuilder = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port);
+        if (options.isPresent()) {
+            options.get().getIds().ifPresent(x -> uriBuilder.queryParam("ids", x));
+            options.get().getReference().ifPresent(x -> uriBuilder.queryParam("reference", x));
+            options.get().getDateFrom().ifPresent(x -> uriBuilder.queryParam("dateFrom", x));
+            options.get().getDateTo().ifPresent(x -> uriBuilder.queryParam("dateTo", x));
+            options.get().getStatus().ifPresent(x -> uriBuilder.queryParam("status", x));
+            options.get().getUserId().ifPresent(x -> uriBuilder.queryParam("userId", x));
+            options.get().getFaxNumber().ifPresent(x -> uriBuilder.queryParam("faxNumber", x));
+            options.get().getLimit().ifPresent(x -> uriBuilder.queryParam("limit", x));
+            options.get().getOffset().ifPresent(x -> uriBuilder.queryParam("offset", x));
+        }
+
+        return  (OutboundFaxStructure[]) executeGetRequest(
+                uriBuilder.build(),
+                OutboundFaxStructure[].class,
+                target -> target.request().get()
         );
     }
 

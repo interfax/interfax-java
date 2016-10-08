@@ -2,6 +2,7 @@ package net.interfax.rest.client;
 
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
@@ -46,6 +47,8 @@ public interface InterFAXClient {
     public APIResponse cancelFax(final String id);
 
     public OutboundFaxStructure[] searchFaxList();
+
+    public OutboundFaxStructure[] searchFaxList(Optional<SearchFaxOptions> options);
 
     // documents
 
