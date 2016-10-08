@@ -26,6 +26,8 @@ public class InterFAX {
 
     private String outboundDocumentsEndpoint;
 
+    private String accountsBalanceEndpoint;
+
     public String getScheme() {
         return scheme;
     }
@@ -120,5 +122,13 @@ public class InterFAX {
 
     public void setOutboundFaxesHideEndpoint(final String outboundFaxesHideEndpoint) {
         this.outboundFaxesHideEndpoint = outboundFaxesHideEndpoint;
+    }
+
+    public String getAccountsBalanceEndpoint() {
+        return accountsBalanceEndpoint;
+    }
+
+    public void setAccountsBalanceEndpoint(final String accountsBalanceEndpoint) {
+        this.accountsBalanceEndpoint = accountsBalanceEndpoint;
     }
 }

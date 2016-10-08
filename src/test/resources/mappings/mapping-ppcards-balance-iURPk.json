@@ -1,0 +1,26 @@
+{
+  "uuid" : "24396aaa-7cff-353d-a27f-f259a1b273b6",
+  "request" : {
+    "url" : "/accounts/self/ppcards/balance",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-ppcards-balance-iURPk.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 22:08:11 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f7818abb4102eaa835dd394f04479e6f4d765e61010262349f59501ed51fa7389; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

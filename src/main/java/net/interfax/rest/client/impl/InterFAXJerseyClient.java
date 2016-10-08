@@ -60,6 +60,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesHideEndpoint;
     private static String outboundSearchEndpoint;
     private static String outboundDocumentsEndpoint;
+    private static String accountsBalanceEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -497,6 +498,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public Double getAccountCredits() throws UnsuccessfulStatusCodeException {
+
+        URI uri = UriBuilder.fromPath(accountsBalanceEndpoint).scheme(scheme).host(hostname).port(port).build();
+        return (Double) executeGetRequest(uri, Double.class, target -> target.request().get());
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
@@ -687,6 +695,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxesHideEndpoint = clientConfig.getInterFAX().getOutboundFaxesHideEndpoint();
             outboundSearchEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
+            accountsBalanceEndpoint = clientConfig.getInterFAX().getAccountsBalanceEndpoint();
         } finally {
             reentrantLock.unlock();
         }

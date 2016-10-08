@@ -293,4 +293,12 @@ public class InterFAXJerseyClientTest {
 
         Assert.assertEquals(200, apiResponse.getStatusCode());
     }
+
+    @Test
+    public void testGetAccountBalance() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        Double balance = interFAXClient.getAccountCredits();
+        Assert.assertEquals(Double.valueOf(3.8500), balance);
+    }
 }

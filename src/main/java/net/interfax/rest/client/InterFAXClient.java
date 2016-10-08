@@ -79,6 +79,10 @@ public interface InterFAXClient {
 
     public APIResponse cancelDocumentUploadSession(String documentId);
 
+    // Accounts
+
+    public Double getAccountCredits() throws UnsuccessfulStatusCodeException;
+
     // client lifecycle
 
     public void closeClient();
