@@ -55,6 +55,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
     private static String outboundFaxesCancelEndpoint;
+    private static String outboundSeachEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
     private static Tika tika;
@@ -306,6 +307,17 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public OutboundFaxStructure[] searchFaxList() {
+
+        URI uri = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port).build();
+        return  (OutboundFaxStructure[]) executeGetRequest(
+                                            uri,
+                                            OutboundFaxStructure[].class,
+                                            target -> target.request().get()
+        );
+    }
+
+    @Override
     public APIResponse uploadDocument(final File fileToUpload) {
 
         return uploadDocument(fileToUpload, Optional.empty());
@@ -536,6 +548,28 @@ public class InterFAXJerseyClient implements InterFAXClient {
         return apiResponse;
     }
 
+    private Object executeGetRequest(URI uri, Class responseEntityClass, JerseyRequestExecutor executor) {
+
+        Response response = null;
+        Object responseEntity = null;
+
+        try {
+
+            WebTarget target = client.target(uri);
+            response = executor.readyTheTargetAndExecute(target);
+            if (response.hasEntity()) {
+                responseEntity = response.readEntity(responseEntityClass);
+            }
+
+        } catch (Exception e) {
+            log.error("Exception occurred while executing request", e);
+        } finally {
+            close(response);
+        }
+
+        return responseEntity;
+    }
+
     private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {
 
         UriBuilder outboundFaxesUriBuilder = UriBuilder
@@ -664,6 +698,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
+            outboundSeachEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {
             reentrantLock.unlock();

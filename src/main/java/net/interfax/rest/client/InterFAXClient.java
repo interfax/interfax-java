@@ -45,6 +45,8 @@ public interface InterFAXClient {
 
     public APIResponse cancelFax(final String id);
 
+    public OutboundFaxStructure[] searchFaxList();
+
     // documents
 
     public APIResponse uploadDocument(final File fileToUpload);
