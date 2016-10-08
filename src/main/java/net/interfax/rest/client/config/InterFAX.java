@@ -18,6 +18,8 @@ public class InterFAX {
 
     private String outboundFaxesCancelEndpoint;
 
+    private String outboundFaxesResendEndpoint;
+
     private String outboundSearchEndpoint;
 
     private String outboundDocumentsEndpoint;
@@ -100,5 +102,13 @@ public class InterFAX {
 
     public void setOutboundSearchEndpoint(final String outboundSearchEndpoint) {
         this.outboundSearchEndpoint = outboundSearchEndpoint;
+    }
+
+    public String getOutboundFaxesResendEndpoint() {
+        return outboundFaxesResendEndpoint;
+    }
+
+    public void setOutboundFaxesResendEndpoint(final String outboundFaxesResendEndpoint) {
+        this.outboundFaxesResendEndpoint = outboundFaxesResendEndpoint;
     }
 }

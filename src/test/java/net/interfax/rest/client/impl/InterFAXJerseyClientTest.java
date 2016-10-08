@@ -111,6 +111,23 @@ public class InterFAXJerseyClientTest {
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 
+
+    @Test
+    public void testResendFax() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.resendFax("667915471", Optional.empty());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testResendFaxWithOptions() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.resendFax("667915471", Optional.of(faxNumber));
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
     @Test
     public void testGetFaxList() throws Exception {
 

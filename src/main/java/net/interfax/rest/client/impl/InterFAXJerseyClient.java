@@ -56,7 +56,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
     private static String outboundFaxesCancelEndpoint;
-    private static String outboundSeachEndpoint;
+    private static String outbountFaxesResendEndpoint;
+    private static String outboundSearchEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
     private static Tika tika;
@@ -151,6 +152,19 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 null,
                 target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
         );
+    }
+
+    @Override
+    public APIResponse resendFax(final String id, final Optional<String> faxNumber) {
+
+        UriBuilder outboundFaxesResendUriBuilder = UriBuilder
+                                        .fromPath(String.format(outbountFaxesResendEndpoint, id))
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port);
+
+        faxNumber.ifPresent(x -> outboundFaxesResendUriBuilder.queryParam("faxNumber", x));
+        return executePostRequest(outboundFaxesResendUriBuilder.build(), null, target -> target.request().post(null));
     }
 
     @Override
@@ -262,7 +276,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public OutboundFaxStructure[] searchFaxList() throws UnsuccessfulStatusCodeException {
 
-        URI uri = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port).build();
+        URI uri = UriBuilder.fromUri(outboundSearchEndpoint).scheme(scheme).host(hostname).port(port).build();
         return  (OutboundFaxStructure[]) executeGetRequest(
                                             uri,
                                             OutboundFaxStructure[].class,
@@ -274,7 +288,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public OutboundFaxStructure[] searchFaxList(final Optional<SearchFaxOptions> options)
             throws UnsuccessfulStatusCodeException {
 
-        UriBuilder uriBuilder = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port);
+        UriBuilder uriBuilder = UriBuilder.fromUri(outboundSearchEndpoint).scheme(scheme).host(hostname).port(port);
         if (options.isPresent()) {
             options.get().getIds().ifPresent(x -> uriBuilder.queryParam("ids", x));
             options.get().getReference().ifPresent(x -> uriBuilder.queryParam("reference", x));
@@ -659,7 +673,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
-            outboundSeachEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
+            outbountFaxesResendEndpoint = clientConfig.getInterFAX().getOutboundFaxesResendEndpoint();
+            outboundSearchEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {
             reentrantLock.unlock();

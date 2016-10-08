@@ -1,0 +1,27 @@
+{
+  "uuid" : "84e0be07-b631-322f-8fbb-032208d4f790",
+  "request" : {
+    "url" : "/outbound/faxes/667915471/resend?faxNumber=%2B442084978672",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-667915471-resend-n4sqD.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Location" : "https://rest.interfax.net/outbound/faxes/669598339",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 21:31:48 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f1bfc21a4d21a466d4c75742b2bf3b4008f4e5cbc320d9ea2222bfa0ed774419d; Path=/"
+    }
+  }
+}
