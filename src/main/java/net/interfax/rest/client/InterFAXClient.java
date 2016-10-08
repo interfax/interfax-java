@@ -34,11 +34,11 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options);
 
-    public OutboundFaxStructure[] getFaxList();
+    public OutboundFaxStructure[] getFaxList() throws UnsuccessfulStatusCodeException;
 
-    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options);
+    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options) throws UnsuccessfulStatusCodeException;
 
-    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids);
+    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) throws UnsuccessfulStatusCodeException;
 
     public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
@@ -46,9 +46,9 @@ public interface InterFAXClient {
 
     public APIResponse cancelFax(final String id);
 
-    public OutboundFaxStructure[] searchFaxList();
+    public OutboundFaxStructure[] searchFaxList() throws UnsuccessfulStatusCodeException;
 
-    public OutboundFaxStructure[] searchFaxList(Optional<SearchFaxOptions> options);
+    public OutboundFaxStructure[] searchFaxList(Optional<SearchFaxOptions> options) throws UnsuccessfulStatusCodeException;
 
     // documents
 
@@ -62,11 +62,11 @@ public interface InterFAXClient {
                                    int endByteRange,
                                    boolean lastChunk);
 
-    public UploadedDocumentStatus[] getUploadedDocumentsList();
+    public UploadedDocumentStatus[] getUploadedDocumentsList() throws UnsuccessfulStatusCodeException;
 
-    public UploadedDocumentStatus[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options);
+    public UploadedDocumentStatus[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options) throws UnsuccessfulStatusCodeException;
 
-    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId);
+    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId) throws UnsuccessfulStatusCodeException;
 
     public APIResponse cancelDocumentUploadSession(String documentId);
 

@@ -93,7 +93,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         String contentType = tika.detect(fileToSendAsFax);
         URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
 
-        return executeRequest(
+        return executePostRequest(
                 outboundFaxesUri,
                 Entity.entity(fileToSendAsFax, contentType),
                 target ->
@@ -125,7 +125,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-        return executeRequest(
+        return executePostRequest(
                 outboundFaxesUri,
                 Entity.entity(multiPart, multiPart.getMediaType()),
                 (target) ->
@@ -146,7 +146,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) {
 
         URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-        return executeRequest(
+        return executePostRequest(
                 outboundFaxesUri,
                 null,
                 target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
@@ -154,13 +154,14 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public OutboundFaxStructure[] getFaxList() {
+    public OutboundFaxStructure[] getFaxList() throws UnsuccessfulStatusCodeException {
 
         return getFaxList(Optional.empty());
     }
 
     @Override
-    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options) {
+    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options)
+            throws UnsuccessfulStatusCodeException {
 
         UriBuilder outboundFaxesUriBuilder =
                 UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port);
@@ -181,7 +182,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) {
+    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) throws UnsuccessfulStatusCodeException {
 
         URI outboundFaxesCompletedUri = UriBuilder
                                             .fromPath(outboundFaxesCompletedEndpoint)
@@ -200,30 +201,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
 
-        Response response = null;
-        OutboundFaxStructure outboundFaxStructure = null;
-        try {
+        URI outboundFaxesRecordUri = UriBuilder
+                                        .fromUri(String.format(outboundFaxesRecordEndpoint, id))
+                                        .scheme(scheme)
+                                        .host(hostname)
+                                        .port(port)
+                                        .build();
 
-            URI outboundFaxesRecordUri = UriBuilder
-                                            .fromUri(String.format(outboundFaxesRecordEndpoint, id))
-                                            .scheme(scheme)
-                                            .host(hostname)
-                                            .port(port)
-                                            .build();
-
-            WebTarget target = client.target(outboundFaxesRecordUri);
-            response = target.request().get();
-
-            if (response.getStatus() == 200) {
-                outboundFaxStructure = response.readEntity(OutboundFaxStructure.class);
-            } else {
-                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
-            }
-        } finally {
-            close(response);
-        }
-
-        return outboundFaxStructure;
+        return (OutboundFaxStructure) executeGetRequest(
+                outboundFaxesRecordUri,
+                OutboundFaxStructure.class,
+                target -> target.request().get()
+        );
     }
 
     @Override
@@ -260,35 +249,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse cancelFax(final String id) {
 
-        Response response = null;
-        APIResponse apiResponse = new APIResponse();
+        URI uri = UriBuilder
+                    .fromPath(String.format(outboundFaxesCancelEndpoint, id))
+                    .host(hostname)
+                    .scheme(scheme)
+                    .port(port)
+                    .build();
 
-        try {
-
-            URI uri = UriBuilder
-                        .fromPath(String.format(outboundFaxesCancelEndpoint, id))
-                        .host(hostname)
-                        .scheme(scheme)
-                        .port(port)
-                        .build();
-
-            response = client.target(uri).request().header("Content-Length", 0).post(null);
-            apiResponse.setStatusCode(response.getStatus());
-            if (response.hasEntity())
-                apiResponse.setResponseBody(response.readEntity(String.class));
-            copyHeadersToAPIResponse(response, apiResponse);
-        } catch (Exception e) {
-            log.error("Exception occurred while cancelling fax", e);
-            apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        } finally {
-            close(response);
-        }
-
-        return apiResponse;
+        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
-    public OutboundFaxStructure[] searchFaxList() {
+    public OutboundFaxStructure[] searchFaxList() throws UnsuccessfulStatusCodeException {
 
         URI uri = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port).build();
         return  (OutboundFaxStructure[]) executeGetRequest(
@@ -299,7 +271,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public OutboundFaxStructure[] searchFaxList(final Optional<SearchFaxOptions> options) {
+    public OutboundFaxStructure[] searchFaxList(final Optional<SearchFaxOptions> options)
+            throws UnsuccessfulStatusCodeException {
 
         UriBuilder uriBuilder = UriBuilder.fromUri(outboundSeachEndpoint).scheme(scheme).host(hostname).port(port);
         if (options.isPresent()) {
@@ -436,60 +409,37 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public UploadedDocumentStatus[] getUploadedDocumentsList() {
+    public UploadedDocumentStatus[] getUploadedDocumentsList() throws UnsuccessfulStatusCodeException {
 
         return getUploadedDocumentsList(Optional.empty());
     }
 
     @Override
-    public UploadedDocumentStatus[] getUploadedDocumentsList(final Optional<GetUploadedDocumentsListOptions> options) {
+    public UploadedDocumentStatus[] getUploadedDocumentsList(final Optional<GetUploadedDocumentsListOptions> options)
+            throws UnsuccessfulStatusCodeException {
 
-        Response response = null;
-        UploadedDocumentStatus[] uploadedDocumentStatuses = null;
-
-        try {
-
-            URI outboundDocumentsUriToGetDocumentsList = getUploadedDocumentListUri(options);
-
-            WebTarget target = client.target(outboundDocumentsUriToGetDocumentsList);
-            response = target.request().get();
-
-            uploadedDocumentStatuses = response.readEntity(UploadedDocumentStatus[].class);
-        } catch (Exception e) {
-            log.error("Exception occurred while getting uploaded doc list", e);
-        } finally {
-            close(response);
-        }
-
-        return uploadedDocumentStatuses;
+        URI outboundDocumentsUriToGetDocumentsList = getUploadedDocumentListUri(options);
+        return (UploadedDocumentStatus[]) executeGetRequest(
+                outboundDocumentsUriToGetDocumentsList,
+                UploadedDocumentStatus[].class,
+                target -> target.request().get()
+        );
     }
 
     @Override
-    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId) {
+    public UploadedDocumentStatus getUploadedDocumentStatus(String documentId) throws UnsuccessfulStatusCodeException {
 
-        Response response = null;
-        UploadedDocumentStatus uploadedDocumentStatus = null;
+        URI outboundDocumentUri = UriBuilder
+                .fromPath(outboundDocumentsEndpoint+"/"+documentId)
+                .scheme(scheme)
+                .host(hostname)
+                .port(port)
+                .build();
 
-        try {
-
-            URI outboundDocumentUri = UriBuilder
-                    .fromPath(outboundDocumentsEndpoint+"/"+documentId)
-                    .scheme(scheme)
-                    .host(hostname)
-                    .port(port)
-                    .build();
-
-            WebTarget target = client.target(outboundDocumentUri);
-            response = target.request().get();
-
-            uploadedDocumentStatus = response.readEntity(UploadedDocumentStatus.class);
-        } catch (Exception e) {
-            log.error("Exception occurred while getting uploaded doc status", e);
-        } finally {
-            close(response);
-        }
-
-        return uploadedDocumentStatus;
+        return (UploadedDocumentStatus) executeGetRequest(
+                outboundDocumentUri,
+                UploadedDocumentStatus.class,
+                target -> target.request().get());
     }
 
     @Override
@@ -528,7 +478,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         client.close();
     }
 
-    private APIResponse executeRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
+    private APIResponse executePostRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
 
         Response response = null;
         APIResponse apiResponse = new APIResponse();
@@ -545,6 +495,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
         } catch (Exception e) {
             log.error("Exception occurred while executing request", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            if (response != null && response.hasEntity())
+                apiResponse.setResponseBody(response.readEntity(String.class));
         } finally {
             close(response);
         }
@@ -552,7 +504,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
         return apiResponse;
     }
 
-    private Object executeGetRequest(URI uri, Class responseEntityClass, JerseyRequestExecutor executor) {
+    private Object executeGetRequest(URI uri, Class responseEntityClass, JerseyRequestExecutor executor)
+            throws UnsuccessfulStatusCodeException {
 
         Response response = null;
         Object responseEntity = null;
@@ -561,12 +514,16 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             WebTarget target = client.target(uri);
             response = executor.readyTheTargetAndExecute(target);
-            if (response.hasEntity()) {
+            if (response.getStatus() == Response.Status.OK.getStatusCode() && response.hasEntity()) {
                 responseEntity = response.readEntity(responseEntityClass);
             }
+            if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+                String responseBody = null;
+                if (response.hasEntity())
+                    responseBody = response.readEntity(String.class);
+                throw new UnsuccessfulStatusCodeException(response.getStatus(), responseBody);
+            }
 
-        } catch (Exception e) {
-            log.error("Exception occurred while executing request", e);
         } finally {
             close(response);
         }
