@@ -34,9 +34,12 @@ public interface InterFAXClient {
 
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options);
 
+    // Outbound fax operations
+
     public OutboundFaxStructure[] getFaxList() throws UnsuccessfulStatusCodeException;
 
-    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options)
+            throws UnsuccessfulStatusCodeException;
 
     public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) throws UnsuccessfulStatusCodeException;
 
@@ -48,9 +51,10 @@ public interface InterFAXClient {
 
     public OutboundFaxStructure[] searchFaxList() throws UnsuccessfulStatusCodeException;
 
-    public OutboundFaxStructure[] searchFaxList(Optional<SearchFaxOptions> options) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure[] searchFaxList(Optional<SearchFaxOptions> options)
+            throws UnsuccessfulStatusCodeException;
 
-    // documents
+    // Documents
 
     public APIResponse uploadDocument(final File fileToUpload);
 
@@ -64,7 +68,8 @@ public interface InterFAXClient {
 
     public UploadedDocumentStatus[] getUploadedDocumentsList() throws UnsuccessfulStatusCodeException;
 
-    public UploadedDocumentStatus[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options) throws UnsuccessfulStatusCodeException;
+    public UploadedDocumentStatus[] getUploadedDocumentsList(Optional<GetUploadedDocumentsListOptions> options)
+            throws UnsuccessfulStatusCodeException;
 
     public UploadedDocumentStatus getUploadedDocumentStatus(String documentId) throws UnsuccessfulStatusCodeException;
 
