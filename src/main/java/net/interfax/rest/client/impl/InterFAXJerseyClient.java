@@ -162,31 +162,22 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options) {
 
-        Response response = null;
-        OutboundFaxStructure[] outboundFaxStructures = null;
-        try {
+        UriBuilder outboundFaxesUriBuilder =
+                UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port);
 
-            UriBuilder outboundFaxesUriBuilder =
-                    UriBuilder.fromPath(outboundFaxesEndpoint).host(hostname).scheme(scheme).port(port);
-
-            if (options.isPresent()) {
-                GetFaxListOptions reqOptions = options.orElse(null);
-                reqOptions.getLastId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("lastId", x));
-                reqOptions.getLimit().ifPresent(x -> outboundFaxesUriBuilder.queryParam("limit", x));
-                reqOptions.getSortOrder().ifPresent(x -> outboundFaxesUriBuilder.queryParam("sortOrder", x));
-                reqOptions.getUserId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("userId", x));
-            }
-
-            WebTarget target = client.target(outboundFaxesUriBuilder.build());
-            response = target.request().get();
-            outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
-        } catch (Exception e) {
-            log.error("Exception occurred while getting fax list", e);
-        } finally {
-            close(response);
+        if (options.isPresent()) {
+            GetFaxListOptions reqOptions = options.orElse(null);
+            reqOptions.getLastId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("lastId", x));
+            reqOptions.getLimit().ifPresent(x -> outboundFaxesUriBuilder.queryParam("limit", x));
+            reqOptions.getSortOrder().ifPresent(x -> outboundFaxesUriBuilder.queryParam("sortOrder", x));
+            reqOptions.getUserId().ifPresent(x -> outboundFaxesUriBuilder.queryParam("userId", x));
         }
 
-        return outboundFaxStructures;
+        return (OutboundFaxStructure[]) executeGetRequest(
+                outboundFaxesUriBuilder.build(),
+                OutboundFaxStructure[].class,
+                target -> target.request().get()
+        );
     }
 
     @Override
