@@ -168,19 +168,19 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
-    public void testGetFaxImage() throws Exception {
+    public void testGetOutboundFaxImage() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
-        byte[] faxImage = interFAXClient.getFaxImage("667915751");
+        byte[] faxImage = interFAXClient.getOuboundFaxImage("667915751");
         Assert.assertEquals(30072, faxImage.length);
     }
 
     @Test(expected = UnsuccessfulStatusCodeException.class)
-    public void testGetFaxImageWithInvalidId() throws Exception {
+    public void testGetOutboundFaxImageWithInvalidId() throws Exception {
 
         try {
             InterFAXClient interFAXClient = new InterFAXJerseyClient();
-            interFAXClient.getFaxImage("1234");
+            interFAXClient.getOuboundFaxImage("1234");
         } catch (UnsuccessfulStatusCodeException e) {
             Assert.assertEquals("Unsuccessful response from API", e.getMessage());
             Assert.assertEquals(404, e.getStatusCode());
@@ -334,5 +334,13 @@ public class InterFAXJerseyClientTest {
         InboundFaxStructure inboundFaxStructure = interFAXClient.getInboundFaxRecord("292626603");
         Assert.assertEquals(292626603, inboundFaxStructure.getMessageId());
         Assert.assertEquals(2, inboundFaxStructure.getPages());
+    }
+
+    @Test
+    public void testGetInboundFaxImage() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        byte[] faxImage = interFAXClient.getInboundFaxImage("292626603");
+        Assert.assertEquals(37194, faxImage.length);
     }
 }

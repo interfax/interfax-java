@@ -51,7 +51,7 @@ public interface InterFAXClient {
 
     public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
-    public byte[] getFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
     public APIResponse cancelFax(final String id);
 
@@ -93,6 +93,8 @@ public interface InterFAXClient {
             throws UnsuccessfulStatusCodeException;
 
     public InboundFaxStructure getInboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
+
+    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
     // client lifecycle
 

@@ -1,0 +1,26 @@
+{
+  "uuid" : "2a3d28f0-1e2e-3a97-808a-521522e2ac7a",
+  "request" : {
+    "url" : "/inbound/faxes/292626603/image",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-292626603-image-qYpTg.pdf",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "application/pdf",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 23:25:57 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f707f1b98626ce91e71ca4ef61f20fb591c934d66bfc95bb0deb459dafcd72bf3; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

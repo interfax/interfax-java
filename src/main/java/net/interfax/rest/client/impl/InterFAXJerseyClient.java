@@ -64,6 +64,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundDocumentsEndpoint;
     private static String accountsBalanceEndpoint;
     private static String inboundFaxesEndpoint;
+    private static String inboundFaxesImageEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -244,34 +245,9 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public byte[] getFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
 
-        Response response = null;
-        byte[] responseBytes = null;
-        try {
-
-            URI uri = UriBuilder
-                        .fromPath(String.format(outboundFaxImageEndpoint, id))
-                        .host(hostname)
-                        .scheme(scheme)
-                        .port(port)
-                        .build();
-
-            response = client.target(uri).request().get();
-            if (response.getStatus() == 200) {
-                InputStream inputStream = response.readEntity(InputStream.class);
-                responseBytes = IOUtils.toByteArray(inputStream);
-                inputStream.close();
-            } else {
-                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
-            }
-        } catch (IOException e) {
-            log.error("Exception occurred while getting fax image", e);
-        } finally {
-            close(response);
-        }
-
-        return responseBytes;
+        return getFaxImage(String.format(outboundFaxImageEndpoint, id));
     }
 
     @Override
@@ -538,6 +514,12 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+
+        return getFaxImage(String.format(inboundFaxesImageEndpoint, id));
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
@@ -594,6 +576,36 @@ public class InterFAXJerseyClient implements InterFAXClient {
         }
 
         return responseEntity;
+    }
+
+    private byte[] getFaxImage(String path) throws UnsuccessfulStatusCodeException {
+
+        Response response = null;
+        byte[] responseBytes = null;
+        try {
+
+            URI uri = UriBuilder
+                    .fromPath(path)
+                    .host(hostname)
+                    .scheme(scheme)
+                    .port(port)
+                    .build();
+
+            response = client.target(uri).request().get();
+            if (response.getStatus() == 200) {
+                InputStream inputStream = response.readEntity(InputStream.class);
+                responseBytes = IOUtils.toByteArray(inputStream);
+                inputStream.close();
+            } else {
+                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
+            }
+        } catch (IOException e) {
+            log.error("Exception occurred while getting fax image", e);
+        } finally {
+            close(response);
+        }
+
+        return responseBytes;
     }
 
     private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {
@@ -730,6 +742,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
             accountsBalanceEndpoint = clientConfig.getInterFAX().getAccountsBalanceEndpoint();
             inboundFaxesEndpoint = clientConfig.getInterFAX().getInboundFaxesEndpoint();
+            inboundFaxesImageEndpoint = clientConfig.getInterFAX().getInboundFaxesImageEndpoint();
         } finally {
             reentrantLock.unlock();
         }

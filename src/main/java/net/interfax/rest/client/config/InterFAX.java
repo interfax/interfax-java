@@ -30,6 +30,8 @@ public class InterFAX {
 
     private String inboundFaxesEndpoint;
 
+    private String inboundFaxesImageEndpoint;
+
     public String getScheme() {
         return scheme;
     }
@@ -140,5 +142,13 @@ public class InterFAX {
 
     public void setInboundFaxesEndpoint(final String inboundFaxesEndpoint) {
         this.inboundFaxesEndpoint = inboundFaxesEndpoint;
+    }
+
+    public String getInboundFaxesImageEndpoint() {
+        return inboundFaxesImageEndpoint;
+    }
+
+    public void setInboundFaxesImageEndpoint(final String inboundFaxesImageEndpoint) {
+        this.inboundFaxesImageEndpoint = inboundFaxesImageEndpoint;
     }
 }

@@ -13,3 +13,4 @@ interFAX:
   outboundDocumentsEndpoint: "/outbound/documents"
   accountsBalanceEndpoint: "/accounts/self/ppcards/balance"
   inboundFaxesEndpoint: "/inbound/faxes"
+  inboundFaxesImageEndpoint: "/inbound/faxes/%s/image"
