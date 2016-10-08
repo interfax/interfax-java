@@ -92,6 +92,8 @@ public interface InterFAXClient {
     public InboundFaxStructure[] getInboundFaxList(final Optional<GetInboundFaxListOptions> options)
             throws UnsuccessfulStatusCodeException;
 
+    public InboundFaxStructure getInboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
+
     // client lifecycle
 
     public void closeClient();

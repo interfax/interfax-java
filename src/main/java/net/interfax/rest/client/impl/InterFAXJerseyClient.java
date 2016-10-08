@@ -530,6 +530,14 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public InboundFaxStructure getInboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
+
+        String path = inboundFaxesEndpoint+"/"+id;
+        URI uri = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port).build();
+        return (InboundFaxStructure) executeGetRequest(uri, InboundFaxStructure.class, t -> t.request().get());
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();

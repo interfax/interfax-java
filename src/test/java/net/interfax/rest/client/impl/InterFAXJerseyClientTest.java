@@ -326,4 +326,13 @@ public class InterFAXJerseyClientTest {
         Assert.assertEquals(3, inboundFaxStructures.length);
         Assert.assertEquals(292957783, inboundFaxStructures[2].getMessageId());
     }
+
+    @Test
+    public void testGetInboundFaxRecord() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        InboundFaxStructure inboundFaxStructure = interFAXClient.getInboundFaxRecord("292626603");
+        Assert.assertEquals(292626603, inboundFaxStructure.getMessageId());
+        Assert.assertEquals(2, inboundFaxStructure.getPages());
+    }
 }

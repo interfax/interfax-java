@@ -1,0 +1,26 @@
+{
+  "uuid" : "290c0eec-a04a-3c5a-918b-fd365b372b68",
+  "request" : {
+    "url" : "/inbound/faxes/292626603",
+    "method" : "GET",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-faxes-292626603-8Dl4c.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 23:22:19 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f9fd1a655dee3e3cfaa49db5d83eb49115768c299f03fd51e783792c28140e338; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}
