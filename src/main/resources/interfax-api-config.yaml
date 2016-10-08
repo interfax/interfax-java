@@ -8,5 +8,6 @@ interFAX:
   outboundFaxImageEndpoint: "/outbound/faxes/%s/image"
   outboundFaxesCancelEndpoint: "/outbound/faxes/%s/cancel"
   outboundFaxesResendEndpoint: "/outbound/faxes/%s/resend"
+  outboundFaxesHideEndpoint: "/outbound/faxes/%s/hide"
   outboundSearchEndpoint: "/outbound/search"
   outboundDocumentsEndpoint: "/outbound/documents"

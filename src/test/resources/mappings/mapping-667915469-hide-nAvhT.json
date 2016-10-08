@@ -1,0 +1,25 @@
+{
+  "uuid" : "02c9df2f-7131-3fba-9098-31145243f3bd",
+  "request" : {
+    "url" : "/outbound/faxes/667915469/hide",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-667915469-hide-nAvhT.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 22:01:33 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f3dc070b4300863d2e72c21d1e3fc8bc8060b053b4022d6150029f4fde1262797; Path=/"
+    }
+  }
+}

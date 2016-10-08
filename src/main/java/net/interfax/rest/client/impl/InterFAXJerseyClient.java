@@ -56,7 +56,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
     private static String outboundFaxesCancelEndpoint;
-    private static String outbountFaxesResendEndpoint;
+    private static String outboundFaxesResendEndpoint;
+    private static String outboundFaxesHideEndpoint;
     private static String outboundSearchEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
@@ -158,13 +159,22 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public APIResponse resendFax(final String id, final Optional<String> faxNumber) {
 
         UriBuilder outboundFaxesResendUriBuilder = UriBuilder
-                                        .fromPath(String.format(outbountFaxesResendEndpoint, id))
+                                        .fromPath(String.format(outboundFaxesResendEndpoint, id))
                                         .scheme(scheme)
                                         .host(hostname)
                                         .port(port);
 
         faxNumber.ifPresent(x -> outboundFaxesResendUriBuilder.queryParam("faxNumber", x));
-        return executePostRequest(outboundFaxesResendUriBuilder.build(), null, target -> target.request().post(null));
+        URI uri = outboundFaxesResendUriBuilder.build();
+        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+    }
+
+    @Override
+    public APIResponse hideFax(final String id) {
+
+        String endpoint = String.format(outboundFaxesHideEndpoint, id);
+        URI uri = UriBuilder.fromPath(endpoint).scheme(scheme).host(hostname).port(port).build();
+        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -673,7 +683,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
-            outbountFaxesResendEndpoint = clientConfig.getInterFAX().getOutboundFaxesResendEndpoint();
+            outboundFaxesResendEndpoint = clientConfig.getInterFAX().getOutboundFaxesResendEndpoint();
+            outboundFaxesHideEndpoint = clientConfig.getInterFAX().getOutboundFaxesHideEndpoint();
             outboundSearchEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {

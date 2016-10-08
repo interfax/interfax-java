@@ -216,6 +216,14 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
+    public void testHideFax() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.hideFax("667915469");
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+    }
+
+    @Test
     public void testUploadDocument() throws Exception {
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();

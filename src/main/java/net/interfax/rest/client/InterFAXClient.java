@@ -36,6 +36,8 @@ public interface InterFAXClient {
 
     public APIResponse resendFax(final String id, final Optional<String> faxNumber);
 
+    public APIResponse hideFax(final String id);
+
     // Outbound fax operations
 
     public OutboundFaxStructure[] getFaxList() throws UnsuccessfulStatusCodeException;
