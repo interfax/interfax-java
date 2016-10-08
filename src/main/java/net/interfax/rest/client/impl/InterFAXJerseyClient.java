@@ -78,88 +78,60 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) {
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException {
 
         return sendFax(faxNumber, fileToSendAsFax, Optional.empty());
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax, final Optional<SendFaxOptions> options) {
+    public APIResponse sendFax(final String faxNumber,
+                               final File fileToSendAsFax,
+                               final Optional<SendFaxOptions> options) throws IOException {
 
-        Response response = null;
-        APIResponse apiResponse = null;
+        String contentType = tika.detect(fileToSendAsFax);
+        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
 
-        try {
-
-            String contentType = tika.detect(fileToSendAsFax);
-
-            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-
-            WebTarget target = client.target(outboundFaxesUri);
-            response = target
-                    .request()
-                    .header("Content-Type", contentType)
-                    .post(Entity.entity(fileToSendAsFax, contentType));
-
-            apiResponse = new APIResponse();
-            apiResponse.setStatusCode(response.getStatus());
-            copyHeadersToAPIResponse(response, apiResponse);
-            if (response.hasEntity())
-                apiResponse.setResponseBody(response.readEntity(String.class));
-
-        } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
-        } finally {
-            close(response);
-        }
-
-        return apiResponse;
+        return executeRequest(
+                outboundFaxesUri,
+                Entity.entity(fileToSendAsFax, contentType),
+                target ->
+                        target
+                                .request()
+                                .header("Content-Type", contentType)
+                                .post(Entity.entity(fileToSendAsFax, contentType))
+        );
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) {
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException {
 
         return sendFax(faxNumber, filesToSendAsFax, Optional.empty());
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax, final Optional<SendFaxOptions> options) {
+    public APIResponse sendFax(final String faxNumber,
+                               final File[] filesToSendAsFax,
+                               final Optional<SendFaxOptions> options) throws IOException {
 
-        Response response = null;
-        APIResponse apiResponse = null;
-
-        try {
-
-            MultiPart multiPart = new MultiPart();
-            int count = 1;
-            for (File file : filesToSendAsFax) {
-                String contentType = tika.detect(file);
-                String entityName = "file"+count++;
-                FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(entityName, file, MediaType.valueOf(contentType));
-                multiPart.bodyPart(fileDataBodyPart);
-            }
-
-            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-            WebTarget target = client.target(outboundFaxesUri);
-            target.register(MultiPartFeature.class);
-            response = target
-                    .request()
-                    .header("Content-Type", "multipart/mixed")
-                    .post(Entity.entity(multiPart, multiPart.getMediaType()));
-
-            apiResponse = new APIResponse();
-            apiResponse.setStatusCode(response.getStatus());
-            copyHeadersToAPIResponse(response, apiResponse);
-            if (response.hasEntity())
-                apiResponse.setResponseBody(response.readEntity(String.class));
-
-        } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
-        } finally {
-            close(response);
+        MultiPart multiPart = new MultiPart();
+        int count = 1;
+        for (File file : filesToSendAsFax) {
+            String contentType = tika.detect(file);
+            String entityName = "file"+count++;
+            FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(entityName, file, MediaType.valueOf(contentType));
+            multiPart.bodyPart(fileDataBodyPart);
         }
 
-        return apiResponse;
+        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        return executeRequest(
+                outboundFaxesUri,
+                Entity.entity(multiPart, multiPart.getMediaType()),
+                (target) ->
+                        target
+                                .request()
+                                .header("Content-Type", "multipart/mixed")
+                                .post(Entity.entity(multiPart, multiPart.getMediaType()))
+        );
     }
 
     @Override
@@ -171,33 +143,12 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) {
 
-        Response response = null;
-        APIResponse apiResponse = null;
-
-        try {
-
-            URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-            WebTarget target = client.target(outboundFaxesUri);
-            response = target
-                    .request()
-                    .header("Content-Location", urlOfDoc)
-                    .header("Content-Length", 0)
-                    .post(null);
-
-            apiResponse = new APIResponse();
-            apiResponse.setStatusCode(response.getStatus());
-            copyHeadersToAPIResponse(response, apiResponse);
-            if (response.hasEntity())
-                apiResponse.setResponseBody(response.readEntity(String.class));
-
-
-        } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
-        } finally {
-            close(response);
-        }
-
-        return apiResponse;
+        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        return executeRequest(
+                outboundFaxesUri,
+                null,
+                target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
+        );
     }
 
     @Override
@@ -559,6 +510,30 @@ public class InterFAXJerseyClient implements InterFAXClient {
     public void closeClient() {
 
         client.close();
+    }
+
+    private APIResponse executeRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
+
+        Response response = null;
+        APIResponse apiResponse = new APIResponse();
+
+        try {
+
+            WebTarget target = client.target(uri);
+            response = executor.readyTheTargetAndExecute(target);
+            apiResponse.setStatusCode(response.getStatus());
+            copyHeadersToAPIResponse(response, apiResponse);
+            if (response.hasEntity())
+                apiResponse.setResponseBody(response.readEntity(String.class));
+
+        } catch (Exception e) {
+            log.error("Exception occurred while executing request", e);
+            apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            close(response);
+        }
+
+        return apiResponse;
     }
 
     private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {

@@ -10,19 +10,24 @@ import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 public interface InterFAXClient {
 
     // Sending faxes
 
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax);
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException;
 
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax, final Optional<SendFaxOptions> options);
+    public APIResponse sendFax(final String faxNumber,
+                               final File fileToSendAsFax,
+                               final Optional<SendFaxOptions> options) throws IOException;
 
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax);
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException;
 
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax, final Optional<SendFaxOptions> options);
+    public APIResponse sendFax(final String faxNumber,
+                               final File[] filesToSendAsFax,
+                               final Optional<SendFaxOptions> options) throws IOException;
 
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc);
 
