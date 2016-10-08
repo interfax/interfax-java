@@ -1,0 +1,50 @@
+[
+  {
+    "userId": "devexp-java",
+    "messageId": 292957796,
+    "phoneNumber": "2084978672",
+    "remoteCSID": "Interfax",
+    "messageStatus": 0,
+    "pages": 1,
+    "messageSize": 24867,
+    "messageType": 1,
+    "receiveTime": "2016-10-08T21:31:34",
+    "callerId": null,
+    "recordingDuration": 41,
+    "imageStatus": "UNREAD",
+    "numOfEmails": 0,
+    "numOfFailedEmails": 0
+  },
+  {
+    "userId": "devexp-java",
+    "messageId": 292957784,
+    "phoneNumber": "2084978672",
+    "remoteCSID": "Interfax",
+    "messageStatus": 0,
+    "pages": 1,
+    "messageSize": 24867,
+    "messageType": 1,
+    "receiveTime": "2016-10-08T21:30:13",
+    "callerId": null,
+    "recordingDuration": 41,
+    "imageStatus": "UNREAD",
+    "numOfEmails": 0,
+    "numOfFailedEmails": 0
+  },
+  {
+    "userId": "devexp-java",
+    "messageId": 292957783,
+    "phoneNumber": "2084978672",
+    "remoteCSID": "Interfax",
+    "messageStatus": 0,
+    "pages": 1,
+    "messageSize": 24867,
+    "messageType": 1,
+    "receiveTime": "2016-10-08T21:28:37",
+    "callerId": null,
+    "recordingDuration": 41,
+    "imageStatus": "UNREAD",
+    "numOfEmails": 0,
+    "numOfFailedEmails": 0
+  }
+]

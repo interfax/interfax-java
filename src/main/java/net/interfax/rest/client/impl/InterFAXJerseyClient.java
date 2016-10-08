@@ -6,6 +6,7 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetInboundFaxListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
@@ -509,8 +510,23 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public InboundFaxStructure[] getInboundFaxList() throws UnsuccessfulStatusCodeException {
 
-        URI uri = UriBuilder.fromPath(inboundFaxesEndpoint).scheme(scheme).host(hostname).port(port).build();
-        return (InboundFaxStructure[]) executeGetRequest(uri, InboundFaxStructure[].class, t -> t.request().get());
+        return getInboundFaxList(Optional.empty());
+    }
+
+    @Override
+    public InboundFaxStructure[] getInboundFaxList(final Optional<GetInboundFaxListOptions> options)
+            throws UnsuccessfulStatusCodeException {
+
+        UriBuilder uriBuilder = UriBuilder.fromPath(inboundFaxesEndpoint).scheme(scheme).host(hostname).port(port);
+        if (options.isPresent()) {
+            options.get().getAllUsers().ifPresent(x -> uriBuilder.queryParam("allUsers", x));
+            options.get().getLastId().ifPresent(x -> uriBuilder.queryParam("lastId", x));
+            options.get().getLimit().ifPresent(x -> uriBuilder.queryParam("limit", x));
+            options.get().getUnreadOnly().ifPresent(x -> uriBuilder.queryParam("unreadOnly", x));
+        }
+
+        return (InboundFaxStructure[])
+                executeGetRequest(uriBuilder.build(), InboundFaxStructure[].class, t -> t.request().get());
     }
 
     @Override

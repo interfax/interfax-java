@@ -5,6 +5,7 @@ import net.interfax.rest.client.InterFAXClient;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
+import net.interfax.rest.client.domain.GetInboundFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
@@ -310,5 +311,19 @@ public class InterFAXJerseyClientTest {
         InboundFaxStructure[] inboundFaxStructures = interFAXClient.getInboundFaxList();
         Assert.assertEquals(25, inboundFaxStructures.length);
         Assert.assertEquals(292957796, inboundFaxStructures[0].getMessageId());
+    }
+
+    @Test
+    public void testGetInboundFaxListWithOptions() throws Exception {
+
+        GetInboundFaxListOptions getInboundFaxListOptions = new GetInboundFaxListOptions();
+        getInboundFaxListOptions.setAllUsers(Optional.of(true));
+        getInboundFaxListOptions.setUnreadOnly(Optional.of(true));
+        getInboundFaxListOptions.setLimit(Optional.of(3));
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        InboundFaxStructure[] inboundFaxStructures
+                = interFAXClient.getInboundFaxList(Optional.of(getInboundFaxListOptions));
+        Assert.assertEquals(3, inboundFaxStructures.length);
+        Assert.assertEquals(292957783, inboundFaxStructures[2].getMessageId());
     }
 }
