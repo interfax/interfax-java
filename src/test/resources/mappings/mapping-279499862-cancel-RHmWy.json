@@ -1,0 +1,26 @@
+{
+  "uuid" : "6ee86362-bccc-3ada-82f4-69200d1c01a1",
+  "request" : {
+    "url" : "/outbound/faxes/279499862/cancel",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 404,
+    "bodyFileName" : "body-279499862-cancel-RHmWy.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sat, 08 Oct 2016 12:29:24 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3fce96b8a507ce19f5164b3f227feb57df6d228d2ce758a21a123a3f866a9de443; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

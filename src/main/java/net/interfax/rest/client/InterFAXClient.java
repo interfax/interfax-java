@@ -30,13 +30,15 @@ public interface InterFAXClient {
 
     public OutboundFaxStructure[] getFaxList();
 
-    public OutboundFaxStructure[] getFaxList(Optional<GetFaxListOptions> options);
+    public OutboundFaxStructure[] getFaxList(final Optional<GetFaxListOptions> options);
 
-    public OutboundFaxStructure[] getCompletedFaxList(String[] ids);
+    public OutboundFaxStructure[] getCompletedFaxList(final String[] ids);
 
-    public OutboundFaxStructure getFaxRecord(String id) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
-    public byte[] getFaxImage(String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+
+    public APIResponse cancelFax(final String id);
 
     // documents
 

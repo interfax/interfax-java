@@ -54,6 +54,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundFaxesCompletedEndpoint;
     private static String outbountFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
+    private static String outboundFaxesCancelEndpoint;
     private static String outboundDocumentsEndpoint;
     private static Client client;
     private static Tika tika;
@@ -234,7 +235,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
 
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while getting fax list", e);
         } finally {
             if (response != null)
                 response.close();
@@ -265,7 +266,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
 
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while getting completed fax list", e);
         } finally {
             if (response != null)
                 response.close();
@@ -327,13 +328,43 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
             }
         } catch (IOException e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while getting fax image", e);
         } finally {
             if (response != null)
                 response.close();
         }
 
         return responseBytes;
+    }
+
+    @Override
+    public APIResponse cancelFax(final String id) {
+
+        Response response = null;
+        APIResponse apiResponse = new APIResponse();
+
+        try {
+
+            URI uri = UriBuilder
+                        .fromPath(String.format(outboundFaxesCancelEndpoint, id))
+                        .host(hostname)
+                        .scheme(scheme)
+                        .port(port)
+                        .build();
+
+            response = client.target(uri).request().header("Content-Length", 0).post(null);
+            apiResponse.setStatusCode(response.getStatus());
+            apiResponse.setResponseBody(response.readEntity(String.class));
+            copyHeadersToAPIResponse(response, apiResponse);
+        } catch (Exception e) {
+            log.error("Exception occurred while cancelling fax", e);
+            apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            if (response != null)
+                response.close();
+        }
+
+        return apiResponse;
     }
 
     @Override
@@ -392,7 +423,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             }
 
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while uplading document", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         } finally {
             if (response != null)
@@ -446,7 +477,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             copyHeadersToAPIResponse(response, apiResponse);
 
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while uploading chunk", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 
         } finally {
@@ -480,7 +511,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             uploadedDocumentStatuses = response.readEntity(UploadedDocumentStatus[].class);
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while getting uploaded doc list", e);
 
         } finally {
             if (response != null)
@@ -512,7 +543,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             uploadedDocumentStatus = response.readEntity(UploadedDocumentStatus.class);
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while getting uploaded doc status", e);
 
         } finally {
             if (response != null)
@@ -547,7 +578,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             copyHeadersToAPIResponse(response, apiResponse);
 
         } catch (Exception e) {
-            log.error("Exception occurred while sending fax", e);
+            log.error("Exception occurred while cancelling doc upload session", e);
 
         } finally {
             if (response != null)
@@ -680,6 +711,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
             outbountFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
+            outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
         } finally {
             reentrantLock.unlock();

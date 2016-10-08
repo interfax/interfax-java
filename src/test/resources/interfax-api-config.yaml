@@ -6,4 +6,5 @@ interFAX:
   outboundFaxesCompletedEndpoint: "/outbound/faxes/completed"
   outboundFaxesRecordEndpoint: "/outbound/faxes/%s"
   outboundFaxImageEndpoint: "/outbound/faxes/%s/image"
+  outboundFaxesCancelEndpoint: "/outbound/faxes/%s/cancel"
   outboundDocumentsEndpoint: "/outbound/documents"
