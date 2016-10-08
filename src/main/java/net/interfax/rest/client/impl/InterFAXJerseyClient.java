@@ -52,7 +52,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static int port;
     private static String outboundFaxesEndpoint;
     private static String outboundFaxesCompletedEndpoint;
-    private static String outbountFaxesRecordEndpoint;
+    private static String outboundFaxesRecordEndpoint;
     private static String outboundFaxImageEndpoint;
     private static String outboundFaxesCancelEndpoint;
     private static String outboundDocumentsEndpoint;
@@ -228,12 +228,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
             }
 
             WebTarget target = client.target(outboundFaxesUriBuilder.build());
-            response = target
-                    .request()
-                    .get();
-
+            response = target.request().get();
             outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
-
         } catch (Exception e) {
             log.error("Exception occurred while getting fax list", e);
         } finally {
@@ -262,9 +258,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             WebTarget target = client.target(outboundFaxesCompletedUri);
             response = target.request().get();
-
             outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
-
         } catch (Exception e) {
             log.error("Exception occurred while getting completed fax list", e);
         } finally {
@@ -283,7 +277,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
         try {
 
             URI outboundFaxesRecordUri = UriBuilder
-                                            .fromUri(String.format(outbountFaxesRecordEndpoint, id))
+                                            .fromUri(String.format(outboundFaxesRecordEndpoint, id))
                                             .scheme(scheme)
                                             .host(hostname)
                                             .port(port)
@@ -386,10 +380,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             URI outboundDocumentsUri = getOutboundDocumentsUri(fileToUpload, options);
 
             WebTarget target = client.target(outboundDocumentsUri);
-            response = target
-                        .request()
-                        .header("Content-Length", 0)
-                        .post(null);
+            response = target.request().header("Content-Length", 0).post(null);
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
@@ -422,7 +413,6 @@ public class InterFAXJerseyClient implements InterFAXClient {
                 }
                 apiResponse.setStatusCode(chunkUploadResponses.getStatusCode());
             }
-
         } catch (Exception e) {
             log.error("Exception occurred while uplading document", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -476,7 +466,6 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             apiResponse.setStatusCode(response.getStatus());
             copyHeadersToAPIResponse(response, apiResponse);
-
         } catch (Exception e) {
             log.error("Exception occurred while uploading chunk", e);
             apiResponse.setStatusCode(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -506,9 +495,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             URI outboundDocumentsUriToGetDocumentsList = getUploadedDocumentListUri(options);
 
             WebTarget target = client.target(outboundDocumentsUriToGetDocumentsList);
-            response = target
-                    .request()
-                    .get();
+            response = target.request().get();
 
             uploadedDocumentStatuses = response.readEntity(UploadedDocumentStatus[].class);
         } catch (Exception e) {
@@ -538,9 +525,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
                     .build();
 
             WebTarget target = client.target(outboundDocumentUri);
-            response = target
-                    .request()
-                    .get();
+            response = target.request().get();
 
             uploadedDocumentStatus = response.readEntity(UploadedDocumentStatus.class);
         } catch (Exception e) {
@@ -570,14 +555,11 @@ public class InterFAXJerseyClient implements InterFAXClient {
                     .build();
 
             WebTarget target = client.target(outboundDocumentUri);
-            response = target
-                    .request()
-                    .delete();
+            response = target.request().delete();
 
             apiResponse.setStatusCode(response.getStatus());
             apiResponse.setResponseBody(response.readEntity(String.class));
             copyHeadersToAPIResponse(response, apiResponse);
-
         } catch (Exception e) {
             log.error("Exception occurred while cancelling doc upload session", e);
 
@@ -710,7 +692,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             port = clientConfig.getInterFAX().getPort();
             outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
             outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
-            outbountFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
+            outboundFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
             outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
             outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
