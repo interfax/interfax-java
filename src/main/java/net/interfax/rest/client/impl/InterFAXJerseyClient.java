@@ -354,7 +354,8 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
             response = client.target(uri).request().header("Content-Length", 0).post(null);
             apiResponse.setStatusCode(response.getStatus());
-            apiResponse.setResponseBody(response.readEntity(String.class));
+            if (response.hasEntity())
+                apiResponse.setResponseBody(response.readEntity(String.class));
             copyHeadersToAPIResponse(response, apiResponse);
         } catch (Exception e) {
             log.error("Exception occurred while cancelling fax", e);
