@@ -12,3 +12,4 @@ interFAX:
   outboundSearchEndpoint: "/outbound/search"
   outboundDocumentsEndpoint: "/outbound/documents"
   accountsBalanceEndpoint: "/accounts/self/ppcards/balance"
+  inboundFaxesEndpoint: "/inbound/faxes"

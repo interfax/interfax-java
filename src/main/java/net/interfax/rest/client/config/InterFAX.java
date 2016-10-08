@@ -28,6 +28,8 @@ public class InterFAX {
 
     private String accountsBalanceEndpoint;
 
+    private String inboundFaxesEndpoint;
+
     public String getScheme() {
         return scheme;
     }
@@ -130,5 +132,13 @@ public class InterFAX {
 
     public void setAccountsBalanceEndpoint(final String accountsBalanceEndpoint) {
         this.accountsBalanceEndpoint = accountsBalanceEndpoint;
+    }
+
+    public String getInboundFaxesEndpoint() {
+        return inboundFaxesEndpoint;
+    }
+
+    public void setInboundFaxesEndpoint(final String inboundFaxesEndpoint) {
+        this.inboundFaxesEndpoint = inboundFaxesEndpoint;
     }
 }

@@ -2,6 +2,7 @@ package net.interfax.rest.client;
 
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
@@ -82,6 +83,10 @@ public interface InterFAXClient {
     // Accounts
 
     public Double getAccountCredits() throws UnsuccessfulStatusCodeException;
+
+    // Receiving faxes
+
+    public InboundFaxStructure[] getInboundFaxList() throws UnsuccessfulStatusCodeException;
 
     // client lifecycle
 

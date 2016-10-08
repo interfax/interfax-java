@@ -6,6 +6,7 @@ import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
+import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.SendFaxOptions;
@@ -295,10 +296,19 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
-    public void testGetAccountBalance() throws Exception {
+    public void testGetAccountCredits() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         Double balance = interFAXClient.getAccountCredits();
         Assert.assertEquals(Double.valueOf(3.8500), balance);
+    }
+
+    @Test
+    public void testGetInboundFaxList() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        InboundFaxStructure[] inboundFaxStructures = interFAXClient.getInboundFaxList();
+        Assert.assertEquals(25, inboundFaxStructures.length);
+        Assert.assertEquals(292957796, inboundFaxStructures[0].getMessageId());
     }
 }

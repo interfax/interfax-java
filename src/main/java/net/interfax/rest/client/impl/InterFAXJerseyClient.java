@@ -6,6 +6,7 @@ import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
@@ -61,6 +62,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String outboundSearchEndpoint;
     private static String outboundDocumentsEndpoint;
     private static String accountsBalanceEndpoint;
+    private static String inboundFaxesEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -505,6 +507,13 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public InboundFaxStructure[] getInboundFaxList() throws UnsuccessfulStatusCodeException {
+
+        URI uri = UriBuilder.fromPath(inboundFaxesEndpoint).scheme(scheme).host(hostname).port(port).build();
+        return (InboundFaxStructure[]) executeGetRequest(uri, InboundFaxStructure[].class, t -> t.request().get());
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
@@ -696,6 +705,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             outboundSearchEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
             outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
             accountsBalanceEndpoint = clientConfig.getInterFAX().getAccountsBalanceEndpoint();
+            inboundFaxesEndpoint = clientConfig.getInterFAX().getInboundFaxesEndpoint();
         } finally {
             reentrantLock.unlock();
         }
