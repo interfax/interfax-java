@@ -183,29 +183,18 @@ public class InterFAXJerseyClient implements InterFAXClient {
     @Override
     public OutboundFaxStructure[] getCompletedFaxList(final String[] ids) {
 
-        Response response = null;
-        OutboundFaxStructure[] outboundFaxStructures = null;
-
-        try {
-
-            URI outboundFaxesCompletedUri = UriBuilder
-                                                .fromPath(outboundFaxesCompletedEndpoint)
-                                                .host(hostname)
-                                                .scheme(scheme)
-                                                .port(port)
-                                                .queryParam("ids", getCsvIds(ids))
-                                                .build();
-
-            WebTarget target = client.target(outboundFaxesCompletedUri);
-            response = target.request().get();
-            outboundFaxStructures = response.readEntity(OutboundFaxStructure[].class);
-        } catch (Exception e) {
-            log.error("Exception occurred while getting completed fax list", e);
-        } finally {
-            close(response);
-        }
-
-        return outboundFaxStructures;
+        URI outboundFaxesCompletedUri = UriBuilder
+                                            .fromPath(outboundFaxesCompletedEndpoint)
+                                            .host(hostname)
+                                            .scheme(scheme)
+                                            .port(port)
+                                            .queryParam("ids", getCsvIds(ids))
+                                            .build();
+        return (OutboundFaxStructure[]) executeGetRequest(
+                outboundFaxesCompletedUri,
+                OutboundFaxStructure[].class,
+                target -> target.request().get()
+        );
     }
 
     @Override
