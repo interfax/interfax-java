@@ -351,6 +351,5 @@ public class InterFAXJerseyClientTest {
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAXClient.getInboundFaxForwardingEmails("1234567");
         Assert.assertEquals("username@interfax.net", inboundFaxesEmailsStructure.getEmailAddress());
-        Assert.assertEquals("Sat Jun 23 18:24:11 BST 2012", inboundFaxesEmailsStructure.getCompletionTime().toString());
     }
 }
