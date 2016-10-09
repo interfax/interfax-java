@@ -294,6 +294,115 @@ Additional info:
 
 * [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2929)
 * [Usage example - InterFAXJerseyClientTest class](src/test/java/net/interfax/rest/client/impl/InterFAXJerseyClientTest.java))    
+
+## Documents
+
+[Upload Document](#upload-document) | [Get list](#get-document-list) | [Status](#get-document-status) | [Get Upload Status](Get-upload-status) | [Cancel](#cancel-document)
+
+Document uploads are useful for several situations:
+
+* When your documents are larger than our [System Limitations](https://www.interfax.net/en/help/limitations) 
+allow and you want to submit them in chunks.
+* When you plan to reuse a document for multiple faxes.
+* When you want a document to be available for use by other users in 
+your account.
+
+### Upload Document
+
+Upload a large file in 1 MB chunks
+
+    String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+    File file = new File(absoluteFilePath);
+    
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    APIResponse apiResponse = interFAXClient.uploadDocument(file);
+    
+With additional options,
+    
+    String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+    File file = new File(absoluteFilePath);
+    
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    DocumentUploadSessionOptions documentUploadSessionOptions = new DocumentUploadSessionOptions();
+    documentUploadSessionOptions.setName(Optional.of("overriddenname.pdf"));
+    documentUploadSessionOptions.setSize(Optional.of(Integer.toUnsignedLong(12345)));
+    documentUploadSessionOptions.setDisposition(Optional.of(Disposition.multiUse));
+    documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
+    APIResponse apiResponse = interFAXClient.uploadDocument(file, Optional.of(documentUploadSessionOptions));
+        
+Additional info: 
+
+* [REST API Documentation - 1](https://www.interfax.net/en/dev/rest/reference/2967), [2](https://www.interfax.net/en/dev/rest/reference/2966) 
+* [Usage example - InterFAXJerseyClientTest class](src/test/java/net/interfax/rest/client/impl/InterFAXJerseyClientTest.java))
+        
+### Get Document List
+
+Get a list of previous document uploads which are currently available.
+
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    UploadedDocumentStatus[] uploadedDocumentStatuses = interFAXClient.getUploadedDocumentsList();
+    
+With additional options,
+    
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    GetUploadedDocumentsListOptions getUploadedDocumentsListOptions = new GetUploadedDocumentsListOptions();
+    getUploadedDocumentsListOptions.setLimit(Optional.of(5));
+    getUploadedDocumentsListOptions.setOffset(Optional.of(1));
+    UploadedDocumentStatus[] uploadedDocumentStatuses = interFAXClient.getUploadedDocumentsList(Optional.of(getUploadedDocumentsListOptions));    
+        
+Additional info: 
+
+* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2968)
+* [Usage example - InterFAXJerseyClientTest class](src/test/java/net/interfax/rest/client/impl/InterFAXJerseyClientTest.java))
+
+### Get Upload Status
+
+Get the current status of a specific document upload.
+
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    UploadedDocumentStatus uploadedDocumentStatus = interFAXClient.getUploadedDocumentStatus("deca890355b44b42944970d9773962b5");
+    
+Additional info: 
+
+* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2965)
+* [Usage example - InterFAXJerseyClientTest class](src/test/java/net/interfax/rest/client/impl/InterFAXJerseyClientTest.java))    
+
+### Cancel Document
+
+Cancel a document upload and tear down the upload session, or delete a 
+previous upload.
+
+    InterFAXClient interFAXClient = new InterFAXJerseyClient();
+    APIResponse apiResponse = interFAXClient.cancelDocumentUploadSession("deca890355b44b42944970d9773962b5");
+
+Additional info: 
+
+* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2964)
+* [Usage example - InterFAXJerseyClientTest class](src/test/java/net/interfax/rest/client/impl/InterFAXJerseyClientTest.java))      
+  
+
+## Contributing
+
+ 1. **Fork** the repo on GitHub
+ 2. **Clone** the project to your own machine
+ 3. **Commit** changes to your own branch
+ 4. **Test** the changes you have made
+ 5. **Push** your work back up to your fork
+ 6. Submit a **Pull request** so that we can review your changes
+   
+### Testing
+
+Before submitting a contribution please ensure all tests pass.
+   
+The project is setup using maven and tests can be run using the 
+following command:
+
+    mvn clean test
+    
+## License
+
+This library is released under the [MIT License](LICENSE).    
+        
     
          
          
