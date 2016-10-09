@@ -1,0 +1,26 @@
+{
+  "uuid" : "37422ecf-dce7-3940-9ff5-a1f0a8f2fb4f",
+  "request" : {
+    "url" : "/inbound/faxes/292626603/mark",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-292626603-mark-Delb3.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sun, 09 Oct 2016 00:15:12 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3f41c3fb3c9de26597b2fa2202e3c2f810936eaa143f165ba4a6eaffa70bb1bdb6; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

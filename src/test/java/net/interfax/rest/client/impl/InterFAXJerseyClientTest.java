@@ -346,10 +346,19 @@ public class InterFAXJerseyClientTest {
     }
 
     @Test
-    public void testGetInboundFaxEmails() throws Exception {
+    public void testGetInboundFaxForwardingEmails() throws Exception {
 
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAXClient.getInboundFaxForwardingEmails("1234567");
         Assert.assertEquals("username@interfax.net", inboundFaxesEmailsStructure.getEmailAddress());
+    }
+
+    @Test
+    public void testMarkInboundFax() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        APIResponse apiResponse = interFAXClient.markInboundFax("292626603", Optional.empty());
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+        Assert.assertEquals("true", apiResponse.getResponseBody());
     }
 }

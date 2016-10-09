@@ -97,7 +97,10 @@ public interface InterFAXClient {
 
     public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
-    public InboundFaxesEmailsStructure getInboundFaxForwardingEmails(final String id) throws UnsuccessfulStatusCodeException;
+    public InboundFaxesEmailsStructure getInboundFaxForwardingEmails(final String id)
+            throws UnsuccessfulStatusCodeException;
+
+    public APIResponse markInboundFax(final String id, final Optional<Boolean> unread);
 
     // client lifecycle
 
