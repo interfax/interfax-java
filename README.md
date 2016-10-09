@@ -401,7 +401,7 @@ following command:
     
 ## License
 
-This library is released under the [MIT License](LICENSE).    
+This library is released under the [MIT License](LICENCE).    
         
     
          
