@@ -8,6 +8,7 @@ import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetInboundFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
+import net.interfax.rest.client.domain.InboundFaxesEmailsStructure;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.SendFaxOptions;
@@ -342,5 +343,14 @@ public class InterFAXJerseyClientTest {
         InterFAXClient interFAXClient = new InterFAXJerseyClient();
         byte[] faxImage = interFAXClient.getInboundFaxImage("292626603");
         Assert.assertEquals(37194, faxImage.length);
+    }
+
+    @Test
+    public void testGetInboundFaxEmails() throws Exception {
+
+        InterFAXClient interFAXClient = new InterFAXJerseyClient();
+        InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAXClient.getInboundFaxForwardingEmails("1234567");
+        Assert.assertEquals("username@interfax.net", inboundFaxesEmailsStructure.getEmailAddress());
+        Assert.assertEquals("Sat Jun 23 18:24:11 BST 2012", inboundFaxesEmailsStructure.getCompletionTime().toString());
     }
 }

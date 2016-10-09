@@ -4,6 +4,7 @@ import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetInboundFaxListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
+import net.interfax.rest.client.domain.InboundFaxesEmailsStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
@@ -95,6 +96,8 @@ public interface InterFAXClient {
     public InboundFaxStructure getInboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
     public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+
+    public InboundFaxesEmailsStructure getInboundFaxForwardingEmails(final String id) throws UnsuccessfulStatusCodeException;
 
     // client lifecycle
 

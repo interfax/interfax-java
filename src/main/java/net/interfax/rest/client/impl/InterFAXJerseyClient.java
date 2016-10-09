@@ -8,6 +8,7 @@ import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
 import net.interfax.rest.client.domain.GetInboundFaxListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
+import net.interfax.rest.client.domain.InboundFaxesEmailsStructure;
 import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
@@ -65,6 +66,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String accountsBalanceEndpoint;
     private static String inboundFaxesEndpoint;
     private static String inboundFaxesImageEndpoint;
+    private static String inboundFaxesEmailsEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -520,6 +522,16 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public InboundFaxesEmailsStructure getInboundFaxForwardingEmails(final String id)
+            throws UnsuccessfulStatusCodeException {
+
+        String path = String.format(inboundFaxesEmailsEndpoint, id);
+        URI uri = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port).build();
+        return (InboundFaxesEmailsStructure)
+                executeGetRequest(uri, InboundFaxesEmailsStructure.class, t -> t.request().get());
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
@@ -743,6 +755,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             accountsBalanceEndpoint = clientConfig.getInterFAX().getAccountsBalanceEndpoint();
             inboundFaxesEndpoint = clientConfig.getInterFAX().getInboundFaxesEndpoint();
             inboundFaxesImageEndpoint = clientConfig.getInterFAX().getInboundFaxesImageEndpoint();
+            inboundFaxesEmailsEndpoint = clientConfig.getInterFAX().getInboundFaxesEmailsEndpoint();
         } finally {
             reentrantLock.unlock();
         }
