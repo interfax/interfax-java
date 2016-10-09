@@ -1,0 +1,26 @@
+{
+  "uuid" : "58a01f70-5901-373b-9ac4-4631ee917764",
+  "request" : {
+    "url" : "/inbound/faxes/292626603/resend?email=someone%40example.com",
+    "method" : "POST",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-292626603-resend-6oyjM.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Sun, 09 Oct 2016 00:28:36 GMT",
+      "Set-Cookie" : "TS0194c058=0173233f3fbab27ac3cc7aa2ad104bdfee7f03a249feeda04f475e16a58c3552e6b74aed7f; Path=/",
+      "Transfer-Encoding" : "chunked"
+    }
+  }
+}

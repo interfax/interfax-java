@@ -16,3 +16,4 @@ interFAX:
   inboundFaxesImageEndpoint: "/inbound/faxes/%s/image"
   inboundFaxesEmailsEndpoint: "/inbound/faxes/%s/emails"
   inboundFaxesMarkEndpoint: "/inbound/faxes/%s/mark"
+  inboundFaxesResendEndpoint: "/inbound/faxes/%s/resend"

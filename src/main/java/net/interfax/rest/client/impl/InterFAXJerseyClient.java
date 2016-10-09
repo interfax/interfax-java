@@ -68,6 +68,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
     private static String inboundFaxesImageEndpoint;
     private static String inboundFaxesEmailsEndpoint;
     private static String inboundFaxesMarkEndpoint;
+    private static String inboundFaxesResendEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -542,6 +543,15 @@ public class InterFAXJerseyClient implements InterFAXClient {
     }
 
     @Override
+    public APIResponse resendInboundFax(final String id, final Optional<String> email) {
+
+        String path = String.format(inboundFaxesResendEndpoint, id);
+        UriBuilder uriBuilder = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port);
+        email.ifPresent(x -> uriBuilder.queryParam("email", x));
+        return executePostRequest(uriBuilder.build(), null, t -> t.request().header("Content-Length", 0).post(null));
+    }
+
+    @Override
     public void closeClient() {
 
         client.close();
@@ -767,6 +777,7 @@ public class InterFAXJerseyClient implements InterFAXClient {
             inboundFaxesImageEndpoint = clientConfig.getInterFAX().getInboundFaxesImageEndpoint();
             inboundFaxesEmailsEndpoint = clientConfig.getInterFAX().getInboundFaxesEmailsEndpoint();
             inboundFaxesMarkEndpoint = clientConfig.getInterFAX().getInboundFaxesMarkEndpoint();
+            inboundFaxesResendEndpoint = clientConfig.getInterFAX().getInboundFaxesResendEndpoint();
         } finally {
             reentrantLock.unlock();
         }

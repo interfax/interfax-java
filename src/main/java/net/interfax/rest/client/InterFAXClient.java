@@ -102,6 +102,8 @@ public interface InterFAXClient {
 
     public APIResponse markInboundFax(final String id, final Optional<Boolean> unread);
 
+    public APIResponse resendInboundFax(final String id, final Optional<String> email);
+
     // client lifecycle
 
     public void closeClient();
