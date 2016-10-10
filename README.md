@@ -1,6 +1,6 @@
 # InterFAX Java Library
 
-[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java)
+[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client)
 
 [Installation](#installation) | [Getting Started](#getting-started) | [Usage](#usage) | [Contributing](#contributing) | [License](#license)
 
@@ -8,25 +8,26 @@ Send and receive faxes in Java with the [InterFAX REST API](https://www.interfax
 
 ## Installation
 
-You can use the library using one of the following approaches.
+You can use the library using one of the following approaches 
 
-### Include as maven dependency
+### Include the library as a maven dependency
 
     <dependency>
       <groupId>net.interfax</groupId>
       <artifactId>api-client</artifactId>
-      <version>0.1.0</version>
+      <version>${latest-version}</version>
     </dependency>
 
-### Download jar and include in application classpath
+### Download the jar file and include in your application's classpath
 
-Download the latest jar from the [OSS Sonatype InterFAX repository](https://oss.sonatype.org/service/local/repositories/releases/content/net/interfax/api-client/0.1.0/api-client-0.1.0.jar) and place it in your application classpath.
+Download the latest version from the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cnet.interfax.api-client)
 
 ## Getting started
 
-### Pre-requisites
+### Pre-requisite(s)
 
-To use this library you will need a InterFAX [developer account](https://www.interfax.net/en/dev).
+The pre-requisite to using the InterFAX API is to have API credentials,
+which can be done by registering for a [developer account](https://secure.interfax.net/Default.aspx?Lang=en&Target=RegistrationService&Method=DisplayForm&BPCode=).
 
 ### Initialise the client
 
