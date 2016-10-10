@@ -8,9 +8,9 @@ Send and receive faxes in Java with the [InterFAX REST API](https://www.interfax
 
 ## Installation
 
-You can use the library using one of the following approaches 
+You can use the library using one of the following approaches.
 
-### Include the library as a maven dependency
+### Include as maven dependency
 
     <dependency>
       <groupId>net.interfax</groupId>
@@ -18,16 +18,15 @@ You can use the library using one of the following approaches
       <version>0.1.0</version>
     </dependency>
 
-### Download the jar file and include in your application's classpath
+### Download jar and include in application classpath
 
-Download the latest version from the [OSS Sonatype InterFAX repository](https://oss.sonatype.org/service/local/repositories/releases/content/net/interfax/api-client/0.1.0/api-client-0.1.0.jar)
+Download the latest jar from the [OSS Sonatype InterFAX repository](https://oss.sonatype.org/service/local/repositories/releases/content/net/interfax/api-client/0.1.0/api-client-0.1.0.jar) and place it in your application classpath.
 
 ## Getting started
 
-### Pre-requisite(s)
+### Pre-requisites
 
-The pre-requisite to using the InterFAX API is to have API credentials,
-which can be done by registering for a [developer account](https://secure.interfax.net/Default.aspx?Lang=en&Target=RegistrationService&Method=DisplayForm&BPCode=).
+To use this library you will need a InterFAX [developer account](https://www.interfax.net/en/dev).
 
 ### Initialise the client
 
