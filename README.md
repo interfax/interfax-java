@@ -8,7 +8,8 @@ Send and receive faxes in Java with the [InterFAX REST API](https://www.interfax
 
 ## Installation
 
-You can use the library using one of the following approaches. 
+Use of the library requires Java 8 or higher and can be done via one of
+the following approaches. 
 
 ### Include as maven dependency
 
