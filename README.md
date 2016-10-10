@@ -12,13 +12,15 @@ You can use the library using one of the following approaches.
 
 ### Include as maven dependency
 
-    <dependency>
-      <groupId>net.interfax</groupId>
-      <artifactId>api-client</artifactId>
-      <version>${version-number}</version>
-    </dependency>
+```xml
+<dependency>
+  <groupId>net.interfax</groupId>
+  <artifactId>api-client</artifactId>
+  <version>${version-number}</version>
+</dependency>
+```
     
-Replace ${version-number} with your preferred version number   
+Replace `${version-number}` with your preferred version number   
 
 ### Download jar and include in application classpath
 
