@@ -4,3 +4,33 @@ jdk:
 - oraclejdk8
 
 sudo: false
+
+after_success:
+
+- echo "<settings><servers><server><id>ossrh</id><username>\${env.OSSRH_USER}</username><password>\${env.OSSRH_PASS}</password></server></servers></settings>" > ~/settings.xml
+
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in scripts/keys/secring.gpg.enc -out
+  ~/secring.gpg -d
+
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in scripts/keys/pubring.gpg.enc -out
+  ~/pubring.gpg -d
+
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in scripts/keys/interfax_id_rsa.pem.enc -out
+  ~/interfax_id_rsa.pem -d
+
+- git config --global user.email "travis@interfax.net"
+
+- git config --global user.name "Travis Release"
+
+- eval "$(ssh-agent -s)"
+
+- chmod 600 ~/interfax_id_rsa.pem
+
+- ssh-add ~/interfax_id_rsa.pem
+
+after_script:
+  scripts/release.sh
+
+env:
+  global:
+    secure: MZgv8wLCE6eCDuZhDmc9vcjIfeCTzSnZmun1bLy/t/WeE5MSgOZxkvKZvfGgXsZ3FLCzLZFdeyENnud1jenXTDl69cLHSLpw8uXpStZHmGBJtwdoNPqp7WX9K/3UiVlz2kyEg+SsVyN4GHkM3MlcZJqf8EHnGqGb4m4FmlRh9MP5sxmtt+e1OYYDg/fBbjGVhhmNW+3F8YRZDW/zidfKhNQIhC/QSoJ9Onnd6iogAFJnAdsWIoH86oaNb4wN6j13ERbozkoxjfXps56KIcPjUVLDVhk99a7WMD3ldwoPR82uNJukKAGX0j7zzvQlW+H4S5MEIUWYuvqYovNTidiFdq1gBJXmQZQSc0HlBmS/ekTwp77usMW10i/NOQ9e6ra1hhHkF7yrSj98+5w+/KLNJQ3Hq7fSg4EmYLFTvF202d1d3TFgtGNaFARO4T8+Xo+ofUFVgs4h9uirmOG4Lx3bKAELgELnhQSx2wqNg5XqWSSZdbO6TqkxjXNXMLga3bMH4UWoA5hI6BdwP2EnI+AS5Q+dPeJ7toUSdjGzzaDiS0uvBt4iQGafR18O0j2ySXzAjBA7mvoUS54f8gZw8nQd9g6bj0cY0eVlP15ttlPuS0ylnX3DbdeZeOlWv6i43LDMb7rahw3Vh099oL6nBh1B6x67ljCTng5k2XcbyiSKNdA=
