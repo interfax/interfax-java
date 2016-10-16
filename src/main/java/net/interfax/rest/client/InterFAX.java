@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-public interface InterFAXClient {
+public interface InterFAX {
 
     // Sending faxes
 

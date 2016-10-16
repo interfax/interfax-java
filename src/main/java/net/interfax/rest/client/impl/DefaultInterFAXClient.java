@@ -1,6 +1,6 @@
 package net.interfax.rest.client.impl;
 
-import net.interfax.rest.client.InterFAXClient;
+import net.interfax.rest.client.InterFAX;
 import net.interfax.rest.client.config.ClientConfig;
 import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class InterFAXJerseyClient implements InterFAXClient {
+public class DefaultInterFAXClient implements InterFAX {
 
     private static String username;
     private static String password;
@@ -74,17 +74,17 @@ public class InterFAXJerseyClient implements InterFAXClient {
 
     private final ReentrantLock reentrantLock = new ReentrantLock();
 
-    private static final Logger log = LoggerFactory.getLogger(InterFAXJerseyClient.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultInterFAXClient.class);
 
-    public InterFAXJerseyClient(String username, String password) {
+    public DefaultInterFAXClient(String username, String password) {
 
-        InterFAXJerseyClient.username = username;
-        InterFAXJerseyClient.password = password;
+        DefaultInterFAXClient.username = username;
+        DefaultInterFAXClient.password = password;
 
         initializeClient(username, password);
     }
 
-    public InterFAXJerseyClient() {
+    public DefaultInterFAXClient() {
 
         initialiseCredentials();
         initializeClient(username, password);
