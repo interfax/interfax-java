@@ -6,7 +6,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST = "false" ]]; then
     echo "===="
     pwd
     echo "===="
-    ls -ltr scripts/keys
+    ls -ltr ~
     echo "===="
-    mvn release:prepare release:perform -Darguments="-Dgpg.defaultKeyring=false -Dgpg-keyname=54F168DD -Dgpg.passphrase=$GPGKEY_PASSPHRASE -Dgpg.publicKeyring=~/pubring.gpg -Dgpg.secretKeyring=~/secring.gpg -DskipTests=true -DskipTests=true" -B -Prelease --settings ~/settings.xml
+    mvn release:prepare release:perform -Darguments="-Dgpg.defaultKeyring=false -Dgpg-keyname=54F168DD -Dgpg.passphrase=$GPGKEY_PASSPHRASE -Dgpg.publicKeyring=~/pubring.gpg -Dgpg.secretKeyring=~/secring.gpg -DskipTests=true" -B -Prelease --settings ~/settings.xml
 fi
