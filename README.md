@@ -113,8 +113,8 @@ public APIResponse sendFax(final String faxNumber,
                            throws IOException;
 ```
 
-All requests to send a fax can include the following `Options`, set via [`SendFaxOptions`](src/main/java/net/interfax/rest/client/domain/SendFaxOptions.java) class
-**Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)                                                                                                                                                    
+All requests to send a fax can include the following **Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)
+set via [`SendFaxOptions`](src/main/java/net/interfax/rest/client/domain/SendFaxOptions.java) class                                                                                                                                                    
                               
 ### Get Outbound Fax List
                               
