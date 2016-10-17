@@ -4,7 +4,7 @@
 
     <groupId>net.interfax</groupId>
     <artifactId>api-client</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
 
     <name>InterFAX Java Client</name>
     <description>Library that enables using InterFAX HTTP APIs using Java</description>
@@ -30,7 +30,7 @@
         <connection>scm:git:git@github.com:interfax/interfax-java.git</connection>
         <developerConnection>scm:git:git@github.com:interfax/interfax-java.git</developerConnection>
         <url>git@github.com:interfax/interfax-java.git</url>
-      <tag>HEAD</tag>
+      <tag>api-client-0.3</tag>
   </scm>
 
     <distributionManagement>
