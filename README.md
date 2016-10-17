@@ -4,12 +4,11 @@
 
 [Installation](#installation) | [Getting Started](#getting-started) | [Usage](#usage) | [Contributing](#contributing) | [License](#license)
 
-Send and receive faxes in Java with the [InterFAX REST API](https://www.interfax.net/en/dev/rest/reference).
+Send and receive faxes in Java with the [InterFAX](https://www.interfax.net/en/dev) REST API.
 
 ## Installation
 
-Use of the library requires Java 8 or higher and can be done via one of
-the following approaches. 
+Use of the library requires Java 8 or higher and can be done via one of the following approaches. 
 
 ### Include as maven dependency
 
@@ -30,26 +29,42 @@ and place it in your application classpath.
 
 ## Getting started
 
-### Pre-requisites
+To send a fax from a PDF file:
 
-To use this library you will need a InterFAX [developer account](https://www.interfax.net/en/dev).
-
-### Initialise the client
-
-Once you have the API credentials in the form of a username and 
-password, the simplest way to get started is to initialise a new 
-`InterFAX` object, using the [Jersey](https://jersey.java.net/) based 
-HTTP client implementation, passing the API username and password as 
-constructor arguments as shown below.
-
-    InterFAX interFAX = new DefaultInterFAXClient("api-username", "api-password");
-        
-For alternate ways of passing API credentials, including via a `yaml` 
-file and environment variables, refer to: [api-credential-configuration.md](docs/api-credential-configuration.md)
+```java
+java.io.File file = new File(absoluteFilePath);
+InterFAX interFAX = new DefaultInterFAXClient("username", "password");
+APIResponse apiResponse = interFAX.sendFax(faxNumber, file);
+```
 
 ## Usage
 
-[Initialise](#initialise-the-client) | [Account](#account) | [Outbound](#outbound) | [Inbound](#inbound) | [Documents](#documents)
+[Client](#client) | [Account](#account) | [Outbound](#outbound) | [Inbound](#inbound) | [Documents](#documents)
+
+## Client
+
+The client follows the [12-factor](http://12factor.net/config) apps principle and can be either set directly or via 
+environment variables.
+
+```java
+// Initialize using parameters
+InterFAX interFAX = new DefaultInterFAXClient("username", "password");
+
+// Alternative 1: Initialize using environment variables
+// Ensure following env vars are initialized with values of your API credentials
+// * INTERFAX_USERNAME
+// * INTERFAX_PASSWORD
+InterFAX interFAX = new DefaultInterFAXClient();
+
+// Alternative 2: Initialize using yaml file
+// Create a file called `interfax-api-credentials.yaml` with the following contents, replacing the value of `username`
+// and `password` fields with those of your API credentials.
+//   username: "api-username"
+//   password: "api-password"
+InterFAX interFAX = new DefaultInterFAXClient();
+```
+
+All connections are established over HTTPS.
 
 ## Account
 
@@ -57,13 +72,12 @@ file and environment variables, refer to: [api-credential-configuration.md](docs
 
 Determine the remaining faxing credits in your account
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    Double balance = interFAX.getAccountCredits();
-    
-Additional info: 
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+Double balance = interFAX.getAccountCredits();
+```    
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/3001)
-* [Usage example - DefaultInterFAXClientTest class, `testGetAccountCredits` method](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))  
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/3001)  
 
 ## Outbound
 
@@ -71,235 +85,215 @@ Additional info:
 
 ### Send Fax
 
-To send a fax, simply invoke the [`sendFax`](src/main/java/net/interfax/rest/client/InterFAX.java)
-method of the `InterFAX` class.
+Submit a fax to a single destination number.
 
-Example:
+There are a few ways to send a fax. One way is to directly provide a file path or url.
 
-    java.io.File file = new File(absoluteFilePath);
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.sendFax(faxNumber, file);
+```java
+// with an absoluteFilePath
+java.io.File file = new File(absoluteFilePath);
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.sendFax(faxNumber, file);
 
-For additional options, including sending an array of files as a fax and
-sending an pre-uploaded document as a fax, the following methods may be
-used
+// with a URL
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.pdf");
+```
 
-    public APIResponse sendFax(final String faxNumber,
-                               final File fileToSendAsFax,
-                               final Optional<SendFaxOptions> options) 
-                               throws IOException;
-                               
-    public APIResponse sendFax(final String faxNumber, 
-                               final File[] filesToSendAsFax) 
-                               throws IOException;
-                                                              
-    public APIResponse sendFax(final String faxNumber,
-                                   final File[] filesToSendAsFax,
-                                   final Optional<SendFaxOptions> options) 
-                                   throws IOException;
-                                                                                                 
-    public APIResponse sendFax(final String faxNumber, 
-                               final String urlOfDoc);
-                                                                                                                                
-    public APIResponse sendFax(final String faxNumber, 
-                               final String urlOfDoc, 
-                               final Optional<SendFaxOptions> options);                                                                                                                                
-                               
-Refer the the accompanying javadocs in [InterFAX](src/main/java/net/interfax/rest/client/InterFAX.java)
+InterFAX supports over 20 file types including HTML, PDF, TXT, Word, and many more. For a full list see the 
+[Supported File Types](https://www.interfax.net/en/help/supported_file_types) documentation.
 
-Additional info: 
+The returned object is a [`APIResponse`](src/main/java/net/interfax/rest/client/domain/APIResponse.java) with the 
+`statusCode` and `responseBody` of the request submitted to InterFAX.
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2918)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-                              
+To send multiple files just pass in an array of files
+```java
+public APIResponse sendFax(final String faxNumber, 
+                           final File[] filesToSendAsFax) 
+                           throws IOException;
+```
+
+All requests to send a fax can include the following **Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)
+set via [`SendFaxOptions`](src/main/java/net/interfax/rest/client/domain/SendFaxOptions.java) class                                                                                                                                                    
+---                              
 ### Get Outbound Fax List
                               
 Get a list of recent outbound faxes (which does not include batch faxes).
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList();
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList();
+```
 
-Using additional options,
+Using additional **Options:** [`limit`, `lastId`, `sortOrder`, `userId`](https://www.interfax.net/en/dev/rest/reference/2920)
+
+```java    
+GetFaxListOptions getFaxListOptions = new GetFaxListOptions();
+getFaxListOptions.setLimit(Optional.of(5));
+
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList(Optional.of(getFaxListOptions));
+```
     
-    GetFaxListOptions getFaxListOptions = new GetFaxListOptions();
-    getFaxListOptions.setLimit(Optional.of(5));
-
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList(Optional.of(getFaxListOptions));    
-    
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2920)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2920)
+---
 ### Get Completed Fax List
 
-Get details for a subset of completed faxes from a submitted list. 
-(Submitted id's which have not completed are ignored).
+Get details for a subset of completed faxes from a submitted list. (Submitted id's which have not completed are 
+ignored).
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure[] outboundFaxStructures = interFAX.getCompletedFaxList(new String[]{"667915751", "667915471"});
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure[] outboundFaxStructures = interFAX.getCompletedFaxList(new String[]{"667915751", "667915471"});
+```
     
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2972)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-    
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2972)
+---    
 ### Get Outbound Fax Record
     
-Retrieves information regarding a previously-submitted fax, including 
-its current status.
-    
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");    
-    
-Additional info: 
+Retrieves information regarding a previously-submitted fax, including its current status.
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2921)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
-    
+```java    
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+```
+
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2921)    
+---    
 ### Get Outbound Fax Image
     
 Retrieve the fax image (TIFF file) of a submitted fax.
-    
-    InterFAX interFAX = new DefaultInterFAXClient();
-    byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
-    
-Additional info: 
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2941)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
+```java    
+InterFAX interFAX = new DefaultInterFAXClient();
+byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+```
     
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2941)    
+---    
 ### Cancel a Fax
     
 Cancel a fax in progress.
     
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.cancelFax("279499862");
+```java    
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.cancelFax("279499862");
+```
         
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2939)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))        
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2939)    
+---
 ### Search Fax List
 
 Search for outbound faxes.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure[] outboundFaxStructures = interFAX.searchFaxList();        
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure[] outboundFaxStructures = interFAX.searchFaxList();
+```
 
-Using additional options,
+Using additional **Options:** [`ids`, `reference`, `dateFrom`, `dateTo`, `status`, `userId`, `faxNumber`, `limit`, `offset`](https://www.interfax.net/en/dev/rest/reference/2959)
 
-    SearchFaxOptions searchFaxOptions = new SearchFaxOptions();
-    searchFaxOptions.setLimit(Optional.of(3));
-    searchFaxOptions.setFaxNumber(Optional.of("+442084978672"));
-    InterFAX interFAX = new DefaultInterFAXClient();
-    OutboundFaxStructure[] outboundFaxStructures = interFAX.searchFaxList(Optional.of(searchFaxOptions));    
-    
-Additional info: 
+```java
+SearchFaxOptions searchFaxOptions = new SearchFaxOptions();
+searchFaxOptions.setLimit(Optional.of(3));
+searchFaxOptions.setFaxNumber(Optional.of("+442084978672"));
+InterFAX interFAX = new DefaultInterFAXClient();
+OutboundFaxStructure[] outboundFaxStructures = interFAX.searchFaxList(Optional.of(searchFaxOptions));
+```    
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2959)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2959)    
+---
 ### Hide Fax
 
 Hide a fax from listing in queries (there is no way to unhide a fax).
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.hideFax("667915469");
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.hideFax("667915469");
+```
 
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2940)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2940)
+---
 ## Inbound
 
 [Get list](#get-inbound-fax-list) | [Get record](#get-inbound-fax-record) | [Get image](#get-inbound-fax-image) | [Get emails](#get-forwarding-emails) | [Mark as read](#mark-as-readunread) | [Resend to email](#resend-inbound-fax)
 
 ### Get Inbound Fax List
 
-Retrieves a user's list of inbound faxes. (Sort order is always in 
-descending ID).
+Retrieves a user's list of inbound faxes. (Sort order is always in descending ID).
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    InboundFaxStructure[] inboundFaxStructures = interFAX.getInboundFaxList();
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+InboundFaxStructure[] inboundFaxStructures = interFAX.getInboundFaxList();
+```
     
-Using additional options,
+Using additional **Options:** [`unreadOnly`, `limit`, `lastId`, `allUsers`](https://www.interfax.net/en/dev/rest/reference/2935)
     
-    GetInboundFaxListOptions getInboundFaxListOptions = new GetInboundFaxListOptions();
-    getInboundFaxListOptions.setAllUsers(Optional.of(true));
-    getInboundFaxListOptions.setUnreadOnly(Optional.of(true));
-    getInboundFaxListOptions.setLimit(Optional.of(3));
-    InterFAX interFAX = new DefaultInterFAXClient();
-    InboundFaxStructure[] inboundFaxStructures = interFAX.getInboundFaxList(Optional.of(getInboundFaxListOptions));    
-    
-Additional info: 
+```java
+GetInboundFaxListOptions getInboundFaxListOptions = new GetInboundFaxListOptions();
+getInboundFaxListOptions.setAllUsers(Optional.of(true));
+getInboundFaxListOptions.setUnreadOnly(Optional.of(true));
+getInboundFaxListOptions.setLimit(Optional.of(3));
+InterFAX interFAX = new DefaultInterFAXClient();
+InboundFaxStructure[] inboundFaxStructures = interFAX.getInboundFaxList(Optional.of(getInboundFaxListOptions));
+```
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2935)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2935)
+---
 ### Get Inbound Fax Record
 
 Retrieves a single fax's metadata (receive time, sender number, etc.).
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    InboundFaxStructure inboundFaxStructure = interFAX.getInboundFaxRecord("292626603");
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+InboundFaxStructure inboundFaxStructure = interFAX.getInboundFaxRecord("292626603");
+```
 
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2938)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-    
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2938)
+---    
 ### Get Inbound Fax Image
 
 Retrieves a single fax's image.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    byte[] faxImage = interFAX.getInboundFaxImage("292626603");
-    
-Additional info: 
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+```
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2937)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))   
- 
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2937)   
+--- 
 ### Get Forwarding Emails
  
 Retrieve the list of email addresses to which a fax was forwarded.
- 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAX.getInboundFaxForwardingEmails("1234567");
-     
-Additional info: 
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2930)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
+```java 
+InterFAX interFAX = new DefaultInterFAXClient();
+InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAX.getInboundFaxForwardingEmails("1234567");
+```
+
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2930)
      
 ### Mark As Read/Unread
 
 Mark a transaction as read/unread.
-     
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.markInboundFax("292626603", Optional.of(true));
-    
-Additional info: 
+```java     
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.markInboundFax("292626603", Optional.of(true));
+```
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2936)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-    
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2936)
+---    
 ### Resend Inbound Fax
 
 Resend an inbound fax to a specific email address.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.resendInboundFax("292626603", Optional.of("someone@example.com"));
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.resendInboundFax("292626603", Optional.of("someone@example.com"));
+```
     
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2929)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2929)
+---
 ## Documents
 
 [Upload Document](#upload-document) | [Get list](#get-document-list) | [Status](#get-document-status) | [Get Upload Status](Get-upload-status) | [Cancel](#cancel-document)
@@ -316,76 +310,74 @@ your account.
 
 Upload a large file in 1 MB chunks
 
-    String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
-    File file = new File(absoluteFilePath);
-    
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.uploadDocument(file);
+```java
+String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+File file = new File(absoluteFilePath);
+
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.uploadDocument(file);
+```
     
 With additional options,
-    
-    String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
-    File file = new File(absoluteFilePath);
-    
-    InterFAX interFAX = new DefaultInterFAXClient();
-    DocumentUploadSessionOptions documentUploadSessionOptions = new DocumentUploadSessionOptions();
-    documentUploadSessionOptions.setName(Optional.of("overriddenname.pdf"));
-    documentUploadSessionOptions.setSize(Optional.of(Integer.toUnsignedLong(12345)));
-    documentUploadSessionOptions.setDisposition(Optional.of(Disposition.multiUse));
-    documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
-    APIResponse apiResponse = interFAX.uploadDocument(file, Optional.of(documentUploadSessionOptions));
-        
-Additional info: 
 
-* [REST API Documentation - 1](https://www.interfax.net/en/dev/rest/reference/2967), [2](https://www.interfax.net/en/dev/rest/reference/2966) 
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
-        
+```java
+String absoluteFilePath = this.getClass().getClassLoader().getResource("A17_FlightPlan.pdf").getFile();
+File file = new File(absoluteFilePath);
+
+InterFAX interFAX = new DefaultInterFAXClient();
+DocumentUploadSessionOptions documentUploadSessionOptions = new DocumentUploadSessionOptions();
+documentUploadSessionOptions.setName(Optional.of("overriddenname.pdf"));
+documentUploadSessionOptions.setSize(Optional.of(Integer.toUnsignedLong(12345)));
+documentUploadSessionOptions.setDisposition(Optional.of(Disposition.multiUse));
+documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
+APIResponse apiResponse = interFAX.uploadDocument(file, Optional.of(documentUploadSessionOptions));
+```
+
+**More:** [documentation - 1](https://www.interfax.net/en/dev/rest/reference/2967), [2](https://www.interfax.net/en/dev/rest/reference/2966)
+---        
 ### Get Document List
 
 Get a list of previous document uploads which are currently available.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    UploadedDocumentStatus[] uploadedDocumentStatuses = interFAX.getUploadedDocumentsList();
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+UploadedDocumentStatus[] uploadedDocumentStatuses = interFAX.getUploadedDocumentsList();
+```
     
-With additional options,
-    
-    InterFAX interFAX = new DefaultInterFAXClient();
-    GetUploadedDocumentsListOptions getUploadedDocumentsListOptions = new GetUploadedDocumentsListOptions();
-    getUploadedDocumentsListOptions.setLimit(Optional.of(5));
-    getUploadedDocumentsListOptions.setOffset(Optional.of(1));
-    UploadedDocumentStatus[] uploadedDocumentStatuses = interFAX.getUploadedDocumentsList(Optional.of(getUploadedDocumentsListOptions));    
-        
-Additional info: 
+With additional **Options:** [`limit`, `offset`](https://www.interfax.net/en/dev/rest/reference/2968)
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2968)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))
+```java    
+InterFAX interFAX = new DefaultInterFAXClient();
+GetUploadedDocumentsListOptions getUploadedDocumentsListOptions = new GetUploadedDocumentsListOptions();
+getUploadedDocumentsListOptions.setLimit(Optional.of(5));
+getUploadedDocumentsListOptions.setOffset(Optional.of(1));
+UploadedDocumentStatus[] uploadedDocumentStatuses = interFAX.getUploadedDocumentsList(Optional.of(getUploadedDocumentsListOptions));    
+```
 
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2968)
+---
 ### Get Upload Status
 
 Get the current status of a specific document upload.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    UploadedDocumentStatus uploadedDocumentStatus = interFAX.getUploadedDocumentStatus("deca890355b44b42944970d9773962b5");
-    
-Additional info: 
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+UploadedDocumentStatus uploadedDocumentStatus = interFAX.getUploadedDocumentStatus("deca890355b44b42944970d9773962b5");
+```
 
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2965)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))    
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2965)    
+---
 ### Cancel Document
 
-Cancel a document upload and tear down the upload session, or delete a 
-previous upload.
+Cancel a document upload and tear down the upload session, or delete a previous upload.
 
-    InterFAX interFAX = new DefaultInterFAXClient();
-    APIResponse apiResponse = interFAX.cancelDocumentUploadSession("deca890355b44b42944970d9773962b5");
+```java
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.cancelDocumentUploadSession("deca890355b44b42944970d9773962b5");
+```
 
-Additional info: 
-
-* [REST API Documentation](https://www.interfax.net/en/dev/rest/reference/2964)
-* [Usage example - DefaultInterFAXClientTest class](src/test/java/net/interfax/rest/client/impl/DefaultInterFAXClientTest.java))      
-  
-
+**More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2964)       
+---
 ## Contributing
 
  1. **Fork** the repo on GitHub
@@ -394,7 +386,7 @@ Additional info:
  4. **Test** the changes you have made
  5. **Push** your work back up to your fork
  6. Submit a **Pull request** so that we can review your changes
-   
+
 ### Testing
 
 Before submitting a contribution please ensure all tests pass.
@@ -402,7 +394,39 @@ Before submitting a contribution please ensure all tests pass.
 The project is setup using maven and tests can be run using the 
 following command:
 
-    mvn clean test
+```shell
+$ mvn clean test
+```
+     
+### Releasing
+    
+#### Versioning
+
+The project uses [semver](http://semver.org/) for versioning. 
+
+##### Minor Releases
+
+If a change is backwards compatible, it can be committed and pushed straight to master. Versioning is handled 
+automatically by incrementing the **minor version** by 1 and released automatically by travisCI, using the 
+[release script](scripts/release.sh)
+
+##### Major Releases 
+
+For breaking changes / major releases, the version number needs to be manually updated in the [project pom](pom.xml). 
+Simply **increment the major version by 1** and **drop the minor version to 0**. Example, if the version in the project
+pom is as follows:
+
+```xml
+<version>0.34-SNAPSHOT</version>
+```
+
+A major change should update it to:
+
+```xml
+<version>1.0-SNAPSHOT</version>
+```
+
+Once updated, committed and pushed to master, travisCI handles releasing the version to maven central. 
     
 ## License
 
