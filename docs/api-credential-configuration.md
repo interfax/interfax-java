@@ -1,6 +1,6 @@
-Alternate ways of passing the API credentials include:
+# Alternate ways of passing the API credentials include:
 
-* Pass credentials via a `yaml` file        
+## Pass credentials via a `yaml` file        
         
 Create a file called `interfax-api-credentials.yaml` with the following
 contents, replacing the value of `username` and `password` fields with
@@ -14,9 +14,9 @@ initialise a new `InterFAXClient` as shown below.
 
     InterFAXClient interFAXClient = new InterFAXJerseyClient();
     
-* Pass credentials via environment variables
+## Pass credentials via environment variables
 
-Copy the file [`interfax-api-credentials.yaml`](src/test/resources/interfax-api-credentials.yaml)
+Copy the file [`interfax-api-credentials.yaml`](../src/test/resources/interfax-api-credentials.yaml)
 into your applications' classpath. The file is pre-configured to use
 values of the following environment variables as the API credentials.
 
