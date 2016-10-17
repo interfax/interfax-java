@@ -115,7 +115,7 @@ public APIResponse sendFax(final String faxNumber,
 
 All requests to send a fax can include the following **Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)
 set via [`SendFaxOptions`](src/main/java/net/interfax/rest/client/domain/SendFaxOptions.java) class                                                                                                                                                    
----                              
+                             
 ### Get Outbound Fax List
                               
 Get a list of recent outbound faxes (which does not include batch faxes).
@@ -136,7 +136,7 @@ OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList(Optional.of(g
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2920)
----
+
 ### Get Completed Fax List
 
 Get details for a subset of completed faxes from a submitted list. (Submitted id's which have not completed are 
@@ -148,7 +148,7 @@ OutboundFaxStructure[] outboundFaxStructures = interFAX.getCompletedFaxList(new 
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2972)
----    
+ 
 ### Get Outbound Fax Record
     
 Retrieves information regarding a previously-submitted fax, including its current status.
@@ -159,7 +159,7 @@ OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2921)    
----    
+  
 ### Get Outbound Fax Image
     
 Retrieve the fax image (TIFF file) of a submitted fax.
@@ -170,7 +170,7 @@ byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2941)    
----    
+ 
 ### Cancel a Fax
     
 Cancel a fax in progress.
@@ -181,7 +181,7 @@ APIResponse apiResponse = interFAX.cancelFax("279499862");
 ```
         
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2939)    
----
+
 ### Search Fax List
 
 Search for outbound faxes.
@@ -202,7 +202,7 @@ OutboundFaxStructure[] outboundFaxStructures = interFAX.searchFaxList(Optional.o
 ```    
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2959)    
----
+
 ### Hide Fax
 
 Hide a fax from listing in queries (there is no way to unhide a fax).
@@ -213,7 +213,7 @@ APIResponse apiResponse = interFAX.hideFax("667915469");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2940)
----
+
 ## Inbound
 
 [Get list](#get-inbound-fax-list) | [Get record](#get-inbound-fax-record) | [Get image](#get-inbound-fax-image) | [Get emails](#get-forwarding-emails) | [Mark as read](#mark-as-readunread) | [Resend to email](#resend-inbound-fax)
@@ -239,7 +239,7 @@ InboundFaxStructure[] inboundFaxStructures = interFAX.getInboundFaxList(Optional
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2935)
----
+
 ### Get Inbound Fax Record
 
 Retrieves a single fax's metadata (receive time, sender number, etc.).
@@ -250,7 +250,7 @@ InboundFaxStructure inboundFaxStructure = interFAX.getInboundFaxRecord("29262660
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2938)
----    
+    
 ### Get Inbound Fax Image
 
 Retrieves a single fax's image.
@@ -261,7 +261,7 @@ byte[] faxImage = interFAX.getInboundFaxImage("292626603");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2937)   
---- 
+ 
 ### Get Forwarding Emails
  
 Retrieve the list of email addresses to which a fax was forwarded.
@@ -282,7 +282,7 @@ APIResponse apiResponse = interFAX.markInboundFax("292626603", Optional.of(true)
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2936)
----    
+    
 ### Resend Inbound Fax
 
 Resend an inbound fax to a specific email address.
@@ -293,7 +293,7 @@ APIResponse apiResponse = interFAX.resendInboundFax("292626603", Optional.of("so
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2929)
----
+
 ## Documents
 
 [Upload Document](#upload-document) | [Get list](#get-document-list) | [Status](#get-document-status) | [Get Upload Status](Get-upload-status) | [Cancel](#cancel-document)
@@ -334,7 +334,7 @@ APIResponse apiResponse = interFAX.uploadDocument(file, Optional.of(documentUplo
 ```
 
 **More:** [documentation - 1](https://www.interfax.net/en/dev/rest/reference/2967), [2](https://www.interfax.net/en/dev/rest/reference/2966)
----        
+        
 ### Get Document List
 
 Get a list of previous document uploads which are currently available.
@@ -355,7 +355,7 @@ UploadedDocumentStatus[] uploadedDocumentStatuses = interFAX.getUploadedDocument
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2968)
----
+
 ### Get Upload Status
 
 Get the current status of a specific document upload.
@@ -366,7 +366,7 @@ UploadedDocumentStatus uploadedDocumentStatus = interFAX.getUploadedDocumentStat
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2965)    
----
+
 ### Cancel Document
 
 Cancel a document upload and tear down the upload session, or delete a previous upload.
@@ -377,7 +377,7 @@ APIResponse apiResponse = interFAX.cancelDocumentUploadSession("deca890355b44b42
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2964)       
----
+
 ## Contributing
 
  1. **Fork** the repo on GitHub
