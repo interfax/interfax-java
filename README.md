@@ -57,10 +57,10 @@ InterFAX interFAX = new DefaultInterFAXClient();
 
 // Alternative 2: Initialize using yaml file
 // Create a file called `interfax-api-credentials.yaml` with the following contents, replacing the value of `username`
-// and  `password` fields with those of your API credentials.
-//    username: "api-username"
-//    password: "api-password"
-// Ensure the file is present in your application's classpath. Next, initialise a new `InterFAX` class as shown below.
+// and `password` fields with those of your API credentials.
+//   username: "api-username"
+//   password: "api-password"
+// Ensure the file is present in your application classpath. Next, initialise a new `InterFAX` object as shown below.
 InterFAX interFAX = new DefaultInterFAXClient();
 ```
 
@@ -103,10 +103,8 @@ APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/exampl
 InterFAX supports over 20 file types including HTML, PDF, TXT, Word, and many more. For a full list see the 
 [Supported File Types](https://www.interfax.net/en/help/supported_file_types) documentation.
 
-The returned object is a `APIResponse` with the `statusCode` and `responseBody` of the request submitted to InterFAX. 
-You can use this object to load more information, get the image, or cancel the sending of the fax.
-
-For additional options, including sending an array of files as a fax, the following methods may be used
+The returned object is a [`APIResponse`](src/main/java/net/interfax/rest/client/domain/APIResponse.java) with the 
+`statusCode` and `responseBody` of the request submitted to InterFAX.
 
 To send multiple files just pass in an array of files
 ```java
@@ -115,7 +113,7 @@ public APIResponse sendFax(final String faxNumber,
                            throws IOException;
 ```
 
-All requests to send a fax can include the following `Options`, set via `net.interfax.rest.client.domain.SendFaxOptions` class
+All requests to send a fax can include the following `Options`, set via [`SendFaxOptions`](src/main/java/net/interfax/rest/client/domain/SendFaxOptions.java) class
 **Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)                                                                                                                                                    
                               
 ### Get Outbound Fax List
