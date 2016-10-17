@@ -51,6 +51,7 @@ environment variables.
 InterFAX interFAX = new DefaultInterFAXClient("username", "password");
 
 // Alternative 1: Initialize using environment variables
+// Ensure following env vars are initialized with values of your API credentials
 // * INTERFAX_USERNAME
 // * INTERFAX_PASSWORD
 InterFAX interFAX = new DefaultInterFAXClient();
@@ -60,7 +61,6 @@ InterFAX interFAX = new DefaultInterFAXClient();
 // and `password` fields with those of your API credentials.
 //   username: "api-username"
 //   password: "api-password"
-// Ensure the file is present in your application classpath. Next, initialise a new `InterFAX` object as shown below.
 InterFAX interFAX = new DefaultInterFAXClient();
 ```
 
