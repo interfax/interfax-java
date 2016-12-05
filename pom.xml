@@ -4,7 +4,7 @@
 
     <groupId>net.interfax</groupId>
     <artifactId>api-client</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.4.1</version>
 
     <name>InterFAX Java Client</name>
     <description>Library that enables using InterFAX HTTP APIs using Java</description>
@@ -78,6 +78,16 @@
             <version>1.7.21</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>20.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -93,6 +103,7 @@
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
             <version>2.1.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
