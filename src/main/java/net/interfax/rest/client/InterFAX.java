@@ -90,7 +90,7 @@ public interface InterFAX {
      * Send an array of input streams as a fax with additional {@link SendFaxOptions}
      *
      * @param faxNumber        number to fax to
-     * @param streamsToSendAsFax array of files to send as fax
+     * @param streamsToSendAsFax array of input streams to send as fax
      * @param fileNames array of file names corresponding to the input streams (for mime detection)
      * @param options          {@link SendFaxOptions} to use when sending the fax
      * @return {@link APIResponse}
