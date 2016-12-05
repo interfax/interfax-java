@@ -21,6 +21,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Optional;
 
 
@@ -87,6 +89,42 @@ public class DefaultInterFAXClientTest {
 
         InterFAX interFAX = new DefaultInterFAXClient();
         APIResponse apiResponse = interFAX.sendFax(faxNumber, files, Optional.of(sendFaxOptions));
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+
+    }
+    
+    @Test
+    public void testSendMultipleInputStreamsAsFax() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        InputStream inputStream1 = new FileInputStream(absoluteFilePath);
+        InputStream inputStream2 = new FileInputStream(absoluteFilePath);
+
+        InputStream[] inputStreams = {inputStream1, inputStream2};
+        String[] fileNames = {"test.pdf", "test.pdf"};
+
+        InterFAX interFAX = new DefaultInterFAXClient();
+        APIResponse apiResponse = interFAX.sendFax(faxNumber, inputStreams, fileNames);
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testSendMultipleInputStreamsAsFaxWithOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        InputStream inputStream1 = new FileInputStream(absoluteFilePath);
+        InputStream inputStream2 = new FileInputStream(absoluteFilePath);
+
+        InputStream[] inputStreams = {inputStream1, inputStream2};
+        String[] fileNames = {"test.pdf", "test.pdf"};
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        sendFaxOptions.setPageSize(Optional.of("a4"));
+
+        InterFAX interFAX = new DefaultInterFAXClient();
+        APIResponse apiResponse = interFAX.sendFax(faxNumber, inputStreams, fileNames, Optional.of(sendFaxOptions));
         Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457707]", apiResponse.getHeaders().get("Location").toString());
         Assert.assertEquals(201, apiResponse.getStatusCode());
 
