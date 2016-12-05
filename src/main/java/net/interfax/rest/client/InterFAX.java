@@ -15,6 +15,7 @@ import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 public interface InterFAX {
@@ -45,7 +46,7 @@ public interface InterFAX {
     public APIResponse sendFax(final String faxNumber,
                                final File fileToSendAsFax,
                                final Optional<SendFaxOptions> options) throws IOException;
-
+    
     /**
      * Send an array of files as a fax
      *
@@ -56,6 +57,18 @@ public interface InterFAX {
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
      */
     public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException;
+
+    /**
+     * Send an array of input streams as a fax
+     *
+     * @param faxNumber        number to fax to
+     * @param streamsToSendAsFax array of input streams to send as fax
+     * @param fileNames array of file names corresponding to the input streams (for mime detection)
+     * @return {@link APIResponse}
+     * @throws IOException
+     * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
+     */
+    public APIResponse sendFax(final String faxNumber, final InputStream[] streamsToSendAsFax, final String fileNames[]) throws IOException;
 
     /**
      * Send an array of files as a fax with additional {@link SendFaxOptions}
@@ -69,6 +82,22 @@ public interface InterFAX {
      */
     public APIResponse sendFax(final String faxNumber,
                                final File[] filesToSendAsFax,
+                               final Optional<SendFaxOptions> options) throws IOException;
+
+    /**
+     * Send an array of files as a fax with additional {@link SendFaxOptions}
+     *
+     * @param faxNumber        number to fax to
+     * @param streamsToSendAsFax array of files to send as fax
+     * @param fileNames array of file names corresponding to the input streams (for mime detection)
+     * @param options          {@link SendFaxOptions} to use when sending the fax
+     * @return {@link APIResponse}
+     * @throws IOException
+     * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
+     */
+    public APIResponse sendFax(final String faxNumber,
+                               final InputStream[] streamsToSendAsFax,
+                               final String fileNames[],
                                final Optional<SendFaxOptions> options) throws IOException;
 
     /**
