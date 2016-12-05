@@ -142,21 +142,14 @@ public class DefaultInterFAXClient implements InterFAX {
             multiPart.bodyPart(fileDataBodyPart);
         }
 
-        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-        return executePostRequest(
-                outboundFaxesUri,
-                Entity.entity(multiPart, multiPart.getMediaType()),
-                (target) ->
-                        target
-                                .request()
-                                .header("Content-Type", "multipart/mixed")
-                                .post(Entity.entity(multiPart, multiPart.getMediaType()))
-        );
+        return sendMultiPartFax(faxNumber, multiPart, options);
     }
 
 	@Override
-	public APIResponse sendFax(String faxNumber, InputStream[] streamsToSendAsFax, String[] fileNames,
-			Optional<SendFaxOptions> options) throws IOException {
+	public APIResponse sendFax(String faxNumber,
+                               InputStream[] streamsToSendAsFax,
+                               String[] fileNames,
+                               Optional<SendFaxOptions> options) throws IOException {
 
 		if (streamsToSendAsFax.length != fileNames.length) {
 			throw new IllegalArgumentException("Stream and file name arrays do not have the same length");
@@ -166,20 +159,15 @@ public class DefaultInterFAXClient implements InterFAX {
         for (int i=0; i < streamsToSendAsFax.length; i++) {
             final String contentType = tika.detect(fileNames[i]);
             final String entityName = fileNames[i];
-            final StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart(entityName, streamsToSendAsFax[i], entityName, MediaType.valueOf(contentType));
+            final StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart(
+                                                                    entityName,
+                                                                    streamsToSendAsFax[i],
+                                                                    entityName,
+                                                                    MediaType.valueOf(contentType));
             multiPart.bodyPart(streamDataBodyPart);
         }
 
-        final URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
-        return executePostRequest(
-                outboundFaxesUri,
-                Entity.entity(multiPart, multiPart.getMediaType()),
-                (target) ->
-                        target
-                                .request()
-                                .header("Content-Type", "multipart/mixed")
-                                .post(Entity.entity(multiPart, multiPart.getMediaType()))
-        );
+        return sendMultiPartFax(faxNumber, multiPart, options);
 	}
 
     @Override
@@ -590,6 +578,20 @@ public class DefaultInterFAXClient implements InterFAX {
     public void closeClient() {
 
         client.close();
+    }
+
+    private APIResponse sendMultiPartFax(String faxNumber, MultiPart multiPart, Optional<SendFaxOptions> options) {
+
+        final URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        return executePostRequest(
+                outboundFaxesUri,
+                Entity.entity(multiPart, multiPart.getMediaType()),
+                (target) ->
+                        target
+                                .request()
+                                .header("Content-Type", "multipart/mixed")
+                                .post(Entity.entity(multiPart, multiPart.getMediaType()))
+        );
     }
 
     private APIResponse executePostRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
