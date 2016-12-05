@@ -95,6 +95,12 @@ java.io.File file = new File(absoluteFilePath);
 InterFAX interFAX = new DefaultInterFAXClient();
 APIResponse apiResponse = interFAX.sendFax(faxNumber, file);
 
+// with an inputstream
+InputStream[] inputStreams = {inputStream};
+String[] fileNames = {"test.pdf"};
+InterFAX interFAX = new DefaultInterFAXClient();
+APIResponse apiResponse = interFAX.sendFax(faxNumber, inputStreams, fileNames);
+
 // with a URL
 InterFAX interFAX = new DefaultInterFAXClient();
 APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.pdf");
@@ -106,11 +112,17 @@ InterFAX supports over 20 file types including HTML, PDF, TXT, Word, and many mo
 The returned object is a [`APIResponse`](src/main/java/net/interfax/rest/client/domain/APIResponse.java) with the 
 `statusCode` and `responseBody` of the request submitted to InterFAX.
 
-To send multiple files just pass in an array of files
+To send multiple files just pass in an array of files or inputstreams
 ```java
+// using Files
 public APIResponse sendFax(final String faxNumber, 
                            final File[] filesToSendAsFax) 
                            throws IOException;
+                           
+// using Inputstreams
+public APIResponse sendFax(final String faxNumber,
+                           final InputStream[] streamsToSendAsFax,
+                           final String fileNames[]) throws IOException;                           
 ```
 
 All requests to send a fax can include the following **Options:** [`contact`, `postponeTime`, `retriesToPerform`, `csid`, `pageHeader`, `reference`, `pageSize`, `fitToPage`, `pageOrientation`, `resolution`, `rendering`](https://www.interfax.net/en/dev/rest/reference/2918)
