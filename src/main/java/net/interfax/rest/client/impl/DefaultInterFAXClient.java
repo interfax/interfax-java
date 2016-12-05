@@ -25,6 +25,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,6 +122,12 @@ public class DefaultInterFAXClient implements InterFAX {
         return sendFax(faxNumber, filesToSendAsFax, Optional.empty());
     }
 
+	@Override
+	public APIResponse sendFax(String faxNumber, InputStream[] streamsToSendAsFax, String[] fileNames)
+			throws IOException {
+		return sendFax(faxNumber, streamsToSendAsFax, fileNames, Optional.empty());
+	}
+
     @Override
     public APIResponse sendFax(final String faxNumber,
                                final File[] filesToSendAsFax,
@@ -146,6 +153,34 @@ public class DefaultInterFAXClient implements InterFAX {
                                 .post(Entity.entity(multiPart, multiPart.getMediaType()))
         );
     }
+
+	@Override
+	public APIResponse sendFax(String faxNumber, InputStream[] streamsToSendAsFax, String[] fileNames,
+			Optional<SendFaxOptions> options) throws IOException {
+
+		if (streamsToSendAsFax.length != fileNames.length) {
+			throw new IllegalArgumentException("Stream and file name arrays do not have the same length");
+		}
+		
+        MultiPart multiPart = new MultiPart();
+        for (int i=0; i < streamsToSendAsFax.length; i++) {
+            final String contentType = tika.detect(fileNames[i]);
+            final String entityName = fileNames[i];
+            final StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart(entityName, streamsToSendAsFax[i], entityName, MediaType.valueOf(contentType));
+            multiPart.bodyPart(streamDataBodyPart);
+        }
+
+        final URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        return executePostRequest(
+                outboundFaxesUri,
+                Entity.entity(multiPart, multiPart.getMediaType()),
+                (target) ->
+                        target
+                                .request()
+                                .header("Content-Type", "multipart/mixed")
+                                .post(Entity.entity(multiPart, multiPart.getMediaType()))
+        );
+	}
 
     @Override
     public APIResponse sendFax(final String faxNumber, final String urlOfDoc) {
