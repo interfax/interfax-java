@@ -4,7 +4,7 @@
 
     <groupId>net.interfax</groupId>
     <artifactId>api-client</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.7-SNAPSHOT</version>
 
     <name>InterFAX Java Client</name>
     <description>Library that enables using InterFAX HTTP APIs using Java</description>
