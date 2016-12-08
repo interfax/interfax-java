@@ -2,13 +2,13 @@ package net.interfax.rest.client;
 
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetInboundFaxListOptions;
+import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.InboundFaxesEmailsStructure;
-import net.interfax.rest.client.domain.SearchFaxOptions;
-import net.interfax.rest.client.domain.GetFaxListOptions;
-import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
+import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;

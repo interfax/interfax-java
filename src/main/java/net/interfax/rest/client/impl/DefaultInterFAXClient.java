@@ -40,7 +40,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -689,7 +692,13 @@ public class DefaultInterFAXClient implements InterFAX {
             reqOptions.getContact().ifPresent(x -> outboundFaxesUriBuilder.queryParam("contact", x));
             reqOptions.getCsid().ifPresent(x -> outboundFaxesUriBuilder.queryParam("csid", x));
             reqOptions.getFitToPage().ifPresent(x -> outboundFaxesUriBuilder.queryParam("fitToPage", x));
-            reqOptions.getPageHeader().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageHeader", x));
+            reqOptions.getPageHeader().ifPresent(x -> {
+                try {
+                    outboundFaxesUriBuilder.queryParam("pageHeader", URLEncoder.encode(x, StandardCharsets.UTF_8.toString()));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            });
             reqOptions.getPageOrientation().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageOrientation", x));
             reqOptions.getPageSize().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageSize", x));
             reqOptions.getPostponeTime().ifPresent(x -> outboundFaxesUriBuilder.queryParam("postponeTime", x));
