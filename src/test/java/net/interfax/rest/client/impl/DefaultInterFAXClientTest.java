@@ -61,6 +61,21 @@ public class DefaultInterFAXClientTest {
     }
 
     @Test
+    public void testSendFaxWithPageHeaderTemplateOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        String pageHeader = "To: {To} From: {From} Pages: {TotalPages}";
+        sendFaxOptions.setPageHeader(Optional.of(pageHeader));
+
+        InterFAX interFAX = new DefaultInterFAXClient();
+        APIResponse apiResponse = interFAX.sendFax(faxNumber, file, Optional.of(sendFaxOptions));
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
     public void testSendMultipleFilesAsFax() throws Exception {
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
