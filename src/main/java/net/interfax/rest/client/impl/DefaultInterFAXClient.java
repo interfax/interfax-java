@@ -148,22 +148,21 @@ public class DefaultInterFAXClient implements InterFAX {
 	@Override
 	public APIResponse sendFax(String faxNumber,
                                InputStream[] streamsToSendAsFax,
-                               String[] fileNames,
+                               String[] mediaTypes,
                                Optional<SendFaxOptions> options) throws IOException {
 
-		if (streamsToSendAsFax.length != fileNames.length) {
+		if (streamsToSendAsFax.length != mediaTypes.length) {
 			throw new IllegalArgumentException("Stream and file name arrays do not have the same length");
 		}
-		
+
         MultiPart multiPart = new MultiPart();
         for (int i=0; i < streamsToSendAsFax.length; i++) {
-            final String contentType = tika.detect(fileNames[i]);
-            final String entityName = fileNames[i];
+            final String entityName = "file"+i;
             final StreamDataBodyPart streamDataBodyPart = new StreamDataBodyPart(
                                                                     entityName,
                                                                     streamsToSendAsFax[i],
                                                                     entityName,
-                                                                    MediaType.valueOf(contentType));
+                                                                    MediaType.valueOf(mediaTypes[i]));
             multiPart.bodyPart(streamDataBodyPart);
         }
 
