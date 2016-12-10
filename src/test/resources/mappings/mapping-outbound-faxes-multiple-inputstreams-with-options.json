@@ -1,0 +1,31 @@
+{
+  "uuid" : "50ef5359-5ae1-4823-8b41-22b6fa722a6d",
+  "request" : {
+    "url" : "/outbound/faxes?faxNumber=%2B442084978672&pageSize=a4",
+    "headers": {
+      "Authorization": {
+        "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+      },
+      "Content-Type": {
+        "matches" : "multipart/mixed.*"
+      }
+    },
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "matches" : ".*file0.*file1.*"
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-outbound-faxes-geyUE.json",
+    "headers" : {
+      "Cache-Control" : "private",
+      "Content-Type" : "text/json",
+      "Location" : "https://rest.interfax.net/outbound/faxes/667457707",
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Methods" : "*",
+      "Access-Control-Allow-Headers" : "Content-Type, Access-Control-Allow-Headers, Access-Control-Request-Method, Authorization, X-Requested-With, Origin, Accept, Accept-Encoding, Accept-Language, Connection, Host, Referer, User-Agent, Content-Disposition",
+      "Date" : "Fri, 30 Sep 2016 13:33:45 GMT"
+    }
+  }
+}

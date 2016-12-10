@@ -89,17 +89,18 @@ public interface InterFAX {
     /**
      * Send an array of input streams as a fax with additional {@link SendFaxOptions}
      *
-     * @param faxNumber        number to fax to
+     * @param faxNumber          number to fax to
      * @param streamsToSendAsFax array of input streams to send as fax
-     * @param fileNames array of file names corresponding to the input streams (for mime detection)
-     * @param options          {@link SendFaxOptions} to use when sending the fax
+     * @param mediaTypes         array of strings representing the {@link javax.ws.rs.core.MediaType} corresponding to
+     *                           the input streams
+     * @param options            {@link SendFaxOptions} to use when sending the fax
      * @return {@link APIResponse}
      * @throws IOException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
      */
     public APIResponse sendFax(final String faxNumber,
                                final InputStream[] streamsToSendAsFax,
-                               final String fileNames[],
+                               final String[] mediaTypes,
                                final Optional<SendFaxOptions> options) throws IOException;
 
     /**
