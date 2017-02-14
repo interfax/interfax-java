@@ -17,6 +17,9 @@ import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 import net.interfax.rest.client.util.ArrayUtil;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
@@ -41,11 +44,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.net.URISyntaxException;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultInterFAXClient implements InterFAX {
@@ -92,7 +92,8 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException {
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax)
+            throws IOException, URISyntaxException {
 
         return sendFax(faxNumber, fileToSendAsFax, Optional.empty());
     }
@@ -100,14 +101,13 @@ public class DefaultInterFAXClient implements InterFAX {
     @Override
     public APIResponse sendFax(final String faxNumber,
                                final File fileToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException {
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
         String contentType = tika.detect(fileToSendAsFax);
         URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
 
         return executePostRequest(
                 outboundFaxesUri,
-                Entity.entity(fileToSendAsFax, contentType),
                 target ->
                         target
                                 .request()
@@ -117,21 +117,22 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException {
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax)
+            throws IOException, URISyntaxException {
 
         return sendFax(faxNumber, filesToSendAsFax, Optional.empty());
     }
 
 	@Override
 	public APIResponse sendFax(String faxNumber, InputStream[] streamsToSendAsFax, String[] fileNames)
-			throws IOException {
+            throws IOException, URISyntaxException {
 		return sendFax(faxNumber, streamsToSendAsFax, fileNames, Optional.empty());
 	}
 
     @Override
     public APIResponse sendFax(final String faxNumber,
                                final File[] filesToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException {
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
         MultiPart multiPart = new MultiPart();
         int count = 1;
@@ -149,7 +150,7 @@ public class DefaultInterFAXClient implements InterFAX {
 	public APIResponse sendFax(String faxNumber,
                                InputStream[] streamsToSendAsFax,
                                String[] mediaTypes,
-                               Optional<SendFaxOptions> options) throws IOException {
+                               Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
 		if (streamsToSendAsFax.length != mediaTypes.length) {
 			throw new IllegalArgumentException("Stream and file name arrays do not have the same length");
@@ -170,18 +171,18 @@ public class DefaultInterFAXClient implements InterFAX {
 	}
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) {
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) throws URISyntaxException {
 
         return sendFax(faxNumber, urlOfDoc, Optional.empty());
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) {
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options)
+            throws URISyntaxException {
 
         URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
                 outboundFaxesUri,
-                null,
                 target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
         );
     }
@@ -197,7 +198,7 @@ public class DefaultInterFAXClient implements InterFAX {
 
         faxNumber.ifPresent(x -> outboundFaxesResendUriBuilder.queryParam("faxNumber", x));
         URI uri = outboundFaxesResendUriBuilder.build();
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -205,7 +206,7 @@ public class DefaultInterFAXClient implements InterFAX {
 
         String endpoint = String.format(outboundFaxesHideEndpoint, id);
         URI uri = UriBuilder.fromPath(endpoint).scheme(scheme).host(hostname).port(port).build();
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -286,7 +287,7 @@ public class DefaultInterFAXClient implements InterFAX {
                     .port(port)
                     .build();
 
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -561,7 +562,7 @@ public class DefaultInterFAXClient implements InterFAX {
         String path = String.format(inboundFaxesMarkEndpoint, id);
         UriBuilder uriBuilder = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port);
         unread.ifPresent(x -> uriBuilder.queryParam("unread", x));
-        return executePostRequest(uriBuilder.build(), null, t -> t.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uriBuilder.build(), t -> t.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -570,7 +571,7 @@ public class DefaultInterFAXClient implements InterFAX {
         String path = String.format(inboundFaxesResendEndpoint, id);
         UriBuilder uriBuilder = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port);
         email.ifPresent(x -> uriBuilder.queryParam("email", x));
-        return executePostRequest(uriBuilder.build(), null, t -> t.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uriBuilder.build(), t -> t.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -579,12 +580,12 @@ public class DefaultInterFAXClient implements InterFAX {
         client.close();
     }
 
-    private APIResponse sendMultiPartFax(String faxNumber, MultiPart multiPart, Optional<SendFaxOptions> options) {
+    private APIResponse sendMultiPartFax(String faxNumber, MultiPart multiPart, Optional<SendFaxOptions> options)
+            throws URISyntaxException {
 
         final URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
                 outboundFaxesUri,
-                Entity.entity(multiPart, multiPart.getMediaType()),
                 (target) ->
                         target
                                 .request()
@@ -593,7 +594,7 @@ public class DefaultInterFAXClient implements InterFAX {
         );
     }
 
-    private APIResponse executePostRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
+    private APIResponse executePostRequest(URI uri, JerseyRequestExecutor executor) {
 
         Response response = null;
         APIResponse apiResponse = new APIResponse();
@@ -676,32 +677,32 @@ public class DefaultInterFAXClient implements InterFAX {
         return responseBytes;
     }
 
-    private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {
+    private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options)
+            throws URISyntaxException {
 
-        UriBuilder outboundFaxesUriBuilder = UriBuilder
-                .fromPath(outboundFaxesEndpoint)
-                .scheme(scheme)
-                .host(hostname)
-                .port(port)
-                .queryParam("faxNumber", faxNumber);
+        URIBuilder uriBuilder = new URIBuilder();
+        uriBuilder.setHost(hostname).setScheme(scheme).setPort(port).setPath(outboundFaxesEndpoint);
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("faxNumber", faxNumber));
 
         if (options.isPresent()) {
             SendFaxOptions reqOptions = options.orElse(null);
-            reqOptions.getContact().ifPresent(x -> outboundFaxesUriBuilder.queryParam("contact", x));
-            reqOptions.getCsid().ifPresent(x -> outboundFaxesUriBuilder.queryParam("csid", x));
-            reqOptions.getFitToPage().ifPresent(x -> outboundFaxesUriBuilder.queryParam("fitToPage", x));
-            reqOptions.getPageHeader().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageHeader", x));
-            reqOptions.getPageOrientation().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageOrientation", x));
-            reqOptions.getPageSize().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageSize", x));
-            reqOptions.getPostponeTime().ifPresent(x -> outboundFaxesUriBuilder.queryParam("postponeTime", x));
-            reqOptions.getReference().ifPresent(x -> outboundFaxesUriBuilder.queryParam("reference", x));
-            reqOptions.getRendering().ifPresent(x -> outboundFaxesUriBuilder.queryParam("rendering", x));
-            reqOptions.getReplyAddress().ifPresent(x -> outboundFaxesUriBuilder.queryParam("replyAddress", x));
-            reqOptions.getResolution().ifPresent(x -> outboundFaxesUriBuilder.queryParam("resolution", x));
-            reqOptions.getRetriesToPerform().ifPresent(x -> outboundFaxesUriBuilder.queryParam("retriesToPerform", x));
+            reqOptions.getContact().ifPresent(          x -> params.add(new BasicNameValuePair("contact", x)));
+            reqOptions.getCsid().ifPresent(             x -> params.add(new BasicNameValuePair("csid", x)));
+            reqOptions.getFitToPage().ifPresent(        x -> params.add(new BasicNameValuePair("fitToPage", x)));
+            reqOptions.getPageHeader().ifPresent(       x -> params.add(new BasicNameValuePair("pageHeader", x)));
+            reqOptions.getPageOrientation().ifPresent(  x -> params.add(new BasicNameValuePair("pageOrientation", x)));
+            reqOptions.getPageSize().ifPresent(         x -> params.add(new BasicNameValuePair("pageSize", x)));
+            reqOptions.getPostponeTime().ifPresent(     x -> params.add(new BasicNameValuePair("postponeTime", x.toString())));
+            reqOptions.getReference().ifPresent(        x -> params.add(new BasicNameValuePair("reference", x)));
+            reqOptions.getRendering().ifPresent(        x -> params.add(new BasicNameValuePair("rendering", x)));
+            reqOptions.getReplyAddress().ifPresent(     x -> params.add(new BasicNameValuePair("replyAddress", x)));
+            reqOptions.getResolution().ifPresent(       x -> params.add(new BasicNameValuePair("resolution", x)));
+            reqOptions.getRetriesToPerform().ifPresent( x -> params.add(new BasicNameValuePair("retriesToPerform", String.valueOf(x))));
         }
 
-        return outboundFaxesUriBuilder.build();
+        uriBuilder.setParameters(params);
+        return uriBuilder.build();
     }
 
     private URI getOutboundDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {

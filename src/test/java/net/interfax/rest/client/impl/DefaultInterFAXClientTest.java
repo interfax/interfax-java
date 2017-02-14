@@ -53,6 +53,8 @@ public class DefaultInterFAXClientTest {
 
         SendFaxOptions sendFaxOptions = new SendFaxOptions();
         sendFaxOptions.setContact(Optional.of("testContactName"));
+        String pageHeader = "To: {To} From: {From} Pages: {TotalPages}";
+        sendFaxOptions.setPageHeader(Optional.of(pageHeader));
 
         InterFAX interFAX = new DefaultInterFAXClient();
         APIResponse apiResponse = interFAX.sendFax(faxNumber, file, Optional.of(sendFaxOptions));

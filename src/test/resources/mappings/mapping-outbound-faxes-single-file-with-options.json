@@ -1,7 +1,7 @@
 {
   "uuid" : "292f2cd5-4bf3-4393-8cef-87b1942d9e4f",
   "request" : {
-    "url" : "/outbound/faxes?faxNumber=%2B442084978672&contact=testContactName",
+    "url" : "/outbound/faxes?faxNumber=%2B442084978672&contact=testContactName&pageHeader=To%3A+%7BTo%7D+From%3A+%7BFrom%7D+Pages%3A+%7BTotalPages%7D",
     "headers": {
       "Authorization": {
         "equalTo" : "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
