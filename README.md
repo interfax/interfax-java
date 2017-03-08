@@ -103,7 +103,7 @@ APIResponse apiResponse = interFAX.sendFax(faxNumber, inputStreams, mediaTypes);
 
 // with a URL
 InterFAX interFAX = new DefaultInterFAXClient();
-APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.pdf");
+APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.html");
 ```
 
 InterFAX supports over 20 file types including HTML, PDF, TXT, Word, and many more. For a full list see the 
