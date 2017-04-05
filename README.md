@@ -450,9 +450,9 @@ The project uses [semver](http://semver.org/) for versioning.
 
 If a change is backwards compatible, it can be committed and pushed straight to master. Versioning is handled 
 automatically by incrementing the **minor version** by 1 and released automatically by travisCI, using the 
-[release script](scripts/release.sh)
+[release script](scripts/release.sh).
 
-##### Major Releases 
+##### Major Releases
 
 For breaking changes / major releases, the version number needs to be manually updated in the [project pom](pom.xml). 
 Simply **increment the major version by 1** and **drop the minor version to 0**. Example, if the version in the project
