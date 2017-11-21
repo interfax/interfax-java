@@ -381,7 +381,7 @@ public class DefaultInterFAXClientTest {
     public void testGetInboundFaxImage() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+        byte[] faxImage = interFAX.getInboundFaxImage(292626603);
         Assert.assertEquals(37194, faxImage.length);
     }
 

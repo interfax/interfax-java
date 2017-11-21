@@ -287,7 +287,7 @@ Retrieves a single fax's image.
 
 ```java
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+byte[] faxImage = interFAX.getInboundFaxImage(292626603);
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2937)   

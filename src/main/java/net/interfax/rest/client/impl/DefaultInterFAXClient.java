@@ -521,7 +521,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     @Override
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException {
 
         return getFaxImage(String.format(inboundFaxesImageEndpoint, id));
     }

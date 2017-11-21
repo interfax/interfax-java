@@ -355,7 +355,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2937">https://www.interfax.net/en/dev/rest/reference/2937</a>
      */
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the list of email addresses to which a fax was forwarded
