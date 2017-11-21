@@ -186,7 +186,7 @@ Retrieve the fax image (TIFF file) of a submitted fax.
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+byte[] faxImage = interFAX.getOutboundFaxImage("667915751");
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2941)    

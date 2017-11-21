@@ -212,7 +212,7 @@ public class DefaultInterFAXClientTest {
     public void testGetOutboundFaxImage() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+        byte[] faxImage = interFAX.getOutboundFaxImage("667915751");
         Assert.assertEquals(30072, faxImage.length);
     }
 
@@ -221,7 +221,7 @@ public class DefaultInterFAXClientTest {
 
         try {
             InterFAX interFAX = new DefaultInterFAXClient();
-            interFAX.getOuboundFaxImage("1234");
+            interFAX.getOutboundFaxImage("1234");
         } catch (UnsuccessfulStatusCodeException e) {
             Assert.assertEquals("Unsuccessful response from API", e.getMessage());
             Assert.assertEquals(404, e.getStatusCode());

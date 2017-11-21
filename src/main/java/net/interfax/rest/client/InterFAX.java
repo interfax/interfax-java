@@ -185,7 +185,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2941">https://www.interfax.net/en/dev/rest/reference/2941</a>
      */
-    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getOutboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Cancel a fax in progress
