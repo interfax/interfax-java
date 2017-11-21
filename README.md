@@ -173,7 +173,7 @@ Retrieves information regarding a previously-submitted fax, including its curren
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+OutboundFaxStructure outboundFaxStructure = interFAX.getOutboundFaxRecord("667915751");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2921)    

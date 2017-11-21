@@ -200,10 +200,10 @@ public class DefaultInterFAXClientTest {
     }
 
     @Test
-    public void testGetFaxRecord() throws Exception {
+    public void testGetOutboundFaxRecord() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+        OutboundFaxStructure outboundFaxStructure = interFAX.getOutboundFaxRecord("667915751");
         Assert.assertEquals("667915751", outboundFaxStructure.getId());
         Assert.assertEquals("2016-10-03T00:36:41", outboundFaxStructure.getSubmitTime());
     }

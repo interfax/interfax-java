@@ -175,7 +175,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2921">https://www.interfax.net/en/dev/rest/reference/2921</a>
      */
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the fax image (TIFF file) of a submitted fax

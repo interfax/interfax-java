@@ -235,7 +235,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     @Override
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
 
         URI outboundFaxesRecordUri = UriBuilder
                                         .fromUri(String.format(outboundFaxesRecordEndpoint, id))
