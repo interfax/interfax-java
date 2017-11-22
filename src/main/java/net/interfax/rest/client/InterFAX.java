@@ -175,7 +175,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2921">https://www.interfax.net/en/dev/rest/reference/2921</a>
      */
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the fax image (TIFF file) of a submitted fax
@@ -185,7 +185,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2941">https://www.interfax.net/en/dev/rest/reference/2941</a>
      */
-    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getOutboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Cancel a fax in progress
@@ -355,7 +355,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2937">https://www.interfax.net/en/dev/rest/reference/2937</a>
      */
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the list of email addresses to which a fax was forwarded

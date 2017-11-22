@@ -1,7 +1,7 @@
 [
   {
     "submitTime": "2016-10-03T00:36:41",
-    "contact": null,
+    "contact": "foo bar",
     "destinationFax": "00442084978672",
     "replyEmail": "",
     "subject": null,

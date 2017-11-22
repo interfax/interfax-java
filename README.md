@@ -173,7 +173,7 @@ Retrieves information regarding a previously-submitted fax, including its curren
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+OutboundFaxStructure outboundFaxStructure = interFAX.getOutboundFaxRecord("667915751");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2921)    
@@ -186,7 +186,7 @@ Retrieve the fax image (TIFF file) of a submitted fax.
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+byte[] faxImage = interFAX.getOutboundFaxImage("667915751");
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2941)    
@@ -287,7 +287,7 @@ Retrieves a single fax's image.
 
 ```java
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+byte[] faxImage = interFAX.getInboundFaxImage(292626603);
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2937)   

@@ -235,7 +235,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     @Override
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
 
         URI outboundFaxesRecordUri = UriBuilder
                                         .fromUri(String.format(outboundFaxesRecordEndpoint, id))
@@ -252,7 +252,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     @Override
-    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getOutboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
 
         return getFaxImage(String.format(outboundFaxImageEndpoint, id));
     }
@@ -521,7 +521,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     @Override
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException {
 
         return getFaxImage(String.format(inboundFaxesImageEndpoint, id));
     }

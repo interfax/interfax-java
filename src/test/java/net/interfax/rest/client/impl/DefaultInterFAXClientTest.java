@@ -200,10 +200,10 @@ public class DefaultInterFAXClientTest {
     }
 
     @Test
-    public void testGetFaxRecord() throws Exception {
+    public void testGetOutboundFaxRecord() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+        OutboundFaxStructure outboundFaxStructure = interFAX.getOutboundFaxRecord("667915751");
         Assert.assertEquals("667915751", outboundFaxStructure.getId());
         Assert.assertEquals("2016-10-03T00:36:41", outboundFaxStructure.getSubmitTime());
     }
@@ -212,7 +212,7 @@ public class DefaultInterFAXClientTest {
     public void testGetOutboundFaxImage() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+        byte[] faxImage = interFAX.getOutboundFaxImage("667915751");
         Assert.assertEquals(30072, faxImage.length);
     }
 
@@ -221,7 +221,7 @@ public class DefaultInterFAXClientTest {
 
         try {
             InterFAX interFAX = new DefaultInterFAXClient();
-            interFAX.getOuboundFaxImage("1234");
+            interFAX.getOutboundFaxImage("1234");
         } catch (UnsuccessfulStatusCodeException e) {
             Assert.assertEquals("Unsuccessful response from API", e.getMessage());
             Assert.assertEquals(404, e.getStatusCode());
@@ -381,7 +381,7 @@ public class DefaultInterFAXClientTest {
     public void testGetInboundFaxImage() throws Exception {
 
         InterFAX interFAX = new DefaultInterFAXClient();
-        byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+        byte[] faxImage = interFAX.getInboundFaxImage(292626603);
         Assert.assertEquals(37194, faxImage.length);
     }
 
