@@ -16,12 +16,10 @@ Use of the library requires Java 8 or higher and can be done via one of the foll
 <dependency>
   <groupId>net.interfax</groupId>
   <artifactId>api-client</artifactId>
-  <version>${version-number}</version>
+  <version>0.12</version>
 </dependency>
 ```
     
-Replace `${version-number}` with your preferred version number   
-
 ### Download jar and include in application classpath
 
 Download the latest jar from the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cnet.interfax.api-client)
