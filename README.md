@@ -1,6 +1,6 @@
 # InterFAX Java Library
 
-[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client)
+[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client)
 
 [Installation](#installation) | [Getting Started](#getting-started) | [Usage](#usage) | [Contributing](#contributing) | [License](#license)
 
@@ -83,7 +83,7 @@ Double balance = interFAX.getAccountCredits();
 
 [Send](#send-fax) | [Get list](#get-outbound-fax-list) | [Get completed list](#get-completed-fax-list) | [Get record](#get-outbound-fax-record) | [Get image](#get-outbound-fax-image) | [Cancel fax](#cancel-a-fax) | [Search](#search-fax-list) | [Hide fax](#hide-fax)
 
-### Send Fax
+### Send Fax
 
 Submit a fax to a single destination number.
 
@@ -153,7 +153,7 @@ OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList(Optional.of(g
 
 ---
 
-### Get Completed Fax List
+### Get Completed Fax List
 
 Get details for a subset of completed faxes from a submitted list. (Submitted id's which have not completed are 
 ignored).
@@ -294,7 +294,7 @@ byte[] faxImage = interFAX.getInboundFaxImage(292626603);
 
 ---
 
-### Get Forwarding Emails
+### Get Forwarding Emails
  
 Retrieve the list of email addresses to which a fax was forwarded.
 
@@ -307,7 +307,7 @@ InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAX.getInboundFax
 
 ---
 
-### Mark As Read/Unread
+### Mark As Read/Unread
 
 Mark a transaction as read/unread.
 ```java     
@@ -319,7 +319,7 @@ APIResponse apiResponse = interFAX.markInboundFax("292626603", Optional.of(true)
 
 ---
 
-### Resend Inbound Fax
+### Resend Inbound Fax
 
 Resend an inbound fax to a specific email address.
 
