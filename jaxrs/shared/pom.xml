@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.interfax</groupId>
+        <artifactId>jaxrs</artifactId>
+        <version>0.20-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jaxrs-client-shared</artifactId>
+    <packaging>bundle</packaging>
+
+    <properties>
+        <osgi.namespace>net.interfax.rest.client.jaxrs.shared</osgi.namespace>
+
+        <osgi.import>
+            !${osgi.namespace},
+            org.apache.tika.*;resolution:=optional,
+            *
+        </osgi.import>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.interfax</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.13</version>
+        </dependency>
+    </dependencies>
+
+</project>
