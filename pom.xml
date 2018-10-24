@@ -4,7 +4,7 @@
 
     <groupId>net.interfax</groupId>
     <artifactId>api-client</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.15-SNAPSHOT</version>
 
     <name>InterFAX Java Client</name>
     <description>Library that enables using InterFAX HTTP APIs using Java</description>
@@ -22,7 +22,7 @@
         <developer>
             <name>Anurag Kapur</name>
             <email>anurag@beancrunch.com</email>
-            <organization>BeanCrunch</organization>
+            <organization>Beancrunch</organization>
         </developer>
     </developers>
 
@@ -114,6 +114,11 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
             <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
         </dependency>
     </dependencies>
 

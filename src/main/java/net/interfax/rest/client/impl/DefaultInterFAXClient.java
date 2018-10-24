@@ -2,17 +2,16 @@ package net.interfax.rest.client.impl;
 
 import net.interfax.rest.client.InterFAX;
 import net.interfax.rest.client.config.ClientConfig;
-import net.interfax.rest.client.config.ClientCredentials;
 import net.interfax.rest.client.config.ConfigLoader;
 import net.interfax.rest.client.domain.APIResponse;
 import net.interfax.rest.client.domain.DocumentUploadSessionOptions;
+import net.interfax.rest.client.domain.GetFaxListOptions;
 import net.interfax.rest.client.domain.GetInboundFaxListOptions;
+import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.InboundFaxStructure;
 import net.interfax.rest.client.domain.InboundFaxesEmailsStructure;
-import net.interfax.rest.client.domain.SearchFaxOptions;
-import net.interfax.rest.client.domain.GetFaxListOptions;
-import net.interfax.rest.client.domain.GetUploadedDocumentsListOptions;
 import net.interfax.rest.client.domain.OutboundFaxStructure;
+import net.interfax.rest.client.domain.SearchFaxOptions;
 import net.interfax.rest.client.domain.SendFaxOptions;
 import net.interfax.rest.client.domain.UploadedDocumentStatus;
 import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
@@ -41,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,28 +48,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class DefaultInterFAXClient implements InterFAX {
+public class DefaultInterFAXClient extends AbstractInterFAXClient implements InterFAX {
 
-    private static String username;
-    private static String password;
-    private static String scheme;
-    private static String hostname;
-    private static int port;
-    private static String outboundFaxesEndpoint;
-    private static String outboundFaxesCompletedEndpoint;
-    private static String outboundFaxesRecordEndpoint;
-    private static String outboundFaxImageEndpoint;
-    private static String outboundFaxesCancelEndpoint;
-    private static String outboundFaxesResendEndpoint;
-    private static String outboundFaxesHideEndpoint;
-    private static String outboundSearchEndpoint;
-    private static String outboundDocumentsEndpoint;
-    private static String accountsBalanceEndpoint;
-    private static String inboundFaxesEndpoint;
-    private static String inboundFaxesImageEndpoint;
-    private static String inboundFaxesEmailsEndpoint;
-    private static String inboundFaxesMarkEndpoint;
-    private static String inboundFaxesResendEndpoint;
     private static Client client;
     private static Tika tika;
 
@@ -92,7 +72,8 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException {
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax)
+            throws IOException, URISyntaxException {
 
         return sendFax(faxNumber, fileToSendAsFax, Optional.empty());
     }
@@ -100,14 +81,13 @@ public class DefaultInterFAXClient implements InterFAX {
     @Override
     public APIResponse sendFax(final String faxNumber,
                                final File fileToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException {
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
         String contentType = tika.detect(fileToSendAsFax);
-        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        URI uri = getSendFaxUri(faxNumber, options);
 
         return executePostRequest(
-                outboundFaxesUri,
-                Entity.entity(fileToSendAsFax, contentType),
+                uri,
                 target ->
                         target
                                 .request()
@@ -117,21 +97,22 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException {
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax)
+            throws IOException, URISyntaxException {
 
         return sendFax(faxNumber, filesToSendAsFax, Optional.empty());
     }
 
 	@Override
 	public APIResponse sendFax(String faxNumber, InputStream[] streamsToSendAsFax, String[] fileNames)
-			throws IOException {
+            throws IOException, URISyntaxException {
 		return sendFax(faxNumber, streamsToSendAsFax, fileNames, Optional.empty());
 	}
 
     @Override
     public APIResponse sendFax(final String faxNumber,
                                final File[] filesToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException {
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
         MultiPart multiPart = new MultiPart();
         int count = 1;
@@ -149,7 +130,7 @@ public class DefaultInterFAXClient implements InterFAX {
 	public APIResponse sendFax(String faxNumber,
                                InputStream[] streamsToSendAsFax,
                                String[] mediaTypes,
-                               Optional<SendFaxOptions> options) throws IOException {
+                               Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
 
 		if (streamsToSendAsFax.length != mediaTypes.length) {
 			throw new IllegalArgumentException("Stream and file name arrays do not have the same length");
@@ -170,18 +151,18 @@ public class DefaultInterFAXClient implements InterFAX {
 	}
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) {
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) throws URISyntaxException {
 
         return sendFax(faxNumber, urlOfDoc, Optional.empty());
     }
 
     @Override
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) {
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options)
+            throws URISyntaxException {
 
-        URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        URI uri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
-                outboundFaxesUri,
-                null,
+                uri,
                 target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
         );
     }
@@ -197,7 +178,7 @@ public class DefaultInterFAXClient implements InterFAX {
 
         faxNumber.ifPresent(x -> outboundFaxesResendUriBuilder.queryParam("faxNumber", x));
         URI uri = outboundFaxesResendUriBuilder.build();
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -205,7 +186,7 @@ public class DefaultInterFAXClient implements InterFAX {
 
         String endpoint = String.format(outboundFaxesHideEndpoint, id);
         URI uri = UriBuilder.fromPath(endpoint).scheme(scheme).host(hostname).port(port).build();
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -254,7 +235,7 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException {
 
         URI outboundFaxesRecordUri = UriBuilder
                                         .fromUri(String.format(outboundFaxesRecordEndpoint, id))
@@ -271,7 +252,7 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getOutboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
 
         return getFaxImage(String.format(outboundFaxImageEndpoint, id));
     }
@@ -286,7 +267,7 @@ public class DefaultInterFAXClient implements InterFAX {
                     .port(port)
                     .build();
 
-        return executePostRequest(uri, null, target -> target.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uri, target -> target.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -540,7 +521,7 @@ public class DefaultInterFAXClient implements InterFAX {
     }
 
     @Override
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException {
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException {
 
         return getFaxImage(String.format(inboundFaxesImageEndpoint, id));
     }
@@ -561,7 +542,7 @@ public class DefaultInterFAXClient implements InterFAX {
         String path = String.format(inboundFaxesMarkEndpoint, id);
         UriBuilder uriBuilder = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port);
         unread.ifPresent(x -> uriBuilder.queryParam("unread", x));
-        return executePostRequest(uriBuilder.build(), null, t -> t.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uriBuilder.build(), t -> t.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -570,7 +551,7 @@ public class DefaultInterFAXClient implements InterFAX {
         String path = String.format(inboundFaxesResendEndpoint, id);
         UriBuilder uriBuilder = UriBuilder.fromPath(path).scheme(scheme).host(hostname).port(port);
         email.ifPresent(x -> uriBuilder.queryParam("email", x));
-        return executePostRequest(uriBuilder.build(), null, t -> t.request().header("Content-Length", 0).post(null));
+        return executePostRequest(uriBuilder.build(), t -> t.request().header("Content-Length", 0).post(null));
     }
 
     @Override
@@ -579,12 +560,12 @@ public class DefaultInterFAXClient implements InterFAX {
         client.close();
     }
 
-    private APIResponse sendMultiPartFax(String faxNumber, MultiPart multiPart, Optional<SendFaxOptions> options) {
+    private APIResponse sendMultiPartFax(String faxNumber, MultiPart multiPart, Optional<SendFaxOptions> options)
+            throws URISyntaxException {
 
-        final URI outboundFaxesUri = getSendFaxUri(faxNumber, options);
+        final URI uri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
-                outboundFaxesUri,
-                Entity.entity(multiPart, multiPart.getMediaType()),
+                uri,
                 (target) ->
                         target
                                 .request()
@@ -593,7 +574,7 @@ public class DefaultInterFAXClient implements InterFAX {
         );
     }
 
-    private APIResponse executePostRequest(URI uri, Entity<?> entity, JerseyRequestExecutor executor) {
+    private APIResponse executePostRequest(URI uri, JerseyRequestExecutor executor) {
 
         Response response = null;
         APIResponse apiResponse = new APIResponse();
@@ -676,72 +657,6 @@ public class DefaultInterFAXClient implements InterFAX {
         return responseBytes;
     }
 
-    private URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options) {
-
-        UriBuilder outboundFaxesUriBuilder = UriBuilder
-                .fromPath(outboundFaxesEndpoint)
-                .scheme(scheme)
-                .host(hostname)
-                .port(port)
-                .queryParam("faxNumber", faxNumber);
-
-        if (options.isPresent()) {
-            SendFaxOptions reqOptions = options.orElse(null);
-            reqOptions.getContact().ifPresent(x -> outboundFaxesUriBuilder.queryParam("contact", x));
-            reqOptions.getCsid().ifPresent(x -> outboundFaxesUriBuilder.queryParam("csid", x));
-            reqOptions.getFitToPage().ifPresent(x -> outboundFaxesUriBuilder.queryParam("fitToPage", x));
-            reqOptions.getPageHeader().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageHeader", x));
-            reqOptions.getPageOrientation().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageOrientation", x));
-            reqOptions.getPageSize().ifPresent(x -> outboundFaxesUriBuilder.queryParam("pageSize", x));
-            reqOptions.getPostponeTime().ifPresent(x -> outboundFaxesUriBuilder.queryParam("postponeTime", x));
-            reqOptions.getReference().ifPresent(x -> outboundFaxesUriBuilder.queryParam("reference", x));
-            reqOptions.getRendering().ifPresent(x -> outboundFaxesUriBuilder.queryParam("rendering", x));
-            reqOptions.getReplyAddress().ifPresent(x -> outboundFaxesUriBuilder.queryParam("replyAddress", x));
-            reqOptions.getResolution().ifPresent(x -> outboundFaxesUriBuilder.queryParam("resolution", x));
-            reqOptions.getRetriesToPerform().ifPresent(x -> outboundFaxesUriBuilder.queryParam("retriesToPerform", x));
-        }
-
-        return outboundFaxesUriBuilder.build();
-    }
-
-    private URI getOutboundDocumentsUri(final File fileToUpload, final Optional<DocumentUploadSessionOptions> options) {
-
-        DocumentUploadSessionOptions reqOptions = options.orElse(null);
-
-        UriBuilder outboundDocumentsUriBuilder = UriBuilder
-                .fromPath(outboundDocumentsEndpoint)
-                .scheme(scheme)
-                .host(hostname)
-                .port(port)
-                .queryParam("size", options.isPresent() ? reqOptions.getSize().orElse(fileToUpload.length()) : fileToUpload.length())
-                .queryParam("name", options.isPresent() ? reqOptions.getName().orElse(fileToUpload.getName()) : fileToUpload.getName());
-
-        if (options.isPresent()) {
-            reqOptions.getDisposition().ifPresent(x -> outboundDocumentsUriBuilder.queryParam("disposition", x.toString()));
-            reqOptions.getSharing().ifPresent(x -> outboundDocumentsUriBuilder.queryParam("sharing", x.toString()));
-        }
-
-        return outboundDocumentsUriBuilder.build();
-    }
-
-    private URI getUploadedDocumentListUri(final Optional<GetUploadedDocumentsListOptions> options) {
-
-        GetUploadedDocumentsListOptions reqOptions = options.orElse(null);
-
-        UriBuilder uriBuilder = UriBuilder
-                                        .fromPath(outboundDocumentsEndpoint)
-                                        .scheme(scheme)
-                                        .host(hostname)
-                                        .port(port);
-
-        if (options.isPresent()) {
-            reqOptions.getLimit().ifPresent(x -> uriBuilder.queryParam("limit", reqOptions.getLimit().get()));
-            reqOptions.getOffset().ifPresent(x -> uriBuilder.queryParam("offset", reqOptions.getOffset().get()));
-        }
-
-        return uriBuilder.build();
-    }
-
     private void copyHeadersToAPIResponse(Response response, APIResponse apiResponse) {
 
         Map<String, List<Object>> headers = new HashMap<>();
@@ -751,18 +666,11 @@ public class DefaultInterFAXClient implements InterFAX {
 
     private String getCsvIds(final String[] ids) {
 
-        return Arrays.stream(ids).reduce((x, y)  -> x + "," + y).get();
-    }
-
-    private void initialiseCredentials() {
-
-        ClientCredentials clientCredentials = new ConfigLoader<>(ClientCredentials.class, "interfax-api-credentials.yaml").getTestConfig();
-
-        username = clientCredentials.getUsername();
-        password = clientCredentials.getPassword();
+        return Arrays.stream(ids).reduce((x, y)  -> x + "," + y).orElse("");
     }
 
     private void close(Response response) {
+
         if (response != null) {
             try {
                 response.close();
@@ -776,7 +684,6 @@ public class DefaultInterFAXClient implements InterFAX {
 
         reentrantLock.lock();
         try {
-
             if (client != null)
                 return;
 
@@ -799,21 +706,7 @@ public class DefaultInterFAXClient implements InterFAX {
             scheme = clientConfig.getInterFAX().getScheme();
             hostname = clientConfig.getInterFAX().getHostname();
             port = clientConfig.getInterFAX().getPort();
-            outboundFaxesEndpoint = clientConfig.getInterFAX().getOutboundFaxesEndpoint();
-            outboundFaxesCompletedEndpoint = clientConfig.getInterFAX().getOutboundFaxesCompletedEndpoint();
-            outboundFaxesRecordEndpoint = clientConfig.getInterFAX().getOutboundFaxesRecordEndpoint();
-            outboundFaxImageEndpoint = clientConfig.getInterFAX().getOutboundFaxImageEndpoint();
-            outboundFaxesCancelEndpoint = clientConfig.getInterFAX().getOutboundFaxesCancelEndpoint();
-            outboundFaxesResendEndpoint = clientConfig.getInterFAX().getOutboundFaxesResendEndpoint();
-            outboundFaxesHideEndpoint = clientConfig.getInterFAX().getOutboundFaxesHideEndpoint();
-            outboundSearchEndpoint = clientConfig.getInterFAX().getOutboundSearchEndpoint();
-            outboundDocumentsEndpoint = clientConfig.getInterFAX().getOutboundDocumentsEndpoint();
-            accountsBalanceEndpoint = clientConfig.getInterFAX().getAccountsBalanceEndpoint();
-            inboundFaxesEndpoint = clientConfig.getInterFAX().getInboundFaxesEndpoint();
-            inboundFaxesImageEndpoint = clientConfig.getInterFAX().getInboundFaxesImageEndpoint();
-            inboundFaxesEmailsEndpoint = clientConfig.getInterFAX().getInboundFaxesEmailsEndpoint();
-            inboundFaxesMarkEndpoint = clientConfig.getInterFAX().getInboundFaxesMarkEndpoint();
-            inboundFaxesResendEndpoint = clientConfig.getInterFAX().getInboundFaxesResendEndpoint();
+            readConfigAndInitializeEndpoints(clientConfig);
         } finally {
             reentrantLock.unlock();
         }

@@ -16,6 +16,7 @@ import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 public interface InterFAX {
@@ -31,7 +32,7 @@ public interface InterFAX {
      * @throws IOException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
      */
-    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException;
+    public APIResponse sendFax(final String faxNumber, final File fileToSendAsFax) throws IOException, URISyntaxException;
 
     /**
      * Send a single file as fax with additional {@link SendFaxOptions}
@@ -45,7 +46,7 @@ public interface InterFAX {
      */
     public APIResponse sendFax(final String faxNumber,
                                final File fileToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException;
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException;
     
     /**
      * Send an array of files as a fax
@@ -56,7 +57,7 @@ public interface InterFAX {
      * @throws IOException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
      */
-    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException;
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax) throws IOException, URISyntaxException;
 
     /**
      * Send an array of input streams as a fax
@@ -70,7 +71,7 @@ public interface InterFAX {
      */
     public APIResponse sendFax(final String faxNumber,
                                final InputStream[] streamsToSendAsFax,
-                               final String fileNames[]) throws IOException;
+                               final String fileNames[]) throws IOException, URISyntaxException;
 
     /**
      * Send an array of files as a fax with additional {@link SendFaxOptions}
@@ -84,7 +85,7 @@ public interface InterFAX {
      */
     public APIResponse sendFax(final String faxNumber,
                                final File[] filesToSendAsFax,
-                               final Optional<SendFaxOptions> options) throws IOException;
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException;
 
     /**
      * Send an array of input streams as a fax with additional {@link SendFaxOptions}
@@ -101,7 +102,7 @@ public interface InterFAX {
     public APIResponse sendFax(final String faxNumber,
                                final InputStream[] streamsToSendAsFax,
                                final String[] mediaTypes,
-                               final Optional<SendFaxOptions> options) throws IOException;
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException;
 
     /**
      * Send a pre-uploaded document, available on a HTTP url, as a fax
@@ -110,7 +111,7 @@ public interface InterFAX {
      * @param urlOfDoc  url of doc to send as fax
      * @return {@link APIResponse}
      */
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc);
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc) throws URISyntaxException;
 
     /**
      * Send a pre-uploaded document, available on a HTTP url, as a fax with additional {@link SendFaxOptions}
@@ -120,7 +121,7 @@ public interface InterFAX {
      * @param options   {@link SendFaxOptions} to use when sending the fax
      * @return {@link APIResponse}
      */
-    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options);
+    public APIResponse sendFax(final String faxNumber, final String urlOfDoc, final Optional<SendFaxOptions> options) throws URISyntaxException;
 
     /**
      * Resend a previously-submitted fax, without needing to re-upload the original document
@@ -174,7 +175,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2921">https://www.interfax.net/en/dev/rest/reference/2921</a>
      */
-    public OutboundFaxStructure getFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
+    public OutboundFaxStructure getOutboundFaxRecord(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the fax image (TIFF file) of a submitted fax
@@ -184,7 +185,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2941">https://www.interfax.net/en/dev/rest/reference/2941</a>
      */
-    public byte[] getOuboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getOutboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Cancel a fax in progress
@@ -354,7 +355,7 @@ public interface InterFAX {
      * @throws UnsuccessfulStatusCodeException
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/2937">https://www.interfax.net/en/dev/rest/reference/2937</a>
      */
-    public byte[] getInboundFaxImage(final String id) throws UnsuccessfulStatusCodeException;
+    public byte[] getInboundFaxImage(final long id) throws UnsuccessfulStatusCodeException;
 
     /**
      * Retrieve the list of email addresses to which a fax was forwarded

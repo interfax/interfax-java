@@ -26,9 +26,9 @@ public class OutboundFaxStructure {
     private String subject;
     private String destinationFax;
     private String replyEmail;
+    private String contact;
     private int pagesSubmitted;
     private int attemptsToPerform;
-    private int contact;
 
     public String getId() {
         return id;
@@ -214,11 +214,11 @@ public class OutboundFaxStructure {
         this.attemptsToPerform = attemptsToPerform;
     }
 
-    public int getContact() {
+    public String getContact() {
         return contact;
     }
 
-    public void setContact(final int contact) {
+    public void setContact(final String contact) {
         this.contact = contact;
     }
 }

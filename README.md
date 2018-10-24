@@ -1,6 +1,6 @@
 # InterFAX Java Library
 
-[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client)
+[![Build Status](https://travis-ci.org/interfax/interfax-java.svg?branch=master)](https://travis-ci.org/interfax/interfax-java) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.interfax/api-client)
 
 [Installation](#installation) | [Getting Started](#getting-started) | [Usage](#usage) | [Contributing](#contributing) | [License](#license)
 
@@ -16,12 +16,10 @@ Use of the library requires Java 8 or higher and can be done via one of the foll
 <dependency>
   <groupId>net.interfax</groupId>
   <artifactId>api-client</artifactId>
-  <version>${version-number}</version>
+  <version>0.12</version>
 </dependency>
 ```
     
-Replace `${version-number}` with your preferred version number   
-
 ### Download jar and include in application classpath
 
 Download the latest jar from the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cnet.interfax.api-client)
@@ -83,7 +81,7 @@ Double balance = interFAX.getAccountCredits();
 
 [Send](#send-fax) | [Get list](#get-outbound-fax-list) | [Get completed list](#get-completed-fax-list) | [Get record](#get-outbound-fax-record) | [Get image](#get-outbound-fax-image) | [Cancel fax](#cancel-a-fax) | [Search](#search-fax-list) | [Hide fax](#hide-fax)
 
-### Send Fax
+### Send Fax
 
 Submit a fax to a single destination number.
 
@@ -103,7 +101,7 @@ APIResponse apiResponse = interFAX.sendFax(faxNumber, inputStreams, mediaTypes);
 
 // with a URL
 InterFAX interFAX = new DefaultInterFAXClient();
-APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.pdf");
+APIResponse apiResponse = interFAX.sendFax(faxNumber, "https://s3.aws.com/example/fax.html");
 ```
 
 InterFAX supports over 20 file types including HTML, PDF, TXT, Word, and many more. For a full list see the 
@@ -153,7 +151,7 @@ OutboundFaxStructure[] outboundFaxStructures = interFAX.getFaxList(Optional.of(g
 
 ---
 
-### Get Completed Fax List
+### Get Completed Fax List
 
 Get details for a subset of completed faxes from a submitted list. (Submitted id's which have not completed are 
 ignored).
@@ -173,7 +171,7 @@ Retrieves information regarding a previously-submitted fax, including its curren
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-OutboundFaxStructure outboundFaxStructure = interFAX.getFaxRecord("667915751");
+OutboundFaxStructure outboundFaxStructure = interFAX.getOutboundFaxRecord("667915751");
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2921)    
@@ -186,7 +184,7 @@ Retrieve the fax image (TIFF file) of a submitted fax.
 
 ```java    
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getOuboundFaxImage("667915751");
+byte[] faxImage = interFAX.getOutboundFaxImage("667915751");
 ```
     
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2941)    
@@ -287,14 +285,14 @@ Retrieves a single fax's image.
 
 ```java
 InterFAX interFAX = new DefaultInterFAXClient();
-byte[] faxImage = interFAX.getInboundFaxImage("292626603");
+byte[] faxImage = interFAX.getInboundFaxImage(292626603);
 ```
 
 **More:** [documentation](https://www.interfax.net/en/dev/rest/reference/2937)   
 
 ---
 
-### Get Forwarding Emails
+### Get Forwarding Emails
  
 Retrieve the list of email addresses to which a fax was forwarded.
 
@@ -307,7 +305,7 @@ InboundFaxesEmailsStructure inboundFaxesEmailsStructure = interFAX.getInboundFax
 
 ---
 
-### Mark As Read/Unread
+### Mark As Read/Unread
 
 Mark a transaction as read/unread.
 ```java     
@@ -319,7 +317,7 @@ APIResponse apiResponse = interFAX.markInboundFax("292626603", Optional.of(true)
 
 ---
 
-### Resend Inbound Fax
+### Resend Inbound Fax
 
 Resend an inbound fax to a specific email address.
 
@@ -450,9 +448,9 @@ The project uses [semver](http://semver.org/) for versioning.
 
 If a change is backwards compatible, it can be committed and pushed straight to master. Versioning is handled 
 automatically by incrementing the **minor version** by 1 and released automatically by travisCI, using the 
-[release script](scripts/release.sh)
+[release script](scripts/release.sh).
 
-##### Major Releases 
+##### Major Releases
 
 For breaking changes / major releases, the version number needs to be manually updated in the [project pom](pom.xml). 
 Simply **increment the major version by 1** and **drop the minor version to 0**. Example, if the version in the project
