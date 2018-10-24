@@ -16,7 +16,7 @@ Use of the library requires Java 8 or higher and can be done via one of the foll
 <dependency>
   <groupId>net.interfax</groupId>
   <artifactId>api-client</artifactId>
-  <version>0.12</version>
+  <version>0.14</version>
 </dependency>
 ```
     
