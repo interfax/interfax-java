@@ -163,7 +163,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
         URI uri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
                 uri,
-                target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
+                target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(Entity.entity(new byte[0], MediaType.APPLICATION_OCTET_STREAM_TYPE))
         );
     }
 
@@ -323,7 +323,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
             URI outboundDocumentsUri = getOutboundDocumentsUri(fileToUpload, options);
 
             WebTarget target = client.target(outboundDocumentsUri);
-            response = target.request().header("Content-Length", 0).post(null);
+            response = target.request().header("Content-Length", 0).post(Entity.entity(new byte[0], MediaType.APPLICATION_OCTET_STREAM_TYPE));
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
