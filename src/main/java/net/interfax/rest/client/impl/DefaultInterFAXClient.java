@@ -163,7 +163,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
         URI uri = getSendFaxUri(faxNumber, options);
         return executePostRequest(
                 uri,
-                target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(null)
+                target -> target.request().header("Content-Location", urlOfDoc).header("Content-Length", 0).post(Entity.entity(new byte[0], MediaType.APPLICATION_OCTET_STREAM_TYPE))
         );
     }
 
@@ -323,7 +323,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
             URI outboundDocumentsUri = getOutboundDocumentsUri(fileToUpload, options);
 
             WebTarget target = client.target(outboundDocumentsUri);
-            response = target.request().header("Content-Length", 0).post(null);
+            response = target.request().header("Content-Length", 0).post(Entity.entity(new byte[0], MediaType.APPLICATION_OCTET_STREAM_TYPE));
 
             apiResponse = new APIResponse();
             apiResponse.setStatusCode(response.getStatus());
@@ -390,11 +390,14 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                     .header("Range", "bytes="+startByteRange+"-"+endByteRange)
                     .post(Entity.entity(bytesToUpload, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 
-            int expectedResponseCode = lastChunk ?
-                                        Response.Status.OK.getStatusCode():
-                                        Response.Status.ACCEPTED.getStatusCode();
 
-            if (response.getStatus() == expectedResponseCode) {
+            final int OK = Response.Status.OK.getStatusCode();
+            final int ACCEPTED = Response.Status.ACCEPTED.getStatusCode();
+            final int NO_CONTENT = Response.Status.NO_CONTENT.getStatusCode(); // 204: No content
+
+
+            if ((lastChunk && response.getStatus() == OK) ||
+                (!lastChunk && (response.getStatus() == ACCEPTED || response.getStatus() == NO_CONTENT))) {
                 log.info(
                         "chunk uploaded at {}; totalByesUploaded = {}; lastChunk = {}",
                         uploadChunkToDocumentEndpoint,
