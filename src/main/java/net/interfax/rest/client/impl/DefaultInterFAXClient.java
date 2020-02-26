@@ -646,6 +646,9 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                 responseBytes = IOUtils.toByteArray(inputStream);
                 inputStream.close();
             } else {
+                String responseBody = null;
+                if (response.hasEntity())
+                    responseBody = response.readEntity(String.class);
                 throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus(), responseBody);
             }
         } catch (IOException e) {
