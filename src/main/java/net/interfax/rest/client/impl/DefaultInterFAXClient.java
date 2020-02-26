@@ -646,7 +646,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                 responseBytes = IOUtils.toByteArray(inputStream);
                 inputStream.close();
             } else {
-                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus());
+                throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus(), responseBody);
             }
         } catch (IOException e) {
             log.error("Exception occurred while getting fax image", e);
