@@ -651,7 +651,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                     responseBody = response.readEntity(String.class);
                 throw new UnsuccessfulStatusCodeException("Unsuccessful response from API", response.getStatus(), responseBody);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.error("Exception occurred while getting fax image", e);
 	} catch (Exception ex) {
             log.error("Exception occurred while getting fax image", ex);
