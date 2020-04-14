@@ -653,6 +653,8 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
             }
         } catch (Exception e) {
             log.error("Exception occurred while getting fax image", e);
+	} catch (Exception ex) {
+            log.error("Exception occurred while getting fax image", ex);
         } finally {
             close(response);
         }
