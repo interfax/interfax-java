@@ -689,26 +689,29 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
 
 		HttpAuthenticationFeature httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
 		
-	   if (client != null) {
-	   	client = ClientBuilder.newClient();
-	   	client.register(httpAuthenticationFeature);
-	    	client.register(MultiPartFeature.class);
-	    	client.register(RequestEntityProcessing.CHUNKED);
-	    	client.register(JacksonFeature.class);
-	   }
-	   else {
-	        // build client
-	    	ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
-	    	client = ClientBuilder.newClient();
-	    	client.register(httpAuthenticationFeature);
-	    	client.register(MultiPartFeature.class);
-	    	client.register(RequestEntityProcessing.CHUNKED);
-	    	client.register(JacksonFeature.class);
-	    	// read config from yaml
-	    	scheme = clientConfig.getInterFAX().getScheme();
-	    	hostname = clientConfig.getInterFAX().getHostname();
-	    	port = clientConfig.getInterFAX().getPort();
-	    	readConfigAndInitializeEndpoints(clientConfig);
-	   }
+		   if (client != null) {
+			client = ClientBuilder.newClient();
+			client.register(httpAuthenticationFeature);
+			client.register(MultiPartFeature.class);
+			client.register(RequestEntityProcessing.CHUNKED);
+			client.register(JacksonFeature.class);
+		   }
+		   else {
+			// build client
+			ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
+			client = ClientBuilder.newClient();
+			client.register(httpAuthenticationFeature);
+			client.register(MultiPartFeature.class);
+			client.register(RequestEntityProcessing.CHUNKED);
+			client.register(JacksonFeature.class);
+			// read config from yaml
+			scheme = clientConfig.getInterFAX().getScheme();
+			hostname = clientConfig.getInterFAX().getHostname();
+			port = clientConfig.getInterFAX().getPort();
+			readConfigAndInitializeEndpoints(clientConfig);
+		   }
+	} finally {
+            reentrantLock.unlock();
+        }
     }
 }
