@@ -710,6 +710,11 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
 			port = clientConfig.getInterFAX().getPort();
 			readConfigAndInitializeEndpoints(clientConfig);
 		   }
+		    // required for the document upload API, to set Content-Length header
+		    System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
+		    // for automatically deriving content type given a file
+		    tika = new Tika(
 	} finally {
             reentrantLock.unlock();
         }
