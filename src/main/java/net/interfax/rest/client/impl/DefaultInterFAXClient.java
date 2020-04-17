@@ -714,7 +714,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
 		    System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
 		    // for automatically deriving content type given a file
-		    tika = new Tika(
+		    tika = new Tika();
 	} finally {
             reentrantLock.unlock();
         }
