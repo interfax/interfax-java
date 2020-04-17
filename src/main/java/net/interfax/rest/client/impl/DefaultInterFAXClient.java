@@ -403,7 +403,7 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                 );
             } else {
                 // TODO: define and use a custom exception
-                throw new Exception("Unexpected response code when uploading chunk"+response.getStatus());
+                throw new Exception("Unexpected response code when uploading chunk"+response.getStatus()+"\r\n Endpoint"+uploadChunkToDocumentEndpoint+"\r\n LastChunk: "+lastChunk+"\r\n endByteRange: "+endByteRange);
             }
 
             apiResponse.setStatusCode(response.getStatus());
