@@ -685,8 +685,9 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
 
     private void initializeClient(String username, String password) {
 
-        reentrantLock.lock();
+        
         try {
+	    reentrantLock.lock();
             if (client != null)
                 return;
 
