@@ -274,7 +274,7 @@ public class DefaultInterFAXClientTest {
 
         InterFAX interFAX = new DefaultInterFAXClient();
         APIResponse apiResponse = interFAX.uploadDocument(file);
-        Assert.assertEquals(200, apiResponse.getStatusCode());
+        Assert.assertEquals(202, apiResponse.getStatusCode());
     }
 
     @Test
@@ -290,7 +290,7 @@ public class DefaultInterFAXClientTest {
         documentUploadSessionOptions.setDisposition(Optional.of(Disposition.multiUse));
         documentUploadSessionOptions.setSharing(Optional.of(Sharing.privateDoc));
         APIResponse apiResponse = interFAX.uploadDocument(file, Optional.of(documentUploadSessionOptions));
-        Assert.assertEquals(200, apiResponse.getStatusCode());
+        Assert.assertEquals(202, apiResponse.getStatusCode());
     }
 
     @Test
