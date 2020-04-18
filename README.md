@@ -8,7 +8,7 @@ Send and receive faxes in Java with the [InterFAX](https://www.interfax.net/en/d
 
 ## Installation
 
-Use of the library requires Java 8 or higher and can be done via one of the following approaches. 
+Use of the library requires Java 11 or higher and can be done via one of the following approaches. 
 
 ### Include as maven dependency
 
@@ -16,7 +16,7 @@ Use of the library requires Java 8 or higher and can be done via one of the foll
 <dependency>
   <groupId>net.interfax</groupId>
   <artifactId>api-client</artifactId>
-  <version>0.12</version>
+  <version>0.16</version>
 </dependency>
 ```
     

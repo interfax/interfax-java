@@ -10,7 +10,7 @@
     }
   },
   "response" : {
-    "status" : 201,
+    "status" : 202,
     "bodyFileName" : "body-outbound-documents-QxROz.json",
     "headers" : {
       "Cache-Control" : "private",
