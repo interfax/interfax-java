@@ -16,8 +16,8 @@ after_success:
 - git config --global user.email "travis@interfax.net"
 - git config --global user.name "Travis Release"
 - eval "$(ssh-agent -s)"
-- chmod 600 ~/interfax_id_rsa.pem
-- ssh-add ~/interfax_id_rsa.pem
+- chmod 600 ~/travis_deploy
+- ssh-add ~/travis_deploy
 after_script: scripts/release.sh
 env:
   global:
