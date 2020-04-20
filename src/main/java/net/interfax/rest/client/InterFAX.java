@@ -310,7 +310,7 @@ public interface InterFAX {
      * Determine the remaining faxing credits in your account
      *
      * @return Value of outstanding outbound credits in account, in the account's currency
-     * @throws {@link UnsuccessfulStatusCodeException} exception with status code and response body if present
+     * @throws UnsuccessfulStatusCodeException exception with status code and response body if present
      * @see <a href="https://www.interfax.net/en/dev/rest/reference/3001">https://www.interfax.net/en/dev/rest/reference/3001</a>
      */
     public Double getAccountCredits() throws UnsuccessfulStatusCodeException;
