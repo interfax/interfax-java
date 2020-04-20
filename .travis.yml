@@ -11,6 +11,8 @@ after_success:
   -out ~/pubring.gpg -d
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in scripts/keys/interfax_id_rsa.pem.enc
   -out ~/interfax_id_rsa.pem -d
+- openssl aes-256-cbc -K $encrypted_4c5089d44db5_key -iv $encrypted_4c5089d44db5_iv
+  -in scripts/keys/travis_deploy.enc -out ~/travis_deploy -d
 - git config --global user.email "travis@interfax.net"
 - git config --global user.name "Travis Release"
 - eval "$(ssh-agent -s)"
