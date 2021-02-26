@@ -20,26 +20,26 @@ import java.util.Optional;
 
 public abstract class AbstractInterFAXClient {
 
-    protected static String username;
-    protected static String password;
-    protected static String scheme;
-    protected static String hostname;
-    protected static int port;
-    protected static String outboundFaxesEndpoint;
-    protected static String outboundFaxesCompletedEndpoint;
-    protected static String outboundFaxesRecordEndpoint;
-    protected static String outboundFaxImageEndpoint;
-    protected static String outboundFaxesCancelEndpoint;
-    protected static String outboundFaxesResendEndpoint;
-    protected static String outboundFaxesHideEndpoint;
-    protected static String outboundSearchEndpoint;
-    protected static String outboundDocumentsEndpoint;
-    protected static String accountsBalanceEndpoint;
-    protected static String inboundFaxesEndpoint;
-    protected static String inboundFaxesImageEndpoint;
-    protected static String inboundFaxesEmailsEndpoint;
-    protected static String inboundFaxesMarkEndpoint;
-    protected static String inboundFaxesResendEndpoint;
+    protected String username;
+    protected String password;
+    protected String scheme;
+    protected String hostname;
+    protected int port;
+    protected String outboundFaxesEndpoint;
+    protected String outboundFaxesCompletedEndpoint;
+    protected String outboundFaxesRecordEndpoint;
+    protected String outboundFaxImageEndpoint;
+    protected String outboundFaxesCancelEndpoint;
+    protected String outboundFaxesResendEndpoint;
+    protected String outboundFaxesHideEndpoint;
+    protected String outboundSearchEndpoint;
+    protected String outboundDocumentsEndpoint;
+    protected String accountsBalanceEndpoint;
+    protected String inboundFaxesEndpoint;
+    protected String inboundFaxesImageEndpoint;
+    protected String inboundFaxesEmailsEndpoint;
+    protected String inboundFaxesMarkEndpoint;
+    protected String inboundFaxesResendEndpoint;
 
 
     protected URI getSendFaxUri(final String faxNumber, final Optional<SendFaxOptions> options)
