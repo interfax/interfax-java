@@ -46,21 +46,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultInterFAXClient extends AbstractInterFAXClient implements InterFAX {
 
-    private static Client client;
-    private static Tika tika;
-
-    private final ReentrantLock reentrantLock = new ReentrantLock();
+    private Client client;
+    private Tika tika;
 
     private static final Logger log = LoggerFactory.getLogger(DefaultInterFAXClient.class);
 
     public DefaultInterFAXClient(String username, String password) {
 
-        DefaultInterFAXClient.username = username;
-        DefaultInterFAXClient.password = password;
+        this.username = username;
+        this.password = password;
 
         initializeClient(username, password);
     }
@@ -684,39 +681,24 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
     }
 
     private void initializeClient(String username, String password) {
-	try {
-		reentrantLock.lock();
+        HttpAuthenticationFeature httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
 
-		HttpAuthenticationFeature httpAuthenticationFeature = HttpAuthenticationFeature.basic(username, password);
-		
-		   if (client != null) {
-			client = ClientBuilder.newClient();
-			client.register(httpAuthenticationFeature);
-			client.register(MultiPartFeature.class);
-			client.register(RequestEntityProcessing.CHUNKED);
-			client.register(JacksonFeature.class);
-		   }
-		   else {
-			// build client
-			ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
-			client = ClientBuilder.newClient();
-			client.register(httpAuthenticationFeature);
-			client.register(MultiPartFeature.class);
-			client.register(RequestEntityProcessing.CHUNKED);
-			client.register(JacksonFeature.class);
-			// read config from yaml
-			scheme = clientConfig.getInterFAX().getScheme();
-			hostname = clientConfig.getInterFAX().getHostname();
-			port = clientConfig.getInterFAX().getPort();
-			readConfigAndInitializeEndpoints(clientConfig);
-		   }
-		    // required for the document upload API, to set Content-Length header
-		    System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+        // build client
+        ClientConfig clientConfig = new ConfigLoader<>(ClientConfig.class, "interfax-api-config.yaml").getTestConfig();
+        client = ClientBuilder.newClient();
+        client.register(httpAuthenticationFeature);
+        client.register(MultiPartFeature.class);
+        client.register(RequestEntityProcessing.CHUNKED);
+        client.register(JacksonFeature.class);
+        // read config from yaml
+        scheme = clientConfig.getInterFAX().getScheme();
+        hostname = clientConfig.getInterFAX().getHostname();
+        port = clientConfig.getInterFAX().getPort();
+        readConfigAndInitializeEndpoints(clientConfig);
+        // required for the document upload API, to set Content-Length header
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
-		    // for automatically deriving content type given a file
-		    tika = new Tika();
-	} finally {
-            reentrantLock.unlock();
-        }
+        // for automatically deriving content type given a file
+        tika = new Tika();
     }
 }
