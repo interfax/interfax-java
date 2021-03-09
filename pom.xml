@@ -30,7 +30,7 @@
         <connection>scm:git:git@github.com:interfax/interfax-java.git</connection>
         <developerConnection>scm:git:git@github.com:interfax/interfax-java.git</developerConnection>
         <url>git@github.com:interfax/interfax-java.git</url>
-      <tag>api-client-0.16</tag>
+      <tag>api-client-0.17</tag>
   </scm>
 
     <distributionManagement>
