@@ -28,19 +28,20 @@ import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -336,8 +337,8 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
                                                     .create(apiResponse.getHeaders().get("Location").get(0).toString())
                                                     .getPath();
 
-                InputStream inputStream = new FileInputStream(fileToUpload);
-                byte[] bytes = IOUtils.toByteArray(inputStream);
+
+                byte[] bytes = Files.readAllBytes(fileToUpload.toPath());
                 int chunkSize = 1024*1024;
                 byte[][] chunks = ArrayUtil.chunkArray(bytes, chunkSize);
                 int bytesUploaded = 0;
@@ -640,7 +641,9 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
             response = client.target(uri).request().get();
             if (response.getStatus() == 200) {
                 InputStream inputStream = response.readEntity(InputStream.class);
-                responseBytes = IOUtils.toByteArray(inputStream);
+                responseBytes = inputStream.readAllBytes();
+
+
                 inputStream.close();
             } else {
                 String responseBody = null;
