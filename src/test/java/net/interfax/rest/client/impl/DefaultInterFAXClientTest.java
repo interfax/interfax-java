@@ -17,6 +17,7 @@ import net.interfax.rest.client.domain.enums.Disposition;
 import net.interfax.rest.client.domain.enums.Sharing;
 import net.interfax.rest.client.exception.UnsuccessfulStatusCodeException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -77,6 +78,7 @@ public class DefaultInterFAXClientTest {
         Assert.assertEquals(201, apiResponse.getStatusCode());
     }
 
+    @Ignore  //don't run as it makes an actual call to the API
     @Test
     public void testSendMultipleFilesAsFaxWithOptions() throws Exception {
 
@@ -95,7 +97,7 @@ public class DefaultInterFAXClientTest {
         Assert.assertEquals(201, apiResponse.getStatusCode());
 
     }
-    
+
     @Test
     public void testSendMultipleInputStreamsAsFax() throws Exception {
 
