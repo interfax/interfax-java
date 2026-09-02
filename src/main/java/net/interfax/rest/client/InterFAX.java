@@ -88,6 +88,37 @@ public interface InterFAX {
                                final Optional<SendFaxOptions> options) throws IOException, URISyntaxException;
 
     /**
+     * Send a combination of files and pre-uploaded/HTTP-hosted document urls as a single fax
+     *
+     * @param faxNumber        number to fax to
+     * @param filesToSendAsFax array of files to send as fax
+     * @param urlsOfDocs       array of urls of documents to send as fax
+     * @return {@link APIResponse}
+     * @throws IOException
+     * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
+     */
+    public APIResponse sendFax(final String faxNumber,
+                               final File[] filesToSendAsFax,
+                               final String[] urlsOfDocs) throws IOException, URISyntaxException;
+
+    /**
+     * Send a combination of files and pre-uploaded/HTTP-hosted document urls as a single fax, with additional
+     * {@link SendFaxOptions}
+     *
+     * @param faxNumber        number to fax to
+     * @param filesToSendAsFax array of files to send as fax
+     * @param urlsOfDocs       array of urls of documents to send as fax
+     * @param options          {@link SendFaxOptions} to use when sending the fax
+     * @return {@link APIResponse}
+     * @throws IOException
+     * @see <a href="https://www.interfax.net/en/dev/rest/reference/2918">https://www.interfax.net/en/dev/rest/reference/2918</a>
+     */
+    public APIResponse sendFax(final String faxNumber,
+                               final File[] filesToSendAsFax,
+                               final String[] urlsOfDocs,
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException;
+
+    /**
      * Send an array of input streams as a fax with additional {@link SendFaxOptions}
      *
      * @param faxNumber          number to fax to

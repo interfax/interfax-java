@@ -21,6 +21,7 @@ import org.apache.tika.io.IOUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.BodyPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -118,6 +119,38 @@ public class DefaultInterFAXClient extends AbstractInterFAXClient implements Int
             String entityName = "file"+count++;
             FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(entityName, file, MediaType.valueOf(contentType));
             multiPart.bodyPart(fileDataBodyPart);
+        }
+
+        return sendMultiPartFax(faxNumber, multiPart, options);
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber, final File[] filesToSendAsFax, final String[] urlsOfDocs)
+            throws IOException, URISyntaxException {
+
+        return sendFax(faxNumber, filesToSendAsFax, urlsOfDocs, Optional.empty());
+    }
+
+    @Override
+    public APIResponse sendFax(final String faxNumber,
+                               final File[] filesToSendAsFax,
+                               final String[] urlsOfDocs,
+                               final Optional<SendFaxOptions> options) throws IOException, URISyntaxException {
+
+        MultiPart multiPart = new MultiPart();
+        int count = 1;
+        for (File file : filesToSendAsFax) {
+            String contentType = tika.detect(file);
+            String entityName = "file"+count++;
+            FileDataBodyPart fileDataBodyPart = new FileDataBodyPart(entityName, file, MediaType.valueOf(contentType));
+            multiPart.bodyPart(fileDataBodyPart);
+        }
+
+        for (String urlOfDoc : urlsOfDocs) {
+            BodyPart urlBodyPart = new BodyPart("", MediaType.TEXT_PLAIN_TYPE);
+            urlBodyPart.getHeaders().add("Content-Location", urlOfDoc);
+            urlBodyPart.getHeaders().add("Content-Length", "0");
+            multiPart.bodyPart(urlBodyPart);
         }
 
         return sendMultiPartFax(faxNumber, multiPart, options);
