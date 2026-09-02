@@ -97,6 +97,39 @@ public class DefaultInterFAXClientTest {
     }
     
     @Test
+    public void testSendMixOfFilesAndUrlsAsFax() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        File[] files = {file};
+        String[] urlsOfDocs = {"https://rest.interfax.net/outbound/documents/mixed-test-doc"};
+
+        InterFAX interFAX = new DefaultInterFAXClient();
+        APIResponse apiResponse = interFAX.sendFax(faxNumber, files, urlsOfDocs);
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457901]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
+    public void testSendMixOfFilesAndUrlsAsFaxWithOptions() throws Exception {
+
+        String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
+        File file = new File(absoluteFilePath);
+
+        File[] files = {file};
+        String[] urlsOfDocs = {"https://rest.interfax.net/outbound/documents/mixed-test-doc"};
+
+        SendFaxOptions sendFaxOptions = new SendFaxOptions();
+        sendFaxOptions.setPageSize(Optional.of("a4"));
+
+        InterFAX interFAX = new DefaultInterFAXClient();
+        APIResponse apiResponse = interFAX.sendFax(faxNumber, files, urlsOfDocs, Optional.of(sendFaxOptions));
+        Assert.assertEquals("[https://rest.interfax.net/outbound/faxes/667457902]", apiResponse.getHeaders().get("Location").toString());
+        Assert.assertEquals(201, apiResponse.getStatusCode());
+    }
+
+    @Test
     public void testSendMultipleInputStreamsAsFax() throws Exception {
 
         String absoluteFilePath = this.getClass().getClassLoader().getResource("test.pdf").getFile();
